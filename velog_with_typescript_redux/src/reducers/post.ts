@@ -1,9 +1,30 @@
 export const initialState = {
-  mainPosts: [],
+  mainPosts: [
+    {
+      id: 0,
+      title: '123',
+      content: '123123',
+      date: '2021-4-13',
+      like: 0,
+      username: '1234',
+      profileImage: '',
+      user_pk: 0,
+      language: ['C', 'Java'],
+      image: '',
+    },
+  ],
   loadPostLoading: false,
   loadPostDone: false,
   loadPostError: null,
+  updatePostLoading: false,
+  updatePostDone: false,
+  updatePostError: null,
+  removePostLoading: false,
+  removePostDone: false,
+  removePostError: null,
   myPosts: [],
+  filterList: [],
+  newOrRec: false,
 
   singlePost: null,
   imagePaths: [],
@@ -21,12 +42,7 @@ export const initialState = {
   addPostLoading: false,
   addPostDone: false,
   addPostError: null,
-  updatePostLoading: false,
-  updatePostDone: false,
-  updatePostError: null,
-  removePostLoading: false,
-  removePostDone: false,
-  removePostError: null,
+
   addCommentLoading: false,
   addCommentDone: false,
   addCommentError: null,
@@ -79,10 +95,30 @@ export const ADD_COMMENT_REQUEST = 'ADD_COMMENT_REQUEST';
 export const ADD_COMMENT_SUCCESS = 'ADD_COMMENT_SUCCESS';
 export const ADD_COMMENT_FAILURE = 'ADD_COMMENT_FAILURE';
 
+export const FILTER_REQUEST = 'FILTER_REQUEST';
+export const FILTER_SUCCESS = 'FILTER_SUCCESS';
+export const FILTER_FAILURE = 'FILTER_FAILURE';
+
+export const NEWORREC_REQUEST = 'NEWORREC_REQUEST';
+export const NEWORREC_SUCCESS = 'NEWORREC_SUCCESS';
+export const NEWORREC_FAILURE = 'NEWORREC_FAILURE';
+
 const Post = (state = initialState, action: any) => {
   switch (action.type) {
     case ADD_POST_SUCCESS:
       return { ...state, mainPosts: [...state.mainPosts, action.data] };
+    case REMOVE_POST_SUCCESS:
+      return { ...state, mainPosts: [...state.mainPosts.filter((v: { id: number }) => v.id !== action.data)] };
+    case UPDATE_POST_SUCCESS: {
+      const temp = [...state.mainPosts];
+      const idx = temp.findIndex((v) => v.id === action.data.id);
+      temp.splice(idx, 1, action.data);
+      return { ...state, mainPosts: temp };
+    }
+    case FILTER_SUCCESS:
+      return { ...state, filterList: action.data };
+    case NEWORREC_SUCCESS:
+      return { ...state, newOrRec: !state.newOrRec };
     default:
       return state;
   }

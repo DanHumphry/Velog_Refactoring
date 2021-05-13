@@ -31,6 +31,15 @@ function AccountInput({ accountText }: Props) {
   }, [accountText]);
 
   const accountReq = (info: { username: string; password: string }) => {
+    const accoutInfo = {
+      ...info,
+      id: 1,
+      email: '',
+      mygit: '',
+      nickname: info.username,
+      myInfo: '',
+      userPhoto: '',
+    };
     let temp = false;
     userInfo.forEach((item) => {
       if (item.username === info.username && item.password === info.password) temp = true;
@@ -39,7 +48,9 @@ function AccountInput({ accountText }: Props) {
       if (temp) {
         dispatch({
           type: LOG_IN_SUCCESS,
-          data: { ...info, id: 0 },
+          data: userInfo.filter(
+            (v: { username: string; password: string }) => v.username === info.username && v.password === info.password,
+          )[0],
         });
         showLoginModal();
       } else {
@@ -51,7 +62,7 @@ function AccountInput({ accountText }: Props) {
     } else {
       dispatch({
         type: SIGN_UP_SUCCESS,
-        data: info,
+        data: accoutInfo,
       });
     }
   };

@@ -1,31 +1,67 @@
 import { RootState } from '@reducers/index';
 import React, { useEffect, useState } from 'react';
 import '@styles/Detail.css';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
+import { useHistory } from 'react-router';
 import { Link } from 'react-router-dom';
+import { REMOVE_POST_SUCCESS } from '@reducers/post';
 
 function Detail() {
-  const pgN = document.location.href.split('/')[4];
+  const history = useHistory();
+  const dispatch = useDispatch();
+  const pgN = +document.location.href.split('/')[4];
 
   const { mainPosts } = useSelector((store: RootState) => store.post);
-  let detailPost: any = [...mainPosts].filter((v: any) => v.id === +pgN)[0];
+  const { me, userInfo } = useSelector((store: RootState) => store.user);
+  let detailPost: any = [...mainPosts].filter((v: any) => v.id === pgN)[0];
+  const [writtenUser, setWrittenUser] = useState(userInfo.filter((v) => v.id === detailPost.user_pk)[0]);
 
   useEffect(() => {
     // eslint-disable-next-line prefer-destructuring
-    detailPost = [...mainPosts].filter((v: any) => v.id === +pgN)[0];
+    detailPost = [...mainPosts].filter((v: any) => v.id === pgN)[0];
+    setWrittenUser(userInfo.filter((v) => v.id === detailPost.user_pk)[0]);
   }, [pgN]);
 
   const [svgColor] = useState({});
+
+  const updatePost = () => {
+    if (detailPost.user_pk === me.id) history.push(`/update/${pgN}`);
+    else alert('권한이 없습니다.');
+  };
+
+  const delPost = (id: number) => {
+    dispatch({
+      type: REMOVE_POST_SUCCESS,
+      data: id,
+    });
+    history.push('/');
+  };
 
   return (
     <div className="detail__container">
       <div className="detail__head-wrapper">
         <h1>{detailPost.title}</h1>
         <div className="detail__head-btn">
-          <>
-            <button type="button">수정</button>
-            <button type="button">삭제</button>
-          </>
+          {me?.id === detailPost.user_pk ? (
+            <>
+              <button
+                type="button"
+                onClick={() => {
+                  updatePost();
+                }}
+              >
+                수정
+              </button>
+              <button
+                type="button"
+                onClick={() => {
+                  delPost(detailPost.id);
+                }}
+              >
+                삭제
+              </button>
+            </>
+          ) : null}
         </div>
         <div className="detail__head-info">
           <div className="information">
@@ -71,10 +107,10 @@ function Detail() {
         <div className="detail__writerInfo">
           <div className="detail__topInfo">
             <Link to={`/mysite/${detailPost.user_pk}`}>
-              <img src="" alt="" />
+              <img src={writtenUser.userPhoto} alt="" />
             </Link>
             <div className="detail__userInfo">
-              <div className="description">me.info</div>
+              <div className="description">{writtenUser.myInfo}</div>
             </div>
           </div>
           <div className="sc-epnACN eIoWCE" />

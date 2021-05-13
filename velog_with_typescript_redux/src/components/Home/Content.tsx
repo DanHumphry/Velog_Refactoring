@@ -1,18 +1,33 @@
 import { RootState } from '@reducers/index';
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import '@styles/Board.css';
 import SideCheckBox from '@components/Home/SideCheckBox';
 import { useSelector } from 'react-redux';
 import { Link } from 'react-router-dom';
 
 function Content() {
-  const { mainPosts } = useSelector((store: RootState) => store.post);
+  const { mainPosts, filterList } = useSelector((store: RootState) => store.post);
+
+  const [filterPost, setFilterPost] = useState([...mainPosts]);
+
+  useEffect(() => {
+    setFilterPost(
+      mainPosts.filter((v: { language: string[] }) => {
+        let inc = true;
+        [...filterList].forEach((item: string) => {
+          if (v.language.indexOf(item) === -1) inc = false;
+        });
+        if (inc) return v;
+        return null;
+      }),
+    );
+  }, [filterList]);
 
   return (
     <div className="trend-section">
       <main className="trend-main">
         <div className="main-section">
-          {[...mainPosts]
+          {filterPost
             .slice(0)
             .reverse()
             .map((a: any) => {
@@ -22,10 +37,10 @@ function Content() {
 
               return (
                 <div className="article" key={a.id}>
-                  {a.image === null ? null : (
+                  {a.image === '' ? null : (
                     <Link to={`/detail/${a.id}`}>
                       <div className="arcticle-img">
-                        <img src={`http://localhost:8000${a.image}`} alt="" />
+                        <img src={a.image} alt="" />
                       </div>
                     </Link>
                   )}

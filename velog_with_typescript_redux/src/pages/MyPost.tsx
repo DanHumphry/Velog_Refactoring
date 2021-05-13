@@ -4,7 +4,7 @@ import '@styles/Mysite.css';
 import { useSelector } from 'react-redux';
 import { Link } from 'react-router-dom';
 
-function Mysite() {
+function MyPost() {
   const pgN = document.location.href.split('/')[4];
 
   const [underline, setUnderline] = useState({ left: '0%' });
@@ -80,10 +80,10 @@ function Mysite() {
         <div className="filter-bar" />
         <div className="myContents">
           <div className="myContents_">
-            {[...myPosts]
+            {myPosts
               .slice(0)
               .reverse()
-              .map((a) => {
+              .map((a: any) => {
                 const Y = a.date.split('-')[0];
                 const M = a.date.split('-')[1];
                 const D = a.date.split('-')[2].split('T')[0];
@@ -104,7 +104,7 @@ function Mysite() {
                       </Link>
                       <p>{a.content}</p>
                       <div className="contents-filter">
-                        {a.language.split(',').map((L: string, i: number) => {
+                        {a.language.map((L: string, i: number) => {
                           return (
                             <>
                               {/* eslint-disable-next-line react/no-array-index-key */}
@@ -130,4 +130,4 @@ function Mysite() {
     </div>
   );
 }
-export default Mysite;
+export default MyPost;

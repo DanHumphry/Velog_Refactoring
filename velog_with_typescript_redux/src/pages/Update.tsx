@@ -1,13 +1,18 @@
 import { RootState } from '@reducers/index';
-import { ADD_POST_SUCCESS } from '@reducers/post';
+import { UPDATE_POST_SUCCESS } from '@reducers/post';
 import React, { useState, useEffect, useRef } from 'react';
 import '@styles/Write.css';
 import '@styles/Thumbnail.css';
 import { useDispatch, useSelector } from 'react-redux';
 import { useHistory } from 'react-router';
 
-function Write() {
+function Update() {
+  const pgN = +document.location.href.split('/')[4];
+
   const { me } = useSelector((store: RootState) => store.user);
+  const { mainPosts } = useSelector((store: RootState) => store.post);
+  let updatePost: any = [...mainPosts].filter((v: { id: number }) => v.id === pgN)[0];
+
   const dispatch = useDispatch();
 
   const [filterList] = useState([
@@ -30,9 +35,18 @@ function Write() {
   const [imgGoback, setImgGoback] = useState(false);
 
   const [img, setImg] = useState('');
-  const [imgURL, setImgURL] = useState('' as string);
+  const [imgURL, setImgURL] = useState('' as string | ArrayBuffer);
   const [title, setTitle] = useState('');
   const [content, setContent] = useState('');
+
+  useEffect(() => {
+    // eslint-disable-next-line prefer-destructuring
+    updatePost = [...mainPosts].filter((v: { id: number }) => v.id === pgN)[0];
+    setTitle(updatePost.title);
+    setContent(updatePost.content);
+    setImgURL(updatePost.image);
+    setLanguageFilterList(updatePost.language);
+  }, [pgN]);
 
   let sendData: any;
   const handleEffect = (handleSubmit: any) => {
@@ -71,7 +85,7 @@ function Write() {
     }
 
     dispatch({
-      type: ADD_POST_SUCCESS,
+      type: UPDATE_POST_SUCCESS,
       data: sendData,
     });
 
@@ -145,7 +159,7 @@ function Write() {
                     setGoback(true);
                   }}
                 >
-                  발행
+                  수정
                 </button>
               </div>
             </footer>
@@ -194,7 +208,7 @@ function Write() {
                         }
                         reader.onloadend = () => {
                           setImg(file);
-                          if (reader.result !== null && typeof reader.result === 'string') setImgURL(reader.result);
+                          if (reader.result !== null) setImgURL(reader.result);
                         };
                         reader.readAsDataURL(file);
                         setImgGoback(true);
@@ -230,14 +244,14 @@ function Write() {
                             />
                           </svg>
                         ) : (
-                          <img src={imgURL} alt="" />
+                          <img src="" alt="" />
                         )}
                       </div>
                     </div>
                   </div>
                   <div className="title-margin">
                     <h4>{title}</h4>
-                    <textarea defaultValue={content} name="viewContent" readOnly />
+                    <textarea value={content} name="viewContent" />
                   </div>
                 </div>
               </section>
@@ -248,6 +262,10 @@ function Write() {
                 <section>
                   <ul>
                     {filterList.map((a) => {
+                      let boolenChecked = false;
+                      if (languagefilterList.indexOf(a.language) !== -1) {
+                        boolenChecked = true;
+                      }
                       return (
                         <li key={a.id}>
                           <input
@@ -256,6 +274,7 @@ function Write() {
                             value="action"
                             type="checkbox"
                             data-type="genres"
+                            defaultChecked={boolenChecked}
                           />
                           {/* eslint-disable-next-line jsx-a11y/click-events-have-key-events */}
                           <label
@@ -299,7 +318,7 @@ function Write() {
                     handleEffect(handleSubmit);
                   }}
                 >
-                  출간하기
+                  수정하기
                 </button>
               </div>
             </div>
@@ -310,4 +329,4 @@ function Write() {
   );
 }
 
-export default Write;
+export default Update;

@@ -8,8 +8,13 @@ export const initialState = {
   signUpLoading: false, // 회원가입 시도중
   signUpDone: false,
   signUpError: null,
+  updateProfileLoading: false, // 회원가입 시도중
+  updateProfileDone: false,
+  updateProfileError: null,
 
-  userInfo: [{ id: 0, username: '1234', password: '1234' }],
+  userInfo: [
+    { id: 0, username: '1234', password: '1234', email: '', mygit: '', nickname: '1234', myInfo: '', userPhoto: '' },
+  ],
   me: null,
 };
 
@@ -24,6 +29,10 @@ export const LOG_OUT_FAILURE = 'LOG_OUT_FAILURE';
 export const SIGN_UP_REQUEST = 'SIGN_UP_REQUEST';
 export const SIGN_UP_SUCCESS = 'SIGN_UP_SUCCESS';
 export const SIGN_UP_FAILURE = 'SIGN_UP_FAILURE';
+
+export const UPDATE_PROFILE_REQUEST = 'UPDATE_PROFILE_REQUEST';
+export const UPDATE_PROFILE_SUCCESS = 'UPDATE_PROFILE_SUCCESS';
+export const UPDATE_PROFILE_FAILURE = 'UPDATE_PROFILE_FAILURE';
 
 function User(state = initialState, action: any) {
   switch (action.type) {
@@ -62,6 +71,22 @@ function User(state = initialState, action: any) {
     case SIGN_UP_FAILURE:
       return { ...state, signUpLoading: false, signUpDone: false, signUpError: action.error };
       break;
+
+    case UPDATE_PROFILE_SUCCESS: {
+      console.log(action.data);
+      const temp = [...state.userInfo];
+      const idx = temp.findIndex((v) => v === state.me);
+      console.log(idx);
+      temp.splice(idx, 1, action.data);
+      return {
+        ...state,
+        updateProfileLoading: false,
+        updateProfileDone: true,
+        updateProfileError: null,
+        userInfo: temp,
+        me: action.data,
+      };
+    }
     default:
       return state;
   }

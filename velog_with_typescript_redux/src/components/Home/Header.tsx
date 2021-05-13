@@ -55,7 +55,7 @@ function Header() {
               {profileModal === true ? (
                 <div className="user-profile">
                   <div className="profile-menu">
-                    <Link to="/mysite">
+                    <Link to={`/myPost/${me.id}`}>
                       <div className="menu">내가 쓴 글</div>
                     </Link>
                     <Link to="/profile">

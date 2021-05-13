@@ -7,6 +7,7 @@ import Home from '@pages/Home';
 import AccountModal from '@pages/AccountModal';
 import useSetModal from '@hooks/useSetModal';
 import Write from '@pages/Write';
+import Update from '@pages/Update';
 import Detail from '@pages/Detail';
 import Header from '@components/Home/Header';
 import Profile from '@pages/Profile';
@@ -43,6 +44,10 @@ function App() {
           <Write />
         </Route>
 
+        <Route path="/update">
+          <Update />
+        </Route>
+
         <Route path="/detail">
           <Header />
           <Detail />
@@ -53,7 +58,7 @@ function App() {
           <Profile />
         </Route>
 
-        <Route path="/mysite">
+        <Route path="/myPost">
           <Header />
           <MyPost />
         </Route>

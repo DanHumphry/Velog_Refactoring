@@ -1,30 +1,41 @@
-import React, { useRef, useEffect } from 'react';
+import { RootState } from '@reducers/index';
+import React, { useState, useEffect } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 import { Link } from 'react-router-dom';
 import '@styles/Navi.css';
+import { NEWORREC_SUCCESS } from '@reducers/post';
 
 function Navi() {
-  const lineRef = useRef<HTMLDivElement | null>(null);
+  const dispatch = useDispatch();
+  const { newOrRec } = useSelector((store: RootState) => store.post);
 
-  const clickNav = (e: any) => {
-    const { current } = lineRef;
-    if (e.target.id === 'new' && current !== null) current.style.left = '0%';
-    else if (current !== null) current.style.left = '50%';
+  const [underlineSt, setUnderlineSt] = useState({ left: '0%' });
+
+  const clickNav = () => {
+    dispatch({
+      type: NEWORREC_SUCCESS,
+    });
   };
+
+  useEffect(() => {
+    if (newOrRec === false) setUnderlineSt({ left: '0%' });
+    else setUnderlineSt({ left: '50%' });
+  }, [newOrRec]);
 
   return (
     <div className="navi-container">
       <div className="navi-box">
-        <Link className="navi-" to="/" onClick={(e) => clickNav(e)}>
+        <Link className="navi-" to="/" onClick={clickNav}>
           <span id="new" role="img" aria-label="하트">
             ⏰최신
           </span>
         </Link>
-        <Link className="navi-" to="/like" onClick={(e) => clickNav(e)}>
+        <Link className="navi-" to="/like" onClick={clickNav}>
           <span id="like" role="img" aria-label="질문">
             🤞추천
           </span>
         </Link>
-        <div ref={lineRef} className="navi-underline" />
+        <div className="navi-underline" style={underlineSt} />
       </div>
     </div>
   );

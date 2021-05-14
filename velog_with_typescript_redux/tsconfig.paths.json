@@ -9,8 +9,7 @@
       "@pages/*": ["src/pages/*"],
       "@reducers/*": ["src/reducers/*"],
       "@sagas/*": ["src/sagas/*"],
-      "@styles/*": ["src/styles/*"],
-      "@dummyData/*": ["src/dummyData/*"]
+      "@styles/*": ["src/styles/*"]
     }
   }
 }

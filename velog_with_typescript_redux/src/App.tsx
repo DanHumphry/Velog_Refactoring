@@ -14,16 +14,12 @@ import Profile from '@pages/Profile';
 import MyPost from '@pages/MyPost';
 
 function App() {
-  const { showLoginModal, showProfileModal } = useSetModal();
-  const { loginModal, profileModal } = useSelector((store: RootState) => store.modal);
-
-  const setProfileModal = () => {
-    if (profileModal) showProfileModal();
-  };
+  const { showLoginModal } = useSetModal();
+  const { loginModal } = useSelector((store: RootState) => store.modal);
 
   return (
     // eslint-disable-next-line jsx-a11y/click-events-have-key-events,jsx-a11y/no-static-element-interactions
-    <div className="App" onClick={setProfileModal}>
+    <div className="App">
       <div className="auto-margin">
         {loginModal ? (
           <>

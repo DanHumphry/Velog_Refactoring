@@ -30,14 +30,13 @@ function Content() {
           {filterPost
             .slice(0)
             .reverse()
-            .map((a: any) => {
-              const Y = a.date.split('-')[0];
-              const M = a.date.split('-')[1];
-              const D = a.date.split('-')[2].split('T')[0];
+            .map((a) => {
+              const temp = a.date.split('-');
+              const date = `${temp[0]}년 ${temp[1]}월 ${temp[2].split('T')[0]}일`;
 
               return (
                 <div className="article" key={a.id}>
-                  {a.image === '' ? null : (
+                  {a.image === null || a.image === undefined || a.image === '' ? null : (
                     <Link to={`/detail/${a.id}`}>
                       <div className="arcticle-img">
                         <img src={a.image} alt="" />
@@ -52,7 +51,7 @@ function Content() {
                       </div>
                     </Link>
                     <div className="sub-info">
-                      <span>{`${Y}년 ${M}월 ${D}일`}</span>
+                      <span>{date}</span>
                       <span className="separator">·</span>
                       <span>0개의 댓글</span>
                     </div>
@@ -64,7 +63,7 @@ function Content() {
                     </div>
                   </div>
                   <div className="article-footer">
-                    <Link to={`/mysite/${a.user_pk}`}>
+                    <Link to={`/myPost/${a.user_pk}`}>
                       <img src={a.profileImage} alt="" />
                       <span>
                         by <b>{a.username}</b>

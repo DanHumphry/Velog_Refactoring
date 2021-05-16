@@ -42,7 +42,7 @@ function AccountModal() {
             </svg>
           </button>
         </div>
-        <span>{accountText}</span>
+        <span className="accountText">{accountText}</span>
         <AccountInput accountText={accountText} />
         <section className="social-box">
           <h4>소셜 계정으로 {accountText}</h4>

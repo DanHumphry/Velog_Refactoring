@@ -13,23 +13,23 @@ module.exports = class User extends Model {
         },
         nickname: {
           type: DataTypes.STRING(30),
-          allowNull: false, // 필수
+          allowNull: false,
         },
         password: {
           type: DataTypes.STRING(100),
-          allowNull: false, // 필수
+          allowNull: false,
         },
         email: {
           type: DataTypes.STRING(30),
-          allowNull: true, // 필수
+          allowNull: true,
         },
         git: {
           type: DataTypes.STRING(100),
-          allowNull: true, // 필수
+          allowNull: true,
         },
         profileImg: {
           type: DataTypes.STRING(100),
-          allowNull: true, // 필수
+          allowNull: true,
         },
       },
       {

@@ -27,7 +27,7 @@
   border-radius: 1px;
 }
 
-.login-box span {
+.login-box .accountText {
   font-size: 1.5rem;
   font-weight: bold;
   margin-top: 15px;
@@ -42,6 +42,7 @@
   margin-bottom: 10px;
   outline: none;
   border-radius: 5px;
+  padding: 15px;
 }
 
 /* + LoginModal */

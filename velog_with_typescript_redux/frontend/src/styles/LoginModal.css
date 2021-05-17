@@ -27,6 +27,17 @@
   border-radius: 1px;
 }
 
+.join-box {
+  margin: 0 auto;
+  width: 400px;
+  height: 620px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  border-radius: 1px;
+  justify-content: center;
+}
+
 .login-box .accountText {
   font-size: 1.5rem;
   font-weight: bold;
@@ -68,7 +79,7 @@
 .exit {
   position: absolute;
   margin-left: 370px;
-  margin-top: 5px;
+  top: 5px;
 }
 .googlebox {
   display: flex;

@@ -23,7 +23,6 @@ function AccountInput({ accountText }: Props) {
     setLoading(true);
 
     if (accountText === '로그인') dispatch(LOG_IN_REQUEST(v));
-    else dispatch(SIGN_UP_REQUEST(v));
 
     setLoading(false);
   };

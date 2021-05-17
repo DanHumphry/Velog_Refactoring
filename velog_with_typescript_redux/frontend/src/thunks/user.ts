@@ -24,9 +24,10 @@ export const LOG_IN_REQUEST = (v: { username: string; password: string }) => asy
   }
 };
 
-export const SIGN_UP_REQUEST = (v: { username: string; password: string }) => async (dispatch: any) => {
+export const SIGN_UP_REQUEST = (v: { email: string; username: string; password: string }) => async (dispatch: any) => {
   try {
     dispatch(SIGN_UP_REQUEST_ACTION(v));
+
     const res = await userAPI.signUpAPI(v);
     if (res.data === 'ok') {
       await dispatch(SIGN_UP_SUCCESS_ACTION());
@@ -38,9 +39,9 @@ export const SIGN_UP_REQUEST = (v: { username: string; password: string }) => as
       alert('회원가입 실패 !!');
     }
   } catch (e) {
-    if (e.response.status === 403) {
-      alert('이미 사용중인 아이디입니다.');
-    }
+    // if (e.response.status === 403) {
+    //   alert('이미 사용중인 아이디입니다.');
+    // }
     dispatch(SIGN_UP_FAILURE_ACTION(e));
   }
 };

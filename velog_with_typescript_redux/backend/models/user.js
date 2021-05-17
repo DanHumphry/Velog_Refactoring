@@ -21,7 +21,7 @@ module.exports = class User extends Model {
         },
         email: {
           type: DataTypes.STRING(30),
-          allowNull: true,
+          allowNull: false,
         },
         git: {
           type: DataTypes.STRING(100),

@@ -1,0 +1,118 @@
+* {
+  box-sizing: border-box;
+}
+
+/* LoginModal */
+
+.login-box .spanText {
+  font-size: 1.5rem;
+  font-weight: bold;
+  margin-top: 15px;
+  margin-bottom: 30px;
+}
+
+.JoinForm {
+  position: relative;
+}
+
+.login-box input {
+  display: block;
+  width: 245px;
+  height: 20px;
+  margin-bottom: 16px;
+  outline: none;
+  border-radius: 5px;
+  padding: 16px;
+  border: 1px solid rgba(102, 112, 139, 0.781);
+}
+.social-box h4 {
+  margin-top: 1rem;
+  color: rgba(102, 112, 139, 0.781);
+  text-align: center;
+  margin-bottom: 0;
+}
+.login-foot {
+  text-align: right;
+  margin-top: 1.5rem;
+}
+.login-foot span {
+  font-size: 17px;
+}
+.foot-link {
+  display: inline-block;
+  font-weight: bold;
+  color: rgba(102, 112, 139, 0.781);
+  cursor: pointer;
+  margin-left: 10px;
+}
+.foot-link button {
+  color: rgba(102, 112, 139, 0.781);
+}
+
+.icon-longarrow {
+  width: 40px;
+  height: 40px;
+  fill: rgba(0, 0, 0, 0.781);
+  cursor: pointer;
+}
+.googlebox {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.googlebox .google-login {
+  width: 30px;
+  height: 30px;
+  margin-top: 25px;
+  margin-bottom: 5px;
+}
+.JoinLoign-button {
+  border: 1px solid rgba(102, 112, 139, 0.781);
+  background-color: rgba(0, 0, 0, 0.781);
+  color: white;
+  border-radius: 0.5rem;
+  display: flex;
+  margin: 0 auto;
+  height: 30px;
+  width: 100%;
+  justify-content: center;
+  align-items: center;
+}
+/* LoginModal */
+
+/* JoinModal */
+.sendEmailBtn {
+  width: 55.31px;
+  position: absolute;
+  right: 0px;
+  border: 1px solid rgba(102, 112, 139, 0.781);
+  background-color: rgba(0, 0, 0, 0.81);
+  color: white;
+  height: 34px;
+  justify-content: center;
+  align-items: center;
+}
+.focusInputOn {
+  font-size: 12px;
+  color: #666;
+  margin-bottom: 10px;
+  margin-top: -8px;
+  padding-left: 10px;
+}
+.case::before {
+  content: '\2022';
+  padding: 0 4px 0 2px;
+}
+.case.ok {
+  color: green;
+}
+.case.no {
+  color: red;
+}
+.case.no:before {
+  content: '\2715';
+}
+.case.ok:before {
+  content: '\2713';
+}
+/* JoinModal */

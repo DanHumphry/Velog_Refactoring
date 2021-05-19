@@ -1,34 +1,35 @@
-import useUpdateProfile from '@hooks/useUpdateProfile';
-import React, { useEffect, useState, VFC } from 'react';
+import { RootState } from '@reducers/index';
+import { UPDATE_PROFILE_REQUEST } from '@thunks/user';
+import React, { useState } from 'react';
 import useInput from '@hooks/useInput';
+import { useDispatch, useSelector } from 'react-redux';
 
-interface Props {
-  me: any;
-}
+const Introduce = () => {
+  const dispatch = useDispatch();
+  const { me } = useSelector((store: RootState) => store.user);
 
-const Introduce: VFC<Props> = ({ me }) => {
   const [infoModal, setInfoModal] = useState(false);
-  const [info, setInfo] = useInput(me.myInfo);
-  const { updateMyProfile } = useUpdateProfile();
+  const [info, setInfo] = useInput(me.myIntroduce || '');
 
-  useEffect(() => {
-    setInfoModal(false);
-  }, [me]);
+  const submit = async () => {
+    await dispatch(UPDATE_PROFILE_REQUEST({ ...me, myIntroduce: info }));
+    await setInfoModal(false);
+  };
 
   return (
     <div className="profile-info">
       {infoModal === true ? (
         <>
           <form>
-            <textarea value={info} name="myInfo" placeholder={me.myInfo} onChange={setInfo} />
+            <textarea value={info} name="myInfo" placeholder={me.myIntroduce} onChange={setInfo} />
           </form>
-          <button type="button" className="myInfoButton" name="myInfo" onClick={(e) => updateMyProfile(e, info)}>
+          <button type="button" className="myInfoButton" name="myInfo" onClick={submit}>
             저장
           </button>
         </>
       ) : (
         <>
-          <h2>{me.myInfo}</h2>
+          <h2>{me.myIntroduce}</h2>
           <button
             type="button"
             className="fix-button"

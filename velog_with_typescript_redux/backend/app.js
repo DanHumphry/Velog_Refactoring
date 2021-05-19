@@ -7,6 +7,7 @@ const cookieParser = require("cookie-parser");
 const dotenv = require("dotenv");
 
 const userRouter = require("./routes/user");
+const emailRouter = require("./routes/email");
 
 const db = require("./models");
 
@@ -40,6 +41,7 @@ app.get("/", (req, res) => {
 });
 
 app.use("/user", userRouter);
+app.use("/sendMail", emailRouter);
 
 app.listen(3065, () => {
   console.log("서버 실행 중!");

@@ -2,34 +2,30 @@ import GoogleAPI from '@components/AccountModal/GoogleAPI';
 import useInput from '@hooks/useInput';
 import useSetModal from '@hooks/useSetModal';
 import ButtonLoader from '@loader/ButtonLoader';
+import { RootState } from '@reducers/index';
 import { LOG_IN_REQUEST } from '@thunks/user';
-import React, { useEffect, useState } from 'react';
+import React, { useEffect } from 'react';
 import '@styles/Login.css';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 
-interface Props {
-  changeAccountText: () => void;
-}
+function Login() {
+  const { showLoginModal, changeAccountText } = useSetModal();
+  const { logInError, logInLoading } = useSelector((store: RootState) => store.user);
 
-function Login({ changeAccountText }: Props) {
-  const { showLoginModal } = useSetModal();
   const [username, setUsername] = useInput('');
   const [password, setPassword] = useInput('');
 
-  const [loading, setLoading] = useState(false);
-
   const dispatch = useDispatch();
-  const submitLoginButton = async () => {
-    await setLoading(true);
+  const submitLoginButton = () => {
     if (username === '' && password === '') alert('아이디와 비밀번호를 입력해주세요.');
     else if (username === '') alert('아이디를 입력해주세요.');
     else if (password === '') alert('비밀번호를 입력해주세요.');
-    else await dispatch(LOG_IN_REQUEST({ username, password }));
+    else dispatch(LOG_IN_REQUEST({ username, password }));
   };
 
   useEffect(() => {
-    return () => setLoading(false);
-  }, [loading]);
+    if (logInError) alert(logInError);
+  }, [logInError]);
 
   return (
     <div className="login-container">
@@ -53,7 +49,7 @@ function Login({ changeAccountText }: Props) {
           <input type="text" value={username} placeholder="아이디를 입력하세요" onChange={setUsername} />
           <input type="password" value={password} placeholder="비밀번호를 입력하세요" onChange={setPassword} />
           <button type="button" className="JoinLoign-button" onClick={submitLoginButton}>
-            {loading ? <ButtonLoader /> : '로그인'}
+            {logInLoading ? <ButtonLoader /> : '로그인'}
           </button>
         </form>
         <section className="social-box">

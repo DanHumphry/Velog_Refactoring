@@ -1,30 +1,26 @@
 import useInput from '@hooks/useInput';
-import { UPDATE_PROFILE_SUCCESS } from '@reducers/user';
-import React, { useState, VFC } from 'react';
-import { useDispatch } from 'react-redux';
+import { RootState } from '@reducers/index';
+import { UPDATE_PROFILE_REQUEST } from '@thunks/user';
+import React, { useEffect, useState, VFC } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 
-interface Props {
-  me: any;
-}
+const Social = () => {
+  const { me } = useSelector((store: RootState) => store.user);
 
-const Social: VFC<Props> = ({ me }) => {
   const [socialModal, setSocialModal] = useState(false);
   const [email, setEmail] = useInput(me.email);
-  const [git, setGit] = useInput(me.mygit);
+  const [git, setGit] = useInput(me.git);
 
   const dispatch = useDispatch();
 
-  const updateMyProfile = () => {
-    dispatch({
-      type: UPDATE_PROFILE_SUCCESS,
-      data: {
-        ...me,
-        email,
-        mygit: git,
-      },
-    });
-    setSocialModal(false);
+  const submit = async () => {
+    await dispatch(UPDATE_PROFILE_REQUEST({ ...me, email, git }));
+    await setSocialModal(false);
   };
+
+  // useEffect(() => {
+  //   setSocialModal(false);
+  // }, [me]);
 
   return (
     <div className="myProfile">
@@ -66,12 +62,12 @@ const Social: VFC<Props> = ({ me }) => {
                         <path fill="currentColor" d="M0 0h20v20H0z" />
                       </g>
                     </svg>
-                    <input value={git} name="mygit" className="social-input" placeholder={me.mygit} onChange={setGit} />
+                    <input value={git} name="mygit" className="social-input" placeholder={me.git} onChange={setGit} />
                   </li>
                 </ul>
               </form>
               <div className="edit-wrapper">
-                <button type="button" className="save-button" onClick={updateMyProfile}>
+                <button type="button" className="save-button" onClick={submit}>
                   저장
                 </button>
               </div>
@@ -103,7 +99,7 @@ const Social: VFC<Props> = ({ me }) => {
                         <path fill="currentColor" d="M0 0h20v20H0z" />
                       </g>
                     </svg>
-                    <span>{me.mygit}</span>
+                    <span>{me.git}</span>
                   </li>
                 </ul>
               </div>

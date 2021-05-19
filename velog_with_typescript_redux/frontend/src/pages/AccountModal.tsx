@@ -1,14 +1,14 @@
 import useSetModal from '@hooks/useSetModal';
+import { RootState } from '@reducers/index';
 import React, { useState, useEffect } from 'react';
 import '@styles/LoginModal.css';
 import Login from '@components/AccountModal/Login';
 import Join from '@components/AccountModal/Join';
+import { useSelector } from 'react-redux';
 
 function AccountModal() {
   const { showLoginModal } = useSetModal();
-  const [changeAccount, setChangeAccount] = useState(false);
-
-  const changeAccountText = () => setChangeAccount(!changeAccount);
+  const { accountText } = useSelector((store: RootState) => store.user);
 
   useEffect(() => {
     const handleEsc = (event: KeyboardEvent) => {
@@ -21,11 +21,7 @@ function AccountModal() {
     };
   }, []);
 
-  return changeAccount ? (
-    <Join changeAccountText={changeAccountText} />
-  ) : (
-    <Login changeAccountText={changeAccountText} />
-  );
+  return accountText ? <Join /> : <Login />;
 }
 
 export default AccountModal;

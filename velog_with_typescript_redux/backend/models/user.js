@@ -5,22 +5,17 @@ module.exports = class User extends Model {
   static init(sequelize) {
     return super.init(
       {
-        // id가 기본적으로 들어있다.
+        email: {
+          type: DataTypes.STRING(50),
+          allowNull: false,
+        },
         username: {
           type: DataTypes.STRING(30), // STRING, TEXT, BOOLEAN, INTEGER, FLOAT, DATETIME
           allowNull: false, // 필수
           unique: true, // 고유한 값
         },
-        nickname: {
-          type: DataTypes.STRING(30),
-          allowNull: false,
-        },
         password: {
           type: DataTypes.STRING(100),
-          allowNull: false,
-        },
-        email: {
-          type: DataTypes.STRING(30),
           allowNull: false,
         },
         git: {
@@ -29,6 +24,10 @@ module.exports = class User extends Model {
         },
         profileImg: {
           type: DataTypes.STRING(100),
+          allowNull: true,
+        },
+        myIntroduce: {
+          type: DataTypes.STRING(120),
           allowNull: true,
         },
       },

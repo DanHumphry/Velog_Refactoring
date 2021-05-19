@@ -1,11 +1,11 @@
 import { useDispatch, useSelector } from 'react-redux';
 import { useCallback } from 'react';
 import { RootState } from '@reducers/index';
-import { SET_LOGIN_MODAL } from '@reducers/user';
+import { SET_LOGIN_MODAL, SET_ACCOUNT_TEXT } from '@reducers/user';
 
 export default function useSetModal() {
   const dispatch = useDispatch();
-  const { loginModal } = useSelector((store: RootState) => store.user);
+  const { loginModal, accountText } = useSelector((store: RootState) => store.user);
   const showLoginModal = useCallback(
     () =>
       dispatch({
@@ -15,5 +15,14 @@ export default function useSetModal() {
     [loginModal],
   );
 
-  return { showLoginModal };
+  const changeAccountText = useCallback(
+    () =>
+      dispatch({
+        type: SET_ACCOUNT_TEXT,
+        data: !accountText,
+      }),
+    [accountText],
+  );
+
+  return { showLoginModal, changeAccountText };
 }

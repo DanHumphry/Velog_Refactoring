@@ -5,6 +5,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { Link } from 'react-router-dom';
 import '@styles/Header.css';
 import useSetModal from '@hooks/useSetModal';
+import gravatar from 'gravatar';
 
 function Header() {
   const dispatch = useDispatch();
@@ -31,7 +32,7 @@ function Header() {
             <Link className="header-logo" to="/">
               Velog
             </Link>
-            {me === null ? (
+            {me === null || me.length === 0 ? (
               <button type="button" className="header-btn" onClick={showLoginModal}>
                 로그인
               </button>
@@ -42,7 +43,11 @@ function Header() {
                 </Link>
                 {/* eslint-disable-next-line jsx-a11y/click-events-have-key-events,jsx-a11y/no-static-element-interactions */}
                 <div className="user-container" onClick={clickProfileModal}>
-                  <img src="" className="user-image" alt="/" />
+                  {me.prfileImg === '' || me.prfileImg === null || me.prfileImg === undefined ? (
+                    <img src={gravatar.url(me.username, { s: '20px', d: 'retro' })} className="user-image" alt="/" />
+                  ) : (
+                    <img src={`http://localhost:3065/${me.profileImg}`} className="user-image" alt="/" />
+                  )}
                   <svg
                     stroke="currentColor"
                     fill="currentColor"

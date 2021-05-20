@@ -79,7 +79,7 @@ export default function User(state = initialState, action: any) {
       return { ...state, logOutLoading: true, logOutDone: false, logOutError: null };
       break;
     case LOG_OUT_SUCCESS:
-      return { ...state, logOutLoading: false, logOutDone: true, logOutError: null, me: null };
+      return { ...state, logOutLoading: false, logOutDone: true, logOutError: null, me: {} };
       break;
     case LOG_OUT_FAILURE:
       return { ...state, logOutLoading: false, logOutDone: false, logOutError: action.data };

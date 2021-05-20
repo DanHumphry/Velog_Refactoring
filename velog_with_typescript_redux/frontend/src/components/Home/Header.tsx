@@ -1,11 +1,11 @@
 import { RootState } from '@reducers/index';
-import { LOG_OUT_SUCCESS } from '@reducers/user';
 import React, { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Link } from 'react-router-dom';
 import '@styles/Header.css';
 import useSetModal from '@hooks/useSetModal';
 import gravatar from 'gravatar';
+import { LOG_OUT_REQUEST } from '@thunks/user';
 
 function Header() {
   const dispatch = useDispatch();
@@ -15,10 +15,7 @@ function Header() {
   const [profileModal, setProfileModal] = useState(false);
 
   const clickProfileModal = () => setProfileModal(!profileModal);
-  const handleLogout = () =>
-    dispatch({
-      type: LOG_OUT_SUCCESS,
-    });
+  const handleLogout = () => dispatch(LOG_OUT_REQUEST());
 
   return (
     <>
@@ -32,7 +29,7 @@ function Header() {
             <Link className="header-logo" to="/">
               Velog
             </Link>
-            {me === null || me.length === 0 ? (
+            {me.id === null || me.id === undefined ? (
               <button type="button" className="header-btn" onClick={showLoginModal}>
                 로그인
               </button>
@@ -43,7 +40,7 @@ function Header() {
                 </Link>
                 {/* eslint-disable-next-line jsx-a11y/click-events-have-key-events,jsx-a11y/no-static-element-interactions */}
                 <div className="user-container" onClick={clickProfileModal}>
-                  {me.prfileImg === '' || me.prfileImg === null || me.prfileImg === undefined ? (
+                  {me.profileImg === '' || me.profileImg === null || me.profileImg === undefined ? (
                     <img src={gravatar.url(me.username, { s: '20px', d: 'retro' })} className="user-image" alt="/" />
                   ) : (
                     <img src={`http://localhost:3065/${me.profileImg}`} className="user-image" alt="/" />

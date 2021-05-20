@@ -22,7 +22,15 @@ db.sequelize
 passportConfig();
 dotenv.config();
 
-app.use(cors({ origin: "http://localhost:3000", credentials: true }));
+app.use(
+  cors({
+    origin: true,
+    credentials: true,
+    methods: "GET, POST, PATCH, DELETE, PUT",
+    allowedHeaders: "Content-Type, Authorization",
+  })
+);
+app.use("/uploads", express.static("uploads"));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(

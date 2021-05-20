@@ -96,7 +96,7 @@ router.patch("/update", async (req, res, next) => {
         myIntroduce: req.body.myIntroduce,
       },
       {
-        where: { id: req.user.id },
+        where: { id: req.body.id },
       }
     );
     await res.status(200).json(req.body);
@@ -132,5 +132,20 @@ router.post("/findUsername", async (req, res) => {
   if (exUser) return res.status(403).send(false);
   else return res.status(200).send(true);
 });
+
+router.get(
+  "/auth/google",
+  passport.authenticate("google", {
+    scope: ["profile", "email"],
+  })
+);
+
+router.get(
+  "/auth/google/redirect",
+  passport.authenticate("google", { failureRedirect: "/login" }),
+  function (req, res) {
+    res.redirect("/");
+  }
+);
 
 module.exports = router;

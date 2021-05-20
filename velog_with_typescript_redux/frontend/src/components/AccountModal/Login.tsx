@@ -4,9 +4,11 @@ import useSetModal from '@hooks/useSetModal';
 import ButtonLoader from '@loader/ButtonLoader';
 import { RootState } from '@reducers/index';
 import { LOG_IN_REQUEST } from '@thunks/user';
+import axios from 'axios';
 import React, { useEffect } from 'react';
 import '@styles/Login.css';
 import { useDispatch, useSelector } from 'react-redux';
+import { googleAPI } from '@api/user';
 
 function Login() {
   const { showLoginModal, changeAccountText } = useSetModal();
@@ -26,6 +28,14 @@ function Login() {
   useEffect(() => {
     if (logInError) alert(logInError);
   }, [logInError]);
+
+  const googleAccount = () => {
+    const res = axios
+      .get('user/auth/google')
+      .then((res) => console.log(res))
+      .catch((error) => console.log(error));
+    console.log(res);
+  };
 
   return (
     <div className="login-container">
@@ -56,6 +66,9 @@ function Login() {
           <h4>소셜 계정으로 로그인</h4>
           <div className="googlebox">
             <GoogleAPI />
+            <button type="button" onClick={googleAccount}>
+              구글로그인
+            </button>
           </div>
         </section>
         <div className="login-foot">

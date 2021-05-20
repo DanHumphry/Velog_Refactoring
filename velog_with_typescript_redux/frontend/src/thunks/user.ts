@@ -12,6 +12,9 @@ import {
   UPDATE_PROFILE_IMG_REQUEST_ACTION,
   UPDATE_PROFILE_IMG_FAILURE_ACTION,
   UPDATE_PROFILE_IMG_SUCCESS_ACTION,
+  LOG_OUT_REQUEST_ACTION,
+  LOG_OUT_SUCCESS_ACTION,
+  LOG_OUT_FAILURE_ACTION,
 } from '@actions/user';
 
 export const LOG_IN_REQUEST = (v: { username: string; password: string }) => async (dispatch: any) => {
@@ -33,6 +36,17 @@ export const SIGN_UP_REQUEST = (v: { email: string; username: string; password: 
     await LOG_IN_REQUEST(v);
   } catch (error) {
     dispatch(SIGN_UP_FAILURE_ACTION(error.response.data));
+  }
+};
+
+export const LOG_OUT_REQUEST = () => async (dispatch: any) => {
+  try {
+    dispatch(LOG_OUT_REQUEST_ACTION());
+    await userAPI.logOutAPI();
+    await dispatch(LOG_OUT_SUCCESS_ACTION());
+  } catch (e) {
+    console.log(e);
+    dispatch(LOG_OUT_FAILURE_ACTION(e));
   }
 };
 

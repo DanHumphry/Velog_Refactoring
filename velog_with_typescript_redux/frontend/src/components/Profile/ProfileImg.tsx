@@ -18,7 +18,7 @@ const ProfileImg = () => {
       // eslint-disable-next-line prefer-destructuring
       file = e.target.files[0];
       setImgFile(file);
-    }
+    } else return;
     reader.readAsDataURL(file);
     reader.onloadend = () => {
       if (reader.result !== null && typeof reader.result === 'string') setImgURL(reader.result);
@@ -39,10 +39,10 @@ const ProfileImg = () => {
       {/* eslint-disable-next-line no-nested-ternary */}
       {imgURL !== '' ? (
         <img src={imgURL} alt="" />
-      ) : me.prfileImg === '' || me.prfileImg === null || me.prfileImg === undefined ? (
+      ) : me.profileImg === '' || me.profileImg === null || me.profileImg === undefined ? (
         <img src={gravatar.url(me.username, { s: '20px', d: 'retro' })} alt="" />
       ) : (
-        <img src={me.profileImg} alt="" />
+        <img src={`http://localhost:3065/${me.profileImg}`} alt="" />
       )}
       <label htmlFor="file" className="img-up">
         <input type="file" id="file" accept=".jpg, .png, .jpeg, .gif" onChange={viewImg} />

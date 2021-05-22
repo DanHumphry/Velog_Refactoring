@@ -15,9 +15,15 @@ import {
   LOG_OUT_REQUEST_ACTION,
   LOG_OUT_SUCCESS_ACTION,
   LOG_OUT_FAILURE_ACTION,
+  CHECK_EMAIL_REQUEST_ACTION,
+  CHECK_EMAIL_SUCCESS_ACTION,
+  CHECK_EMAIL_FAILURE_ACTION,
+  SEND_EMAIL_REQUEST_ACTION,
+  SEND_EMAIL_FAILURE_ACTION,
+  SEND_EMAIL_SUCCESS_ACTION,
 } from '@actions/user';
 
-export const LOG_IN_REQUEST = (v: { username: string; password: string }) => async (dispatch: any) => {
+export const LOG_IN_REQUEST = (v: { email: string; password: string }) => async (dispatch: any) => {
   try {
     dispatch(LOG_IN_REQUEST_ACTION());
     const res = await userAPI.logInAPI(v);
@@ -27,7 +33,7 @@ export const LOG_IN_REQUEST = (v: { username: string; password: string }) => asy
   }
 };
 
-export const SIGN_UP_REQUEST = (v: { email: string; username: string; password: string }) => async (dispatch: any) => {
+export const SIGN_UP_REQUEST = (v: { email: string; password: string }) => async (dispatch: any) => {
   try {
     dispatch(SIGN_UP_REQUEST_ACTION(v));
     await userAPI.signUpAPI(v);
@@ -36,6 +42,32 @@ export const SIGN_UP_REQUEST = (v: { email: string; username: string; password: 
     await LOG_IN_REQUEST(v);
   } catch (error) {
     dispatch(SIGN_UP_FAILURE_ACTION(error.response.data));
+  }
+};
+
+export const CHECK_EMAIL_REQUEST = (v: { email: string }) => async (dispatch: any) => {
+  try {
+    dispatch(CHECK_EMAIL_REQUEST_ACTION());
+    const res = await userAPI.emailCheckAPI(v);
+    await dispatch(CHECK_EMAIL_SUCCESS_ACTION());
+    alert('사용가능한 이메일 입니다.');
+    return res;
+  } catch (error) {
+    dispatch(CHECK_EMAIL_FAILURE_ACTION(error));
+    alert('이미 존재하는 이메일 입니다.');
+    return error;
+  }
+};
+
+export const SEND_EMAIL_REQUEST = (data: { email: string; number: number }) => async (dispatch: any) => {
+  try {
+    await dispatch(SEND_EMAIL_REQUEST_ACTION());
+    await userAPI.sendEmailAPI(data);
+    await dispatch(SEND_EMAIL_SUCCESS_ACTION());
+    alert('발송완료되었습니다. 이메일을 확인해주세요.');
+  } catch (error) {
+    dispatch(SEND_EMAIL_FAILURE_ACTION(error));
+    alert('발송에 실패했습니다. 이메일을 확인해주세요.');
   }
 };
 

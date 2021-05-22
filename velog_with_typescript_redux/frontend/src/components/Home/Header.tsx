@@ -43,7 +43,7 @@ function Header() {
                   {me.profileImg === '' || me.profileImg === null || me.profileImg === undefined ? (
                     <img src={gravatar.url(me.username, { s: '20px', d: 'retro' })} className="user-image" alt="/" />
                   ) : (
-                    <img src={`http://localhost:3065/${me.profileImg}`} className="user-image" alt="/" />
+                    <img src={me.profileImg} className="user-image" alt="/" />
                   )}
                   <svg
                     stroke="currentColor"

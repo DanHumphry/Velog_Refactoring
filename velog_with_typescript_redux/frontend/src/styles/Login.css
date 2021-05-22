@@ -55,23 +55,27 @@
   fill: rgba(0, 0, 0, 0.781);
   cursor: pointer;
 }
-.googlebox {
+.socialIconSection {
   display: flex;
   justify-content: center;
   align-items: center;
 }
-.googlebox .google-login {
+.socialIconSection .socialSVG {
   width: 30px;
   height: 30px;
   margin-top: 25px;
   margin-bottom: 5px;
 }
+.socialIconSection button:nth-child(2) {
+  margin-left: 40px;
+  margin-right: 40px;
+}
+
 .JoinLoign-button {
   border: 1px solid rgba(102, 112, 139, 0.781);
   background-color: rgba(0, 0, 0, 0.781);
   color: white;
   border-radius: 0.5rem;
-  display: flex;
   margin: 0 auto;
   height: 30px;
   width: 100%;

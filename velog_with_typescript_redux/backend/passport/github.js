@@ -1,19 +1,17 @@
 const passport = require("passport");
 const { User } = require("../models");
-const GoogleStrategy = require("passport-google-oauth20").Strategy;
+const GitHubStrategy = require("passport-github").Strategy;
 
 module.exports = () => {
   passport.use(
-    new GoogleStrategy(
+    new GitHubStrategy(
       {
-        clientID: process.env.GOOGLE_CLIENT_ID,
-        clientSecret: process.env.GOOGLE_CLIENT_SECRET,
-        callbackURL: "http://localhost:3065/user/auth/google/redirect",
+        clientID: process.env.GITHUB_CLIENT_ID,
+        clientSecret: process.env.GITHUB_CLIENT_SECRET,
+        callbackURL: "http://localhost:3065/user/auth/github/redirect",
       },
       async (accessToken, refreshToken, profile, done) => {
-        const {
-          _json: { email },
-        } = profile;
+        const email = `${profile._json.id}_github`;
 
         try {
           const user = await User.findOne({
@@ -25,8 +23,9 @@ module.exports = () => {
           } else {
             const newUser = await User.create({
               email: email,
-              nickname: email.split("@")[0],
-              profileImg: profile._json.picture,
+              nickname: profile._json.login,
+              profileImg: profile._json.avatar_url,
+              git: profile._json.html_url,
             });
             return done(null, newUser);
           }

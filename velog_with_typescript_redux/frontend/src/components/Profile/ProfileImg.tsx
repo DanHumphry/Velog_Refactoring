@@ -42,7 +42,7 @@ const ProfileImg = () => {
       ) : me.profileImg === '' || me.profileImg === null || me.profileImg === undefined ? (
         <img src={gravatar.url(me.username, { s: '20px', d: 'retro' })} alt="" />
       ) : (
-        <img src={`http://localhost:3065/${me.profileImg}`} alt="" />
+        <img src={me.profileImg} alt="" />
       )}
       <label htmlFor="file" className="img-up">
         <input type="file" id="file" accept=".jpg, .png, .jpeg, .gif" onChange={viewImg} />

@@ -1,11 +1,10 @@
-import { RootState } from '@reducers/index';
 import React from 'react';
 import '@styles/Profile.css';
-import { useSelector } from 'react-redux';
 import ProfileImg from '@components/Profile/ProfileImg';
 import Introduce from '@components/Profile/Introduce';
 import Social from '@components/Profile/Social';
 import Button from '@components/Profile/Button';
+import Nickname from '@components/Profile/Nickname';
 
 function Profile() {
   return (
@@ -16,6 +15,7 @@ function Profile() {
       </section>
 
       <section className="section2">
+        <Nickname />
         <Social />
         <Button />
       </section>

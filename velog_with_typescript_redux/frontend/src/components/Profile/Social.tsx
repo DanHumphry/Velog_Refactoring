@@ -1,26 +1,21 @@
 import useInput from '@hooks/useInput';
 import { RootState } from '@reducers/index';
 import { UPDATE_PROFILE_REQUEST } from '@thunks/user';
-import React, { useEffect, useState, VFC } from 'react';
+import React, { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 
 const Social = () => {
   const { me } = useSelector((store: RootState) => store.user);
 
   const [socialModal, setSocialModal] = useState(false);
-  const [email, setEmail] = useInput(me.email);
-  const [git, setGit] = useInput(me.git);
+  const [git, setGit] = useInput(me.git === null ? '' : me.git);
 
   const dispatch = useDispatch();
 
   const submit = async () => {
-    await dispatch(UPDATE_PROFILE_REQUEST({ ...me, email, git }));
+    await dispatch(UPDATE_PROFILE_REQUEST({ ...me, git }));
     await setSocialModal(false);
   };
-
-  // useEffect(() => {
-  //   setSocialModal(false);
-  // }, [me]);
 
   return (
     <div className="myProfile">
@@ -33,21 +28,6 @@ const Social = () => {
             <>
               <form>
                 <ul className="social-contents">
-                  <li>
-                    <svg width="32" height="32" fill="none" viewBox="0 0 32 32">
-                      <path
-                        fill="currentColor"
-                        d="M16 16.871L1.019 5H30.98L16 16.871zm0 3.146L1 8.131V27h30V8.131L16 20.017z"
-                      />
-                    </svg>
-                    <input
-                      value={email}
-                      name="email"
-                      className="social-input"
-                      placeholder={me.email}
-                      onChange={setEmail}
-                    />
-                  </li>
                   <li>
                     <svg width="20" height="20" fill="currentColor" viewBox="0 0 20 20">
                       <mask id="github" width="20" height="20" x="0" y="0" maskUnits="userSpaceOnUse">
@@ -62,7 +42,13 @@ const Social = () => {
                         <path fill="currentColor" d="M0 0h20v20H0z" />
                       </g>
                     </svg>
-                    <input value={git} name="mygit" className="social-input" placeholder={me.git} onChange={setGit} />
+                    <input
+                      value={git}
+                      name="mygit"
+                      className="social-input"
+                      placeholder={me.git === '' || me.git === null ? 'github 주소를 적어주세요.' : me.git}
+                      onChange={setGit}
+                    />
                   </li>
                 </ul>
               </form>
@@ -76,15 +62,6 @@ const Social = () => {
             <>
               <div className="contents">
                 <ul className="social-contents">
-                  <li>
-                    <svg width="32" height="32" fill="none" viewBox="0 0 32 32">
-                      <path
-                        fill="currentColor"
-                        d="M16 16.871L1.019 5H30.98L16 16.871zm0 3.146L1 8.131V27h30V8.131L16 20.017z"
-                      />
-                    </svg>
-                    <span>{me.email}</span>
-                  </li>
                   <li>
                     <svg width="20" height="20" fill="currentColor" viewBox="0 0 20 20">
                       <mask id="github" width="20" height="20" x="0" y="0" maskUnits="userSpaceOnUse">

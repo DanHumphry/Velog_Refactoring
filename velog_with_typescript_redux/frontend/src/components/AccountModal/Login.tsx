@@ -1,41 +1,31 @@
-import GoogleAPI from '@components/AccountModal/GoogleAPI';
 import useInput from '@hooks/useInput';
 import useSetModal from '@hooks/useSetModal';
 import ButtonLoader from '@loader/ButtonLoader';
 import { RootState } from '@reducers/index';
 import { LOG_IN_REQUEST } from '@thunks/user';
-import axios from 'axios';
 import React, { useEffect } from 'react';
 import '@styles/Login.css';
 import { useDispatch, useSelector } from 'react-redux';
-import { googleAPI } from '@api/user';
+import SocialAPI from '@components/AccountModal/SocialAPI';
 
 function Login() {
   const { showLoginModal, changeAccountText } = useSetModal();
   const { logInError, logInLoading } = useSelector((store: RootState) => store.user);
 
-  const [username, setUsername] = useInput('');
+  const [email, setEmail] = useInput('');
   const [password, setPassword] = useInput('');
 
   const dispatch = useDispatch();
   const submitLoginButton = () => {
-    if (username === '' && password === '') alert('아이디와 비밀번호를 입력해주세요.');
-    else if (username === '') alert('아이디를 입력해주세요.');
+    if (email === '' && password === '') alert('이메일과 비밀번호를 입력해주세요.');
+    else if (email === '') alert('이메일을 입력해주세요.');
     else if (password === '') alert('비밀번호를 입력해주세요.');
-    else dispatch(LOG_IN_REQUEST({ username, password }));
+    else dispatch(LOG_IN_REQUEST({ email, password }));
   };
 
   useEffect(() => {
     if (logInError) alert(logInError);
   }, [logInError]);
-
-  const googleAccount = () => {
-    const res = axios
-      .get('user/auth/google')
-      .then((res) => console.log(res))
-      .catch((error) => console.log(error));
-    console.log(res);
-  };
 
   return (
     <div className="login-container">
@@ -56,7 +46,7 @@ function Login() {
         </div>
         <span className="spanText">로그인</span>
         <form>
-          <input type="text" value={username} placeholder="아이디를 입력하세요" onChange={setUsername} />
+          <input type="email" value={email} placeholder="이메일을 입력하세요" onChange={setEmail} />
           <input type="password" value={password} placeholder="비밀번호를 입력하세요" onChange={setPassword} />
           <button type="button" className="JoinLoign-button" onClick={submitLoginButton}>
             {logInLoading ? <ButtonLoader /> : '로그인'}
@@ -64,11 +54,8 @@ function Login() {
         </form>
         <section className="social-box">
           <h4>소셜 계정으로 로그인</h4>
-          <div className="googlebox">
-            <GoogleAPI />
-            <button type="button" onClick={googleAccount}>
-              구글로그인
-            </button>
+          <div className="socialIconSection">
+            <SocialAPI />
           </div>
         </section>
         <div className="login-foot">

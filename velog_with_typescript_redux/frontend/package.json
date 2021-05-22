@@ -31,7 +31,6 @@
     "test": "craco test",
     "eject": "react-scripts eject"
   },
-  "proxy": "https://accounts.google.com/",
   "eslintConfig": {
     "extends": [
       "react-app",

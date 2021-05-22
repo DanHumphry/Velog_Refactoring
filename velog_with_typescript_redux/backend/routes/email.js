@@ -28,8 +28,10 @@ router.post("/", async (req, res, next) => {
   transporter.sendMail(mailOptions, function (error, info) {
     if (error) {
       console.log(error);
+      return res.send(error);
     } else {
       console.log("Email sent: " + info.response);
+      return res.send("ok");
     }
   });
 });

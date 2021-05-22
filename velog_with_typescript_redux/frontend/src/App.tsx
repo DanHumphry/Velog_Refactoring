@@ -1,7 +1,8 @@
+import { LOG_IN_SUCCESS_ACTION } from '@actions/user';
+import { getUser } from '@api/user';
 import { RootState } from '@reducers/index';
-import React, { useState } from 'react';
-import { Simulate } from 'react-dom/test-utils';
-import { useSelector } from 'react-redux';
+import React, { useEffect, useState } from 'react';
+import { useSelector, useDispatch } from 'react-redux';
 import { Route } from 'react-router-dom';
 import './App.css';
 import Home from '@pages/Home';
@@ -16,10 +17,19 @@ import MyPost from '@pages/MyPost';
 import PageLoader from '@loader/PageLoader';
 
 function App() {
+  const dispatch = useDispatch();
   const { showLoginModal } = useSetModal();
   const { loginModal } = useSelector((store: RootState) => store.user);
 
   const [loading, setLoading] = useState(false);
+
+  useEffect(() => {
+    getUser()
+      .then((res) => {
+        if (res.data) dispatch(LOG_IN_SUCCESS_ACTION(res.data));
+      })
+      .catch((error) => console.log(error));
+  }, []);
 
   if (loading) return <PageLoader />;
 

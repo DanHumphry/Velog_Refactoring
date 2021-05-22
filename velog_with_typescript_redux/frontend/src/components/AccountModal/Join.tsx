@@ -3,21 +3,16 @@ import ButtonLoader from '@loader/ButtonLoader';
 import { RootState } from '@reducers/index';
 import React, { useEffect } from 'react';
 import '@styles/Login.css';
-import GoogleAPI from '@components/AccountModal/GoogleAPI';
 import { useDispatch, useSelector } from 'react-redux';
 import JoinEmailSection from '@components/AccountModal/JoinEmailSection';
-import JoinUsernameSection from '@components/AccountModal/JoinUsernameSection';
 import JoinPasswordSection from '@components/AccountModal/JoinPasswordSection';
 import { SIGN_UP_REQUEST } from '@thunks/user';
+import SocialAPI from '@components/AccountModal/SocialAPI';
 
 function Join() {
   const dispatch = useDispatch();
   const { showLoginModal, changeAccountText } = useSetModal();
   const { signUpError, signUpLoading } = useSelector((store: RootState) => store.user);
-
-  useEffect(() => {
-    if (signUpError) alert(signUpError);
-  }, [signUpError]);
 
   const submitJoinButton = (e: any) => {
     e.preventDefault();
@@ -39,11 +34,14 @@ function Join() {
     dispatch(
       SIGN_UP_REQUEST({
         email: e.target.elements.email.value,
-        username: e.target.elements.username.value,
         password: e.target.elements.password.value,
       }),
     );
   };
+
+  useEffect(() => {
+    if (signUpError) alert(signUpError);
+  }, [signUpError]);
 
   return (
     <div className="login-container">
@@ -65,7 +63,6 @@ function Join() {
         <span className="spanText">회원가입</span>
         <form className="JoinForm" onSubmit={(e) => submitJoinButton(e)}>
           <JoinEmailSection />
-          <JoinUsernameSection />
           <JoinPasswordSection />
           <button type="submit" className="JoinLoign-button">
             {signUpLoading ? <ButtonLoader /> : '회원가입'}
@@ -73,8 +70,8 @@ function Join() {
         </form>
         <section className="social-box">
           <h4>소셜 계정으로 회원가입</h4>
-          <div className="googlebox">
-            <GoogleAPI />
+          <div className="socialIconSection">
+            <SocialAPI />
           </div>
         </section>
         <div className="login-foot">

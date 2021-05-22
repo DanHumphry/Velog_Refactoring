@@ -34,16 +34,16 @@ router.post("/signUp", async (req, res, next) => {
   try {
     const exUser = await User.findOne({
       where: {
-        username: req.body.username,
+        email: req.body.email,
       },
     });
     if (exUser) {
-      return res.status(403).send("이미 사용 중인 아이디입니다.");
+      return res.status(403).send("이미 사용 중인 이메일입니다.");
     }
     const hashedPassword = await bcrypt.hash(req.body.password, 10);
     await User.create({
       email: req.body.email,
-      username: req.body.username,
+      nickname: req.body.email.split("@")[0],
       password: hashedPassword,
     });
     res.status(201).send("ok");
@@ -109,12 +109,8 @@ router.patch("/update", async (req, res, next) => {
 router.post("/update/image", upload.single("image"), async (req, res, next) => {
   try {
     await User.update(
-      {
-        profileImg: req.file.path,
-      },
-      {
-        where: { id: req.body.id },
-      }
+      { profileImg: `http://localhost:3065/${req.file.path}` },
+      { where: { id: req.body.id } }
     );
     await res.status(200).json(req.file.path);
   } catch (error) {
@@ -123,14 +119,16 @@ router.post("/update/image", upload.single("image"), async (req, res, next) => {
   }
 });
 
-router.post("/findUsername", async (req, res) => {
+router.post("/findEmail", async (req, res) => {
   const exUser = await User.findOne({
-    where: {
-      username: req.body.username,
-    },
+    where: { email: req.body.email },
   });
   if (exUser) return res.status(403).send(false);
   else return res.status(200).send(true);
+});
+
+router.get("/getUser", (req, res) => {
+  return res.status(200).json(req.user);
 });
 
 router.get(
@@ -142,9 +140,38 @@ router.get(
 
 router.get(
   "/auth/google/redirect",
-  passport.authenticate("google", { failureRedirect: "/login" }),
+  passport.authenticate("google", {
+    failureRedirect: "/login",
+  }),
+  (req, res) => {
+    res.redirect("http://localhost:3000");
+  }
+);
+
+router.get(
+  "/auth/kakao",
+  passport.authenticate("kakao", {
+    failureRedirect: "#!/login",
+  })
+);
+
+router.get(
+  "/auth/kakao/redirect",
+  passport.authenticate("kakao", {
+    failureRedirect: "#!/login",
+  }),
+  (req, res) => {
+    res.redirect("http://localhost:3000");
+  }
+);
+
+router.get("/auth/github", passport.authenticate("github"));
+
+router.get(
+  "/auth/github/redirect",
+  passport.authenticate("github", { failureRedirect: "/login" }),
   function (req, res) {
-    res.redirect("/");
+    res.redirect("http://localhost:3000");
   }
 );
 

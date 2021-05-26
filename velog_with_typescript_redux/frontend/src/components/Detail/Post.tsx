@@ -13,18 +13,18 @@ function Post() {
   const { mainPosts } = useSelector((store: RootState) => store.post);
   const { me, userInfo } = useSelector((store: RootState) => store.user);
   let detailPost: any = [...mainPosts].filter((v: any) => v.id === pgN)[0];
-  const [writtenUser, setWrittenUser] = useState(userInfo.filter((v) => v.id === detailPost.user_pk)[0]);
+  const [writtenUser, setWrittenUser] = useState(userInfo.filter((v) => v.id === detailPost.UserId)[0]);
 
   useEffect(() => {
     // eslint-disable-next-line prefer-destructuring
     detailPost = [...mainPosts].filter((v: any) => v.id === pgN)[0];
-    setWrittenUser(userInfo.filter((v) => v.id === detailPost.user_pk)[0]);
+    setWrittenUser(userInfo.filter((v) => v.id === detailPost.UserId)[0]);
   }, [pgN]);
 
   const [svgColor] = useState({});
 
   const updatePost = () => {
-    if (detailPost.user_pk === me.id) history.push(`/update/${pgN}`);
+    if (detailPost.UserId === me.id) history.push(`/update/${pgN}`);
     else alert('권한이 없습니다.');
   };
 
@@ -40,7 +40,7 @@ function Post() {
       <div className="detail__head-wrapper">
         <h1>{detailPost.title}</h1>
         <div className="detail__head-btn">
-          {me?.id === detailPost.user_pk ? (
+          {me?.id === detailPost.UserId ? (
             <>
               <button type="button" onClick={() => updatePost}>
                 수정
@@ -94,7 +94,7 @@ function Post() {
       <div className="detail__footer-wrapper">
         <div className="detail__writerInfo">
           <div className="detail__topInfo">
-            <Link to={`/mysite/${detailPost.user_pk}`}>
+            <Link to={`/mysite/${detailPost.UserId}`}>
               <img src={writtenUser.userPhoto} alt="" />
             </Link>
             <div className="detail__userInfo">

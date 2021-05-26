@@ -17,6 +17,15 @@ module.exports = class Post extends Model {
           type: DataTypes.STRING(200),
           allowNull: true,
         },
+        language: {
+          type: DataTypes.STRING(200),
+          allowNull: true,
+        },
+        like: {
+          type: DataTypes.INTEGER,
+          defaultValue: 0,
+          allowNull: true,
+        },
       },
       {
         modelName: "Post",
@@ -29,7 +38,5 @@ module.exports = class Post extends Model {
   }
   static associate(db) {
     db.Post.belongsTo(db.User);
-    db.Post.belongsToMany(db.Lang, { through: "PostLang" });
-    db.User.belongsToMany(db.Post, { through: "Like", as: "Likers" });
   }
 };

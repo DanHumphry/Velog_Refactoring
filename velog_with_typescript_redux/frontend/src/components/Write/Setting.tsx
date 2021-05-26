@@ -1,21 +1,14 @@
-import { RootState } from '@reducers/index';
-import { ADD_POST_SUCCESS } from '@reducers/post';
 import React, { useEffect, useRef, useState, VFC } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
-import { useHistory } from 'react-router';
 
 interface Props {
-  setGoBack: React.Dispatch<React.SetStateAction<boolean>>;
-  title: string;
-  content: string;
+  visibility: { textSection: { visibility: string }; settingSection: { visibility: string } };
+  setVisibility: React.Dispatch<
+    React.SetStateAction<{ textSection: { visibility: string }; settingSection: { visibility: string } }>
+  >;
+  inp: { title: string; content: string };
 }
 
-const Setting: VFC<Props> = ({ setGoBack, title, content }) => {
-  const dispatch = useDispatch();
-  const history = useHistory();
-
-  const { me } = useSelector((store: RootState) => store.user);
-
+const Setting: VFC<Props> = ({ visibility, setVisibility, inp }) => {
   const [filterList] = useState([
     { id: 1, language: 'Python' },
     { id: 2, language: 'React' },
@@ -28,15 +21,10 @@ const Setting: VFC<Props> = ({ setGoBack, title, content }) => {
   ]);
   const [languagefilterList, setLanguageFilterList] = useState<string[]>([]);
 
-  const Today = new Date();
-  const date = `${Today.getFullYear()}-${Today.getMonth()}-${Today.getDate()}`;
-
   const [imgGoback, setImgGoback] = useState(false);
 
   const [img, setImg] = useState('');
   const [imgURL, setImgURL] = useState('' as string);
-
-  let sendData: any;
 
   const [ImgCount, setImgCount] = useState(0);
   const refImgFiles: any = useRef(null);
@@ -46,40 +34,6 @@ const Setting: VFC<Props> = ({ setGoBack, title, content }) => {
       setImgCount(1);
     }
   }, [img]);
-
-  const handleEffect = (handleSubmit: any) => {
-    if (languagefilterList.length === 0 || languagefilterList.length === 0) {
-      alert('한 개 이상의 언어를 선택해주세요.');
-      return;
-    }
-    sendData = {
-      id: me.id,
-
-      image: imgURL,
-      title,
-      content,
-      date,
-      like: 0,
-      username: me.username,
-      language: languagefilterList,
-      profileImage: '',
-      user_pk: me.id,
-    };
-    handleSubmit();
-  };
-
-  const handleSubmit = () => {
-    if (ImgCount === 1) {
-      sendData = { ...sendData, image: refImgFiles.current.files[0] };
-    }
-
-    dispatch({
-      type: ADD_POST_SUCCESS,
-      data: sendData,
-    });
-
-    history.push('/');
-  };
 
   const ClickFilter = (lang: string) => {
     let Num = 0;
@@ -100,7 +54,7 @@ const Setting: VFC<Props> = ({ setGoBack, title, content }) => {
   };
 
   return (
-    <div className="thumbnail_container">
+    <div className="thumbnail_container" style={visibility.settingSection as React.CSSProperties}>
       <div className="thumbnail_section">
         <div className="left_section">
           <section className="left_container">
@@ -109,6 +63,7 @@ const Setting: VFC<Props> = ({ setGoBack, title, content }) => {
               <label htmlFor="file" className="img-up">
                 <input
                   ref={refImgFiles}
+                  name="imgFile"
                   type="file"
                   id="file"
                   accept=".jpg, .png, .jpeg, .gif"
@@ -164,8 +119,8 @@ const Setting: VFC<Props> = ({ setGoBack, title, content }) => {
                 </div>
               </div>
               <div className="title-margin">
-                <h4>{title}</h4>
-                <textarea defaultValue={content} name="viewContent" readOnly />
+                <h4>{inp.title}</h4>
+                <textarea defaultValue={inp.content} name="viewContent" readOnly />
               </div>
             </div>
           </section>
@@ -184,6 +139,7 @@ const Setting: VFC<Props> = ({ setGoBack, title, content }) => {
                         value="action"
                         type="checkbox"
                         data-type="genres"
+                        name="langs"
                       />
                       {/* eslint-disable-next-line jsx-a11y/click-events-have-key-events */}
                       <label
@@ -214,19 +170,13 @@ const Setting: VFC<Props> = ({ setGoBack, title, content }) => {
             <button
               type="button"
               className="upButton"
-              onClick={() => {
-                setGoBack(false);
-              }}
+              onClick={() =>
+                setVisibility({ textSection: { visibility: 'visible' }, settingSection: { visibility: 'hidden' } })
+              }
             >
               뒤로가기
             </button>
-            <button
-              type="button"
-              className="upButton"
-              onClick={() => {
-                handleEffect(handleSubmit);
-              }}
-            >
+            <button type="submit" className="upButton" name="sendAPIButton">
               출간하기
             </button>
           </div>

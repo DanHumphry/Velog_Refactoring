@@ -1,21 +1,21 @@
-*{
+* {
   margin: 0;
   padding: 0;
 }
-.container-section{
+.container-section {
   width: 100%;
-  height: 100%;
+  height: 100vh;
   display: flex;
   animation: 0.5s ease 0s 1 normal forwards running bcCCNc;
 }
-button.transparent-btn{
+button.transparent-btn {
   background-color: transparent;
   border: 0;
   outline: 0;
   cursor: pointer;
 }
 
-button{
+button {
   border: 0;
   background-color: transparent;
   cursor: pointer;
@@ -23,6 +23,7 @@ button{
 }
 .post-title {
   width: 100%;
+  height: 70px;
 }
 article > div.post-title > textarea {
   display: block;
@@ -34,29 +35,28 @@ article > div.post-title > textarea {
   resize: none;
   color: #202020;
   line-height: 45px;
-  border-bottom: 1px solid rgba(0,0,0,.05);
+  border-bottom: 1px solid rgba(0, 0, 0, 0.05);
   padding-left: 10px;
   padding-right: 10px;
   padding-bottom: 10px;
   padding-top: 14px;
 }
 
-
 /* write */
-.post-tag input{
-display: block;
-width: 100%;
-height: 3rem;
-font-size: 14px;
-border: none;
-outline: 0 none;
-resize: none;
-color: #202020;
-line-height: 40px;
-border-bottom: 1px solid rgba(0,0,0,.05);
-padding-left: 40px;
+.post-tag input {
+  display: block;
+  width: 100%;
+  height: 3rem;
+  font-size: 14px;
+  border: none;
+  outline: 0 none;
+  resize: none;
+  color: #202020;
+  line-height: 40px;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+  padding-left: 40px;
 }
-.write-container{
+.write-container {
   min-width: 0px;
   flex: 1 1 0%;
   display: flex;
@@ -66,16 +66,17 @@ padding-left: 40px;
   box-shadow: rgba(0, 0, 0, 0.016) 0px 0px 8px;
   height: 100%;
 }
-.post-contents{
-flex: 1 1 0%;
+.post-contents {
+  flex: 1 1 0%;
   min-height: 0px;
   display: flex;
   flex-direction: column;
+  height: auto;
 }
-.post-textarea{
+.post-textarea {
   display: block;
   width: 100%;
-  height: 614px;
+  height: 100%;
   font-size: 20px;
   border: none;
   outline: 0 none;
@@ -85,7 +86,7 @@ flex: 1 1 0%;
   padding-bottom: 50px;
   padding-top: 15px;
 }
-.tag-class{
+.tag-class {
   position: absolute;
   font-size: 1rem;
   display: inline-flex;
@@ -103,7 +104,7 @@ flex: 1 1 0%;
   margin-bottom: 0.75rem;
   animation: 0.125s ease-in-out 0s 1 normal forwards running iMKika;
 }
-.textarea-display{
+.textarea-display {
   height: 794px;
   max-height: 869px;
   padding: 10px;
@@ -112,24 +113,24 @@ flex: 1 1 0%;
   background-color: #fff;
   outline: 0;
 }
-.post-textarea2{
-display: none;
-width: 100%;
-font-size: 20px;
-border: none;
-outline: 0 none;
-resize: none;
-padding-left: 10px;
-padding-right: 10px;
-padding-bottom: 50px;
-padding-top: 15px;
+.post-textarea2 {
+  display: none;
+  width: 100%;
+  font-size: 20px;
+  border: none;
+  outline: 0 none;
+  resize: none;
+  padding-left: 10px;
+  padding-right: 10px;
+  padding-bottom: 50px;
+  padding-top: 15px;
 }
-.textarea-display img{
-width: 400px;
-height: 400px;
+.textarea-display img {
+  width: 400px;
+  height: 400px;
 }
-.textarea-display p{
-font-size: 20px;
+.textarea-display p {
+  font-size: 20px;
 }
 /* .textarea-display::before{
 display: table;
@@ -144,17 +145,15 @@ box-sizing: border-box;
 } */
 /* write */
 
-
-
 /* footer */
-footer.post-comment{
+footer.post-comment {
   position: relative;
   height: 70px;
   border: 1px solid #e0e0e0;
   background-color: #fff;
 }
 
-.exit-btn{
+.exit-btn {
   position: absolute;
   left: 20px;
   top: 50%;
@@ -169,7 +168,7 @@ footer.post-comment > div {
   transform: translateY(-50%);
 }
 
-.transparent-btn{
+.transparent-btn {
   color: #0095f6;
   font-size: 18px;
   opacity: 0.5;
@@ -177,14 +176,13 @@ footer.post-comment > div {
   transition: all 300ms ease;
 }
 
-footer.post-comment > div > button:hover{
+footer.post-comment > div > button:hover {
   opacity: 1;
 }
-  /* footer */
-
+/* footer */
 
 /* view */
-.view-container{
+.view-container {
   min-width: 0px;
   flex: 1 1 0%;
   display: flex;
@@ -192,7 +190,7 @@ footer.post-comment > div > button:hover{
   position: relative;
   background-color: rgb(251, 253, 252);
 }
-.view-margin{
+.view-margin {
   word-break: break-word;
   padding: 3rem;
   flex: 1 1 0%;
@@ -200,7 +198,7 @@ footer.post-comment > div > button:hover{
   color: rgb(33, 37, 41);
 }
 
-.view-margin h1{
+.view-margin h1 {
   display: block;
   font-size: 2em;
   margin-block-start: 0.67em;
@@ -210,7 +208,7 @@ footer.post-comment > div > button:hover{
   font-weight: bold;
 }
 
-.view-content{
+.view-content {
   font-size: 1.125rem;
   color: rgb(34, 36, 38);
   line-height: 1.7;
@@ -219,5 +217,4 @@ footer.post-comment > div > button:hover{
   overflow-wrap: break-word;
 }
 
-
-  /* view */
+/* view */

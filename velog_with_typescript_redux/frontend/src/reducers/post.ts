@@ -2,17 +2,25 @@ export const initialState = {
   mainPosts: [
     {
       id: 0,
-      title: '123',
       content: '123123',
-      date: '2021-4-13',
+      title: 'test',
+      image: null,
+      language: 'C#,C',
       like: 0,
-      username: '1234',
-      profileImage: '',
-      user_pk: 0,
-      language: ['C', 'Java'],
-      image: '',
+      createdAt: '2021-05-26T15:00:16.000Z',
+      updatedAt: '2021-05-26T15:00:16.000Z',
+      User: {
+        id: 1,
+        nickname: 'nokla4137',
+        profileImg: 'https://lh3.googleusercontent.com/a-/AOh14GiWv8UOjDd2qXvpMJ0tfwIoK1bZdE8kCIIaFvN2Mw=s96-c',
+        myIntroduce: null,
+      },
     },
   ],
+  addPostLoading: false, // 포스트 작성중
+  addPostDone: false,
+  addPostError: null,
+
   loadPostLoading: false,
   loadPostDone: false,
   loadPostError: null,
@@ -39,9 +47,6 @@ export const initialState = {
   loadPostsLoading: false,
   loadPostsDone: false,
   loadPostsError: null,
-  addPostLoading: false,
-  addPostDone: false,
-  addPostError: null,
 
   addCommentLoading: false,
   addCommentDone: false,
@@ -105,8 +110,22 @@ export const NEWORREC_FAILURE = 'NEWORREC_FAILURE';
 
 const Post = (state = initialState, action: any) => {
   switch (action.type) {
-    case ADD_POST_SUCCESS:
-      return { ...state, mainPosts: [...state.mainPosts, action.data] };
+    case ADD_POST_REQUEST:
+      return { ...state, addPostLoading: true, addPostDone: false, addPostError: null };
+    case ADD_POST_SUCCESS: {
+      const posts = [...state.mainPosts];
+      posts.unshift(action.data);
+      return {
+        ...state,
+        addPostLoading: false,
+        addPostDone: true,
+        addPostError: null,
+        mainPosts: posts,
+      };
+    }
+    case ADD_POST_FAILURE:
+      return { ...state, addPostLoading: false, addPostDone: false, addPostError: action.data };
+
     case REMOVE_POST_SUCCESS:
       return { ...state, mainPosts: [...state.mainPosts.filter((v: { id: number }) => v.id !== action.data)] };
     case UPDATE_POST_SUCCESS: {

@@ -1,25 +1,29 @@
+import useInput from '@hooks/useInput';
 import React, { VFC } from 'react';
 import { useHistory } from 'react-router';
 
 interface Props {
-  setGoBack: React.Dispatch<React.SetStateAction<boolean>>;
-  title: string;
-  setTitle: (e: any) => void;
-  content: string;
-  setContent: (e: any) => void;
+  visibility: { textSection: { visibility: string }; settingSection: { visibility: string } };
+  setVisibility: React.Dispatch<
+    React.SetStateAction<{ textSection: { visibility: string }; settingSection: { visibility: string } }>
+  >;
 }
 
-const TextArea: VFC<Props> = ({ setGoBack, title, setTitle, content, setContent }) => {
+const TextArea: VFC<Props> = ({ visibility, setVisibility }) => {
   const history = useHistory();
 
+  const [title, setTitle] = useInput('');
+  const [content, setContent] = useInput('');
+
   return (
-    <section className="container-section">
+    <section className="container-section" style={visibility.textSection as React.CSSProperties}>
       <article className="write-container">
         <div className="post-title">
-          <textarea defaultValue={title} name="" id="" placeholder="제목을 입력하세요" onChange={setTitle} />
+          <textarea defaultValue={title} name="title" placeholder="제목을 입력하세요" onChange={setTitle} />
         </div>
         <div className="post-contents">
           <textarea
+            name="content"
             defaultValue={content}
             className="post-textarea"
             placeholder="내용을 입력하세요"
@@ -43,11 +47,12 @@ const TextArea: VFC<Props> = ({ setGoBack, title, setTitle, content, setContent 
           </button>
           <div>
             <button
-              type="button"
+              type="submit"
+              name="settingPropsButton"
               className="transparent-btn"
-              onClick={() => {
-                setGoBack(true);
-              }}
+              onClick={() =>
+                setVisibility({ textSection: { visibility: 'hidden' }, settingSection: { visibility: 'visible' } })
+              }
             >
               발행
             </button>

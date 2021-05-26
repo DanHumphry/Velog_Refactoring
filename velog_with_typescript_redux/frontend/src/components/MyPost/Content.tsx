@@ -27,7 +27,7 @@ function Content() {
               const date = `${temp[0]}년 ${temp[1]}월 ${temp[2].split('T')[0]}일`;
 
               let boardActicle;
-              if (a.user_pk.toString() === pgN) {
+              if (a.UserId.toString() === pgN) {
                 boardActicle = (
                   <div className="contents-acticle" key={a.id}>
                     {a.image === null || a.image === undefined || a.image === '' ? null : (

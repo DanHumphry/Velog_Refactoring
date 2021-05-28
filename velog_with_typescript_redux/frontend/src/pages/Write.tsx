@@ -20,6 +20,7 @@ function Write() {
 
   const submitWrite = async (e: any) => {
     e.preventDefault();
+    console.log(e);
     let langs = '';
 
     if (e.nativeEvent.submitter.name === 'settingPropsButton') {
@@ -35,7 +36,7 @@ function Write() {
       formData.append('title', inp.title);
       formData.append('language', langs);
       if (e.target.elements.imgFile.value) {
-        formData.append('image', e.target.elements.imgFile.value);
+        formData.append('image', e.target.elements.imgFile.files[0]);
       }
 
       await dispatch(ADD_POST_REQUEST(formData));
@@ -44,7 +45,7 @@ function Write() {
   };
 
   return (
-    <form onSubmit={(e) => submitWrite(e)}>
+    <form encType="multipart/form-data" onSubmit={(e) => submitWrite(e)}>
       <TextArea visibility={visibility} setVisibility={setVisibility} />
       <Setting visibility={visibility} setVisibility={setVisibility} inp={inp} />
     </form>

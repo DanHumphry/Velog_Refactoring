@@ -1,6 +1,7 @@
 import { LOG_IN_SUCCESS_ACTION } from '@actions/user';
 import { getUser } from '@api/user';
 import { RootState } from '@reducers/index';
+import { LOAD_POSTS_REQUEST } from '@thunks/post';
 import React, { useEffect, useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { Route } from 'react-router-dom';
@@ -29,6 +30,7 @@ function App() {
         if (res.data) dispatch(LOG_IN_SUCCESS_ACTION(res.data));
       })
       .catch((error) => console.log(error));
+    dispatch(LOAD_POSTS_REQUEST());
   }, []);
 
   if (loading) return <PageLoader />;

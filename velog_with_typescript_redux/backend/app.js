@@ -9,6 +9,7 @@ const dotenv = require("dotenv");
 const userRouter = require("./routes/user");
 const emailRouter = require("./routes/email");
 const postRouter = require("./routes/post");
+const postsRouter = require("./routes/posts");
 
 const db = require("./models");
 
@@ -50,6 +51,7 @@ app.get("/", (req, res) => {
 app.use("/user", userRouter);
 app.use("/sendMail", emailRouter);
 app.use("/post", postRouter);
+app.use("/posts", postsRouter);
 
 app.listen(3065, () => {
   console.log("서버 실행 중!");

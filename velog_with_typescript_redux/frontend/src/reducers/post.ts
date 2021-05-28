@@ -1,37 +1,25 @@
 export const initialState = {
-  mainPosts: [
-    {
-      id: 0,
-      content: '123123',
-      title: 'test',
-      image: null,
-      language: 'C#,C',
-      like: 0,
-      createdAt: '2021-05-26T15:00:16.000Z',
-      updatedAt: '2021-05-26T15:00:16.000Z',
-      User: {
-        id: 1,
-        nickname: 'nokla4137',
-        profileImg: 'https://lh3.googleusercontent.com/a-/AOh14GiWv8UOjDd2qXvpMJ0tfwIoK1bZdE8kCIIaFvN2Mw=s96-c',
-        myIntroduce: null,
-      },
-    },
-  ],
+  mainPosts: [],
+  detailPost: {},
+  myPosts: [],
+  filterList: [],
   addPostLoading: false, // 포스트 작성중
   addPostDone: false,
   addPostError: null,
-
-  loadPostLoading: false,
+  loadPostsLoading: false, // 포스트들 가져오는중
+  loadPostsDone: false,
+  loadPostsError: null,
+  loadPostLoading: false, // 포스트 가져오는중
   loadPostDone: false,
   loadPostError: null,
+
   updatePostLoading: false,
   updatePostDone: false,
   updatePostError: null,
   removePostLoading: false,
   removePostDone: false,
   removePostError: null,
-  myPosts: [],
-  filterList: [],
+
   newOrRec: false,
 
   singlePost: null,
@@ -44,21 +32,22 @@ export const initialState = {
   unlikePostDone: false,
   unlikePostError: null,
 
-  loadPostsLoading: false,
-  loadPostsDone: false,
-  loadPostsError: null,
-
   addCommentLoading: false,
   addCommentDone: false,
   addCommentError: null,
-  uploadImagesLoading: false,
-  uploadImagesDone: false,
-  uploadImagesError: null,
 };
 
-export const UPLOAD_IMAGES_REQUEST = 'UPLOAD_IMAGES_REQUEST';
-export const UPLOAD_IMAGES_SUCCESS = 'UPLOAD_IMAGES_SUCCESS';
-export const UPLOAD_IMAGES_FAILURE = 'UPLOAD_IMAGES_FAILURE';
+export const ADD_POST_REQUEST = 'ADD_POST_REQUEST';
+export const ADD_POST_SUCCESS = 'ADD_POST_SUCCESS';
+export const ADD_POST_FAILURE = 'ADD_POST_FAILURE';
+
+export const LOAD_POSTS_REQUEST = 'LOAD_POSTS_REQUEST';
+export const LOAD_POSTS_SUCCESS = 'LOAD_POSTS_SUCCESS';
+export const LOAD_POSTS_FAILURE = 'LOAD_POSTS_FAILURE';
+
+export const LOAD_POST_REQUEST = 'LOAD_POST_REQUEST';
+export const LOAD_POST_SUCCESS = 'LOAD_POST_SUCCESS';
+export const LOAD_POST_FAILURE = 'LOAD_POST_FAILURE';
 
 export const LIKE_POST_REQUEST = 'LIKE_POST_REQUEST';
 export const LIKE_POST_SUCCESS = 'LIKE_POST_SUCCESS';
@@ -68,10 +57,6 @@ export const UNLIKE_POST_REQUEST = 'UNLIKE_POST_REQUEST';
 export const UNLIKE_POST_SUCCESS = 'UNLIKE_POST_SUCCESS';
 export const UNLIKE_POST_FAILURE = 'UNLIKE_POST_FAILURE';
 
-export const LOAD_POST_REQUEST = 'LOAD_POST_REQUEST';
-export const LOAD_POST_SUCCESS = 'LOAD_POST_SUCCESS';
-export const LOAD_POST_FAILURE = 'LOAD_POST_FAILURE';
-
 export const LOAD_USER_POSTS_REQUEST = 'LOAD_USER_POSTS_REQUEST';
 export const LOAD_USER_POSTS_SUCCESS = 'LOAD_USER_POSTS_SUCCESS';
 export const LOAD_USER_POSTS_FAILURE = 'LOAD_USER_POSTS_FAILURE';
@@ -79,14 +64,6 @@ export const LOAD_USER_POSTS_FAILURE = 'LOAD_USER_POSTS_FAILURE';
 export const LOAD_HASHTAG_POSTS_REQUEST = 'LOAD_HASHTAG_POSTS_REQUEST';
 export const LOAD_HASHTAG_POSTS_SUCCESS = 'LOAD_HASHTAG_POSTS_SUCCESS';
 export const LOAD_HASHTAG_POSTS_FAILURE = 'LOAD_HASHTAG_POSTS_FAILURE';
-
-export const LOAD_POSTS_REQUEST = 'LOAD_POSTS_REQUEST';
-export const LOAD_POSTS_SUCCESS = 'LOAD_POSTS_SUCCESS';
-export const LOAD_POSTS_FAILURE = 'LOAD_POSTS_FAILURE';
-
-export const ADD_POST_REQUEST = 'ADD_POST_REQUEST';
-export const ADD_POST_SUCCESS = 'ADD_POST_SUCCESS';
-export const ADD_POST_FAILURE = 'ADD_POST_FAILURE';
 
 export const UPDATE_POST_REQUEST = 'UPDATE_POST_REQUEST';
 export const UPDATE_POST_SUCCESS = 'UPDATE_POST_SUCCESS';
@@ -113,7 +90,7 @@ const Post = (state = initialState, action: any) => {
     case ADD_POST_REQUEST:
       return { ...state, addPostLoading: true, addPostDone: false, addPostError: null };
     case ADD_POST_SUCCESS: {
-      const posts = [...state.mainPosts];
+      const posts: any[] = [...state.mainPosts];
       posts.unshift(action.data);
       return {
         ...state,
@@ -126,14 +103,28 @@ const Post = (state = initialState, action: any) => {
     case ADD_POST_FAILURE:
       return { ...state, addPostLoading: false, addPostDone: false, addPostError: action.data };
 
+    case LOAD_POSTS_REQUEST:
+      return { ...state, loadPostsLoading: true, loadPostsDone: false, loadPostsError: false };
+    case LOAD_POSTS_SUCCESS:
+      return { ...state, loadPostsLoading: false, loadPostsDone: true, loadPostsError: false, mainPosts: action.data };
+    case LOAD_POSTS_FAILURE:
+      return { ...state, loadPostsLoading: false, loadPostsDone: false, loadPostsError: action.data };
+
+    case LOAD_POST_REQUEST:
+      return { ...state, loadPostLoading: true, loadPostDone: false, loadPostError: false };
+    case LOAD_POST_SUCCESS:
+      return { ...state, loadPostLoading: false, loadPostDone: true, loadPostError: false, detailPost: action.data };
+    case LOAD_POST_FAILURE:
+      return { ...state, loadPostLoading: false, loadPostDone: false, loadPostError: action.data };
+
     case REMOVE_POST_SUCCESS:
       return { ...state, mainPosts: [...state.mainPosts.filter((v: { id: number }) => v.id !== action.data)] };
-    case UPDATE_POST_SUCCESS: {
-      const temp = [...state.mainPosts];
-      const idx = temp.findIndex((v) => v.id === action.data.id);
-      temp.splice(idx, 1, action.data);
-      return { ...state, mainPosts: temp };
-    }
+    // case UPDATE_POST_SUCCESS: {
+    //   const temp = [...state.mainPosts];
+    //   const idx = temp.findIndex((v) => v.id === action.data.id);
+    //   temp.splice(idx, 1, action.data);
+    //   return { ...state, mainPosts: temp };
+    // }
     case FILTER_SUCCESS:
       return { ...state, filterList: action.data };
     case NEWORREC_SUCCESS:

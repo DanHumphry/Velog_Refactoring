@@ -26,6 +26,10 @@ module.exports = class Post extends Model {
           defaultValue: 0,
           allowNull: true,
         },
+        liker: {
+          type: DataTypes.STRING,
+          allowNull: true,
+        },
       },
       {
         modelName: "Post",

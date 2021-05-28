@@ -1,30 +1,22 @@
 import { RootState } from '@reducers/index';
 import { REMOVE_POST_SUCCESS } from '@reducers/post';
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useHistory } from 'react-router';
 import { Link } from 'react-router-dom';
 
-function Post() {
+const Post = () => {
   const history = useHistory();
   const dispatch = useDispatch();
-  const pgN = +document.location.href.split('/')[4];
 
-  const { mainPosts } = useSelector((store: RootState) => store.post);
-  const { me, userInfo } = useSelector((store: RootState) => store.user);
-  let detailPost: any = [...mainPosts].filter((v: any) => v.id === pgN)[0];
-  const [writtenUser, setWrittenUser] = useState(userInfo.filter((v) => v.id === detailPost.UserId)[0]);
+  const { detailPost } = useSelector((store: RootState) => store.post);
+  const { me } = useSelector((store: RootState) => store.user);
 
-  useEffect(() => {
-    // eslint-disable-next-line prefer-destructuring
-    detailPost = [...mainPosts].filter((v: any) => v.id === pgN)[0];
-    setWrittenUser(userInfo.filter((v) => v.id === detailPost.UserId)[0]);
-  }, [pgN]);
-
+  const [post, setPost] = useState({ ...(detailPost as any) });
   const [svgColor] = useState({});
 
   const updatePost = () => {
-    if (detailPost.UserId === me.id) history.push(`/update/${pgN}`);
+    if (post.UserId === me.id) history.push(`/update/${post.id}`);
     else alert('권한이 없습니다.');
   };
 
@@ -38,9 +30,9 @@ function Post() {
   return (
     <>
       <div className="detail__head-wrapper">
-        <h1>{detailPost.title}</h1>
+        <h1>{post.title}</h1>
         <div className="detail__head-btn">
-          {me?.id === detailPost.UserId ? (
+          {me?.id === post.UserId ? (
             <>
               <button type="button" onClick={() => updatePost}>
                 수정
@@ -53,16 +45,18 @@ function Post() {
         </div>
         <div className="detail__head-info">
           <div className="information">
-            <span className="detail__head-username">{detailPost.username}</span>
+            <span className="detail__head-username">{post.User.nickname}</span>
             <span className="separator">·</span>
-            <span>{detailPost.date}</span>
+            <span>{`${post.createdAt.split('-')[0]}년 ${post.createdAt.split('-')[1]}월 ${
+              post.createdAt.split('-')[2].split('T')[0]
+            }일`}</span>
           </div>
           <div className="detail__head-mobileLike">
             <button type="button" className="likeBtn">
               <svg width="24" height="24" viewBox="0 0 24 24">
                 <path fill="currentColor" d="M18 1l-6 4-6-4-6 5v7l12 10 12-10v-7z" />
               </svg>
-              <span>{detailPost.like}</span>
+              <span>{post.like}</span>
             </button>
           </div>
         </div>
@@ -74,31 +68,31 @@ function Post() {
                 <path fill="currentColor" d="M18 1l-6 4-6-4-6 5v7l12 10 12-10v-7z" />
               </svg>
             </div>
-            <div className="sc-iyvyFf bJqQCy">{detailPost.like}</div>
+            <div className="sc-iyvyFf bJqQCy">{post.like}</div>
           </div>
         </div>
         <div className="filetrList">
-          {detailPost.language.map((a: string, i: number) => {
+          {post.language.split(',').map((a: string, i: number) => {
             // eslint-disable-next-line react/no-array-index-key
             return <p key={i}>{a}</p>;
           })}
         </div>
-        {detailPost.image === null ? null : <img src="" alt="" />}
+        {post.image === null ? null : <img src={post.image} alt="" />}
       </div>
       <div className="detail__body-wrapper">
         <div className="detail__content">
-          <p>{detailPost.content}</p>
+          <p>{post.content}</p>
         </div>
       </div>
 
       <div className="detail__footer-wrapper">
         <div className="detail__writerInfo">
           <div className="detail__topInfo">
-            <Link to={`/mysite/${detailPost.UserId}`}>
-              <img src={writtenUser.userPhoto} alt="" />
+            <Link to={`/mysite/${post.UserId}`}>
+              <img src={post.User.profileImg} alt="" />
             </Link>
             <div className="detail__userInfo">
-              <div className="description">{writtenUser.myInfo}</div>
+              <div className="description">{post.User.myIntroduce}</div>
             </div>
           </div>
           <div className="sc-epnACN eIoWCE" />
@@ -131,5 +125,5 @@ function Post() {
       </div>
     </>
   );
-}
+};
 export default Post;

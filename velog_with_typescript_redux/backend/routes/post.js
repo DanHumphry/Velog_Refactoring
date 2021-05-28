@@ -32,14 +32,43 @@ const upload = multer({
 router.post("/", upload.single("image"), async (req, res, next) => {
   // POST /post
   try {
+    const image = req.file ? `http://localhost:3065/${req.file.path}` : null;
     const post = await Post.create({
       title: req.body.title,
       content: req.body.content,
-      image: req.body.image,
+      image,
       like: 0,
       language: req.body.language,
       UserId: req.user.id,
     });
+
+    const fullPost = await Post.findOne({
+      where: { id: post.id },
+      include: [
+        {
+          model: User, // 게시글 작성자
+          attributes: ["id", "nickname", "profileImg", "myIntroduce"],
+        },
+      ],
+    });
+
+    res.status(201).json(fullPost);
+  } catch (error) {
+    console.error(error);
+    next(error);
+  }
+});
+
+router.get("/:postId", async (req, res, next) => {
+  try {
+    console.log("t:", req.params.postId);
+
+    const post = await Post.findOne({
+      where: { id: req.params.postId },
+    });
+    if (!post) {
+      return res.status(404).send("존재하지 않는 게시글입니다.");
+    }
 
     const fullPost = await Post.findOne({
       where: { id: post.id },

@@ -48,12 +48,8 @@ function Content() {
                 <p>{a.content}</p>
                 <div className="contents-filter">
                   {a.language.split(',').map((L: string, i: number) => {
-                    return (
-                      <>
-                        {/* eslint-disable-next-line react/no-array-index-key */}
-                        <p key={i}>{L}</p>
-                      </>
-                    );
+                    // eslint-disable-next-line react/no-array-index-key
+                    return <p key={i}>{L}</p>;
                   })}
                 </div>
                 <div className="time-info">

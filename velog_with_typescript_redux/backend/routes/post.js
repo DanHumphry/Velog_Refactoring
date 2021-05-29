@@ -87,4 +87,56 @@ router.get("/:postId", async (req, res, next) => {
   }
 });
 
+router.delete("/:postId/delete", async (req, res, next) => {
+  try {
+    await Post.destroy({
+      where: {
+        id: req.params.postId,
+        UserId: req.user.id,
+      },
+    });
+    res.status(200).json({ PostId: +req.params.postId });
+  } catch (error) {
+    console.error(error);
+    next(error);
+  }
+});
+
+router.post(
+  "/:postId/update",
+  upload.single("image"),
+  async (req, res, next) => {
+    try {
+      const image = req.file ? `http://localhost:3065/${req.file.path}` : null;
+
+      await Post.update(
+        {
+          title: req.body.title,
+          content: req.body.content,
+          image,
+          language: req.body.language,
+        },
+        {
+          where: { id: req.params.postId },
+        }
+      );
+
+      const fullPost = await Post.findOne({
+        where: { id: req.params.postId },
+        include: [
+          {
+            model: User, // 게시글 작성자
+            attributes: ["id", "nickname", "profileImg", "myIntroduce"],
+          },
+        ],
+      });
+
+      res.status(201).json(fullPost);
+    } catch (error) {
+      console.error(error);
+      next(error);
+    }
+  }
+);
+
 module.exports = router;

@@ -1,17 +1,27 @@
+import { RootState } from '@reducers/index';
 import React from 'react';
+import { useSelector } from 'react-redux';
 
 function Profile() {
+  const { me } = useSelector((store: RootState) => store.user);
+  const githubLink = () => {
+    if (!me.git || me.git === '') {
+      alert('github주소가 등록되지 않은 사용자입니다.');
+    } else window.open(me.git);
+  };
+
   return (
     <div className="header-section">
       <div className="profile">
-        <img src="" alt="/" />
+        <img src={me.profileImg} alt="/" />
         <div className="profile-info">
-          <div className="desc">자기소개?</div>
+          <div className="desc">{me.myIntroduce}</div>
         </div>
       </div>
       <div className="line" />
       <div className="socila">
-        <div>
+        {/* eslint-disable-next-line jsx-a11y/click-events-have-key-events,jsx-a11y/no-static-element-interactions */}
+        <div onClick={githubLink}>
           <svg width="20" height="20" fill="currentColor" viewBox="0 0 20 20">
             <mask id="github" width="20" height="20" x="0" y="0" maskUnits="userSpaceOnUse">
               <path
@@ -24,11 +34,6 @@ function Profile() {
             <g mask="url(#github)">
               <path fill="currentColor" d="M0 0h20v20H0z" />
             </g>
-          </svg>
-        </div>
-        <div>
-          <svg width="32" height="32" fill="none" viewBox="0 0 32 32" data-testid="email">
-            <path fill="currentColor" d="M16 16.871L1.019 5H30.98L16 16.871zm0 3.146L1 8.131V27h30V8.131L16 20.017z" />
           </svg>
         </div>
       </div>

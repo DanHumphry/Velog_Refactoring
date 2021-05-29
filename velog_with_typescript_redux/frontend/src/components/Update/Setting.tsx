@@ -1,25 +1,17 @@
 import { RootState } from '@reducers/index';
-import { UPDATE_POST_SUCCESS } from '@reducers/post';
-import React, { useEffect, useRef, useState, VFC } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
-import { useHistory } from 'react-router';
+import React, { useRef, useState, VFC } from 'react';
+import { useSelector } from 'react-redux';
 
 interface Props {
-  setGoBack: React.Dispatch<React.SetStateAction<boolean>>;
-  title: string;
-  setTitle: (e: any) => void;
-  content: string;
-  setContent: (e: any) => void;
+  visibility: { textSection: { visibility: string }; settingSection: { visibility: string } };
+  setVisibility: React.Dispatch<
+    React.SetStateAction<{ textSection: { visibility: string }; settingSection: { visibility: string } }>
+  >;
+  inp: { title: string; content: string };
 }
 
-const Setting: VFC<Props> = ({ setGoBack, title, content, setTitle, setContent }) => {
-  const pgN = +document.location.href.split('/')[4];
-
-  const { me } = useSelector((store: RootState) => store.user);
-  const { mainPosts } = useSelector((store: RootState) => store.post);
-  let updatePost: any = [...mainPosts].filter((v: { id: number }) => v.id === pgN)[0];
-
-  const dispatch = useDispatch();
+const Setting: VFC<Props> = ({ visibility, setVisibility, inp }) => {
+  const { detailPost } = useSelector((store: RootState) => store.post);
 
   const [filterList] = useState([
     { id: 1, language: 'Python' },
@@ -31,90 +23,12 @@ const Setting: VFC<Props> = ({ setGoBack, title, content, setTitle, setContent }
     { id: 7, language: 'GO' },
     { id: 8, language: 'Javascript' },
   ]);
-  const [languagefilterList, setLanguageFilterList] = useState<string[]>([]);
+  const [imgURL, setImgURL] = useState(detailPost.image as string);
 
-  const Today = new Date();
-  const date = `${Today.getFullYear()}-${Today.getMonth()}-${Today.getDate()}`;
-
-  const history = useHistory();
-  const [imgGoback, setImgGoback] = useState(false);
-
-  const [img, setImg] = useState('');
-  const [imgURL, setImgURL] = useState('' as string | ArrayBuffer);
-
-  useEffect(() => {
-    // eslint-disable-next-line prefer-destructuring
-    updatePost = [...mainPosts].filter((v: { id: number }) => v.id === pgN)[0];
-    setTitle(updatePost.title);
-    setContent(updatePost.content);
-    setImgURL(updatePost.image);
-    setLanguageFilterList(updatePost.language);
-  }, [pgN]);
-
-  let sendData: any;
-  const handleEffect = (handleSubmit: any) => {
-    if (languagefilterList.length === 0 || languagefilterList.length === 0) {
-      alert('한 개 이상의 언어를 선택해주세요.');
-      return;
-    }
-    sendData = {
-      id: me.id,
-
-      image: imgURL,
-      title,
-      content,
-      date,
-      like: 0,
-      username: me.username,
-      language: languagefilterList,
-      profileImage: '',
-      user_pk: me.id,
-    };
-    handleSubmit();
-  };
-
-  const [ImgCount, setImgCount] = useState(0);
   const refImgFiles: any = useRef(null);
 
-  useEffect(() => {
-    if (img !== undefined) {
-      setImgCount(1);
-    }
-  }, [img]);
-
-  const handleSubmit = () => {
-    if (ImgCount === 1) {
-      sendData = { ...sendData, image: refImgFiles.current.files[0] };
-    }
-
-    dispatch({
-      type: UPDATE_POST_SUCCESS,
-      data: sendData,
-    });
-
-    history.push('/');
-  };
-
-  const ClickFilter = (lang: string) => {
-    let Num = 0;
-    const List: string[] = [...languagefilterList];
-
-    List.map((a) => {
-      if (a === lang) {
-        Num = 1;
-      }
-      return Num;
-    });
-    if (Num === 0) {
-      List.push(lang);
-    } else {
-      List.splice(List.indexOf(lang), 1);
-    }
-    setLanguageFilterList(List);
-  };
-
   return (
-    <div className="thumbnail_container">
+    <div className="thumbnail_container" style={visibility.settingSection as React.CSSProperties}>
       <div className="thumbnail_section">
         <div className="left_section">
           <section className="left_container">
@@ -123,6 +37,7 @@ const Setting: VFC<Props> = ({ setGoBack, title, content, setTitle, setContent }
               <label htmlFor="file" className="img-up">
                 <input
                   ref={refImgFiles}
+                  name="imgFile"
                   type="file"
                   id="file"
                   accept=".jpg, .png, .jpeg, .gif"
@@ -135,11 +50,9 @@ const Setting: VFC<Props> = ({ setGoBack, title, content, setTitle, setContent }
                       file = e.target.files[0];
                     }
                     reader.onloadend = () => {
-                      setImg(file);
-                      if (reader.result !== null) setImgURL(reader.result);
+                      if (reader.result !== null && typeof reader.result === 'string') setImgURL(reader.result);
                     };
                     reader.readAsDataURL(file);
-                    setImgGoback(true);
                   }}
                 />
                 이미지 업로드
@@ -149,9 +62,7 @@ const Setting: VFC<Props> = ({ setGoBack, title, content, setTitle, setContent }
               type="button"
               className="upButton"
               onClick={() => {
-                setImg('');
                 setImgURL('');
-                setImgGoback(false);
               }}
             >
               이미지 제거
@@ -160,7 +71,7 @@ const Setting: VFC<Props> = ({ setGoBack, title, content, setTitle, setContent }
               <div className="left_container3">
                 <div className="img_container">
                   <div className="img_container2">
-                    {imgGoback === false ? (
+                    {imgURL === '' || imgURL === null ? (
                       <svg width="107" height="85" fill="none" viewBox="0 0 107 85">
                         <path
                           fill="#868E96"
@@ -172,14 +83,14 @@ const Setting: VFC<Props> = ({ setGoBack, title, content, setTitle, setContent }
                         />
                       </svg>
                     ) : (
-                      <img src="" alt="" />
+                      <img src={imgURL} alt="" />
                     )}
                   </div>
                 </div>
               </div>
               <div className="title-margin">
-                <h4>{title}</h4>
-                <textarea value={content} name="viewContent" />
+                <h4>{inp.title}</h4>
+                <textarea defaultValue={inp.content} name="viewContent" readOnly />
               </div>
             </div>
           </section>
@@ -190,10 +101,8 @@ const Setting: VFC<Props> = ({ setGoBack, title, content, setTitle, setContent }
             <section>
               <ul>
                 {filterList.map((a) => {
-                  let boolenChecked = false;
-                  if (languagefilterList.indexOf(a.language) !== -1) {
-                    boolenChecked = true;
-                  }
+                  let checked = false;
+                  if (detailPost.language.indexOf(a.language) !== -1) checked = true;
                   return (
                     <li key={a.id}>
                       <input
@@ -202,16 +111,11 @@ const Setting: VFC<Props> = ({ setGoBack, title, content, setTitle, setContent }
                         value="action"
                         type="checkbox"
                         data-type="genres"
-                        defaultChecked={boolenChecked}
+                        name="langs"
+                        defaultChecked={checked}
                       />
                       {/* eslint-disable-next-line jsx-a11y/click-events-have-key-events */}
-                      <label
-                        className="input__label | filters-input__label--checkbox"
-                        htmlFor={a.language}
-                        onClick={() => {
-                          ClickFilter(a.language);
-                        }}
-                      >
+                      <label className="input__label | filters-input__label--checkbox" htmlFor={a.language}>
                         <span>{a.language}</span>
                         <span className="filters-input__tick">
                           <svg focusable="false" aria-hidden="true">
@@ -233,19 +137,13 @@ const Setting: VFC<Props> = ({ setGoBack, title, content, setTitle, setContent }
             <button
               type="button"
               className="upButton"
-              onClick={() => {
-                setGoBack(false);
-              }}
+              onClick={() =>
+                setVisibility({ textSection: { visibility: 'visible' }, settingSection: { visibility: 'hidden' } })
+              }
             >
               뒤로가기
             </button>
-            <button
-              type="button"
-              className="upButton"
-              onClick={() => {
-                handleEffect(handleSubmit);
-              }}
-            >
+            <button type="submit" className="upButton" name="sendAPIButton">
               수정하기
             </button>
           </div>

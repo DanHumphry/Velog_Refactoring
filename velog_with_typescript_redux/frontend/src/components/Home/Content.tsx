@@ -49,9 +49,9 @@ function Content() {
                     </div>
                   </div>
                 )}
-                <div className="article-content">
-                  {/* eslint-disable-next-line jsx-a11y/click-events-have-key-events,jsx-a11y/no-static-element-interactions */}
-                  <div onClick={() => loadPost(a.id)}>
+                {/* eslint-disable-next-line jsx-a11y/click-events-have-key-events,jsx-a11y/no-static-element-interactions */}
+                <div className="article-content" onClick={() => loadPost(a.id)}>
+                  <div>
                     <h4>{a.title}</h4>
                     <div className="desc-wrapper">
                       <p>{a.content}</p>

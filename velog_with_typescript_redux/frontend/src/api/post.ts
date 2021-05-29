@@ -14,3 +14,11 @@ export const loadPostsAPI = () => {
 export const loadPostAPI = (id: string) => {
   return axios.get(`post/${id}`);
 };
+
+export const updatePostAPI = (id: string, data: any) => {
+  return axios.post(`post/${id}/update`, data);
+};
+
+export const removePostAPI = (id: string) => {
+  return axios.delete(`post/${id}/delete`);
+};

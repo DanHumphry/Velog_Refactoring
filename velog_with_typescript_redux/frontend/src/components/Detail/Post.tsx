@@ -1,9 +1,9 @@
 import { RootState } from '@reducers/index';
-import { REMOVE_POST_SUCCESS } from '@reducers/post';
 import React, { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useHistory } from 'react-router';
 import { Link } from 'react-router-dom';
+import { REMOVE_POST_REQUEST } from '@thunks/post';
 
 const Post = () => {
   const history = useHistory();
@@ -12,32 +12,33 @@ const Post = () => {
   const { detailPost } = useSelector((store: RootState) => store.post);
   const { me } = useSelector((store: RootState) => store.user);
 
-  const [post, setPost] = useState({ ...(detailPost as any) });
   const [svgColor] = useState({});
 
   const updatePost = () => {
-    if (post.UserId === me.id) history.push(`/update/${post.id}`);
+    if (detailPost.UserId === me.id) history.push(`/update/${detailPost.id}`);
     else alert('권한이 없습니다.');
   };
 
-  const delPost = (id: number) => {
-    dispatch({
-      type: REMOVE_POST_SUCCESS,
-      data: id,
-    });
-    history.push('/');
+  const delPost = async () => {
+    if (detailPost.UserId === me.id) {
+      if (window.confirm('정말 삭제하시겠습니까 ?')) {
+        await dispatch(REMOVE_POST_REQUEST(detailPost.id));
+        history.push('/');
+      }
+    } else alert('권한이 없습니다.');
   };
+
   return (
     <>
       <div className="detail__head-wrapper">
-        <h1>{post.title}</h1>
+        <h1>{detailPost.title}</h1>
         <div className="detail__head-btn">
-          {me?.id === post.UserId ? (
+          {me?.id === detailPost.UserId ? (
             <>
-              <button type="button" onClick={() => updatePost}>
+              <button type="button" onClick={updatePost}>
                 수정
               </button>
-              <button type="button" onClick={() => updatePost}>
+              <button type="button" onClick={delPost}>
                 삭제
               </button>
             </>
@@ -45,10 +46,10 @@ const Post = () => {
         </div>
         <div className="detail__head-info">
           <div className="information">
-            <span className="detail__head-username">{post.User.nickname}</span>
+            <span className="detail__head-username">{detailPost.User.nickname}</span>
             <span className="separator">·</span>
-            <span>{`${post.createdAt.split('-')[0]}년 ${post.createdAt.split('-')[1]}월 ${
-              post.createdAt.split('-')[2].split('T')[0]
+            <span>{`${detailPost.createdAt.split('-')[0]}년 ${detailPost.createdAt.split('-')[1]}월 ${
+              detailPost.createdAt.split('-')[2].split('T')[0]
             }일`}</span>
           </div>
           <div className="detail__head-mobileLike">
@@ -56,7 +57,7 @@ const Post = () => {
               <svg width="24" height="24" viewBox="0 0 24 24">
                 <path fill="currentColor" d="M18 1l-6 4-6-4-6 5v7l12 10 12-10v-7z" />
               </svg>
-              <span>{post.like}</span>
+              <span>{detailPost.like}</span>
             </button>
           </div>
         </div>
@@ -68,31 +69,31 @@ const Post = () => {
                 <path fill="currentColor" d="M18 1l-6 4-6-4-6 5v7l12 10 12-10v-7z" />
               </svg>
             </div>
-            <div className="sc-iyvyFf bJqQCy">{post.like}</div>
+            <div className="sc-iyvyFf bJqQCy">{detailPost.like}</div>
           </div>
         </div>
         <div className="filetrList">
-          {post.language.split(',').map((a: string, i: number) => {
+          {detailPost.language.split(',').map((a: string, i: number) => {
             // eslint-disable-next-line react/no-array-index-key
             return <p key={i}>{a}</p>;
           })}
         </div>
-        {post.image === null ? null : <img src={post.image} alt="" />}
+        {detailPost.image === null ? null : <img src={detailPost.image} alt="" />}
       </div>
       <div className="detail__body-wrapper">
         <div className="detail__content">
-          <p>{post.content}</p>
+          <p>{detailPost.content}</p>
         </div>
       </div>
 
       <div className="detail__footer-wrapper">
         <div className="detail__writerInfo">
           <div className="detail__topInfo">
-            <Link to={`/mysite/${post.UserId}`}>
-              <img src={post.User.profileImg} alt="" />
+            <Link to={`/mysite/${detailPost.UserId}`}>
+              <img src={detailPost.User.profileImg} alt="" />
             </Link>
             <div className="detail__userInfo">
-              <div className="description">{post.User.myIntroduce}</div>
+              <div className="description">{detailPost.User.myIntroduce}</div>
             </div>
           </div>
           <div className="sc-epnACN eIoWCE" />

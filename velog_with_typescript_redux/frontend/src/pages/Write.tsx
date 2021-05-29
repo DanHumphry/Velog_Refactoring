@@ -8,8 +8,6 @@ import { useDispatch } from 'react-redux';
 import { useHistory } from 'react-router';
 
 function Write() {
-  // 진행상황 : dispatch통해서 state값과 db에 넣는것까지 했음, 앞으로 posts만들어서 메인화면으로 가져오는 api만들고 더미데이터 삭제
-  // 또 이미지 formData에 image 제대로 안들어가있으니까 해결하고
   const history = useHistory();
   const dispatch = useDispatch();
   const [visibility, setVisibility] = useState({
@@ -20,7 +18,6 @@ function Write() {
 
   const submitWrite = async (e: any) => {
     e.preventDefault();
-    console.log(e);
     let langs = '';
 
     if (e.nativeEvent.submitter.name === 'settingPropsButton') {

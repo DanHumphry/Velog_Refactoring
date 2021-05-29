@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState, VFC } from 'react';
+import React, { useRef, useState, VFC } from 'react';
 
 interface Props {
   visibility: { textSection: { visibility: string }; settingSection: { visibility: string } };
@@ -19,39 +19,9 @@ const Setting: VFC<Props> = ({ visibility, setVisibility, inp }) => {
     { id: 7, language: 'GO' },
     { id: 8, language: 'Javascript' },
   ]);
-  const [languagefilterList, setLanguageFilterList] = useState<string[]>([]);
-
-  const [imgGoback, setImgGoback] = useState(false);
-
-  const [img, setImg] = useState('');
   const [imgURL, setImgURL] = useState('' as string);
 
-  const [ImgCount, setImgCount] = useState(0);
   const refImgFiles: any = useRef(null);
-
-  useEffect(() => {
-    if (img !== undefined) {
-      setImgCount(1);
-    }
-  }, [img]);
-
-  const ClickFilter = (lang: string) => {
-    let Num = 0;
-    const List: string[] = [...languagefilterList];
-
-    List.map((a) => {
-      if (a === lang) {
-        Num = 1;
-      }
-      return Num;
-    });
-    if (Num === 0) {
-      List.push(lang);
-    } else {
-      List.splice(List.indexOf(lang), 1);
-    }
-    setLanguageFilterList(List);
-  };
 
   return (
     <div className="thumbnail_container" style={visibility.settingSection as React.CSSProperties}>
@@ -76,11 +46,9 @@ const Setting: VFC<Props> = ({ visibility, setVisibility, inp }) => {
                       file = e.target.files[0];
                     }
                     reader.onloadend = () => {
-                      setImg(file);
                       if (reader.result !== null && typeof reader.result === 'string') setImgURL(reader.result);
                     };
                     reader.readAsDataURL(file);
-                    setImgGoback(true);
                   }}
                 />
                 이미지 업로드
@@ -90,9 +58,7 @@ const Setting: VFC<Props> = ({ visibility, setVisibility, inp }) => {
               type="button"
               className="upButton"
               onClick={() => {
-                setImg('');
                 setImgURL('');
-                setImgGoback(false);
               }}
             >
               이미지 제거
@@ -101,7 +67,7 @@ const Setting: VFC<Props> = ({ visibility, setVisibility, inp }) => {
               <div className="left_container3">
                 <div className="img_container">
                   <div className="img_container2">
-                    {imgGoback === false ? (
+                    {imgURL === '' ? (
                       <svg width="107" height="85" fill="none" viewBox="0 0 107 85">
                         <path
                           fill="#868E96"
@@ -142,13 +108,7 @@ const Setting: VFC<Props> = ({ visibility, setVisibility, inp }) => {
                         name="langs"
                       />
                       {/* eslint-disable-next-line jsx-a11y/click-events-have-key-events */}
-                      <label
-                        className="input__label | filters-input__label--checkbox"
-                        htmlFor={a.language}
-                        onClick={() => {
-                          ClickFilter(a.language);
-                        }}
-                      >
+                      <label className="input__label | filters-input__label--checkbox" htmlFor={a.language}>
                         <span>{a.language}</span>
                         <span className="filters-input__tick">
                           <svg focusable="false" aria-hidden="true">

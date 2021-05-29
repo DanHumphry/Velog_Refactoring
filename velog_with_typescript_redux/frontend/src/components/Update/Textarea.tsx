@@ -1,39 +1,37 @@
+import useInput from '@hooks/useInput';
+import { RootState } from '@reducers/index';
 import React, { VFC } from 'react';
+import { useSelector } from 'react-redux';
 import { useHistory } from 'react-router';
 
 interface Props {
-  setGoBack: React.Dispatch<React.SetStateAction<boolean>>;
-  title: string;
-  setTitle: (e: any) => void;
-  content: string;
-  setContent: (e: any) => void;
+  visibility: { textSection: { visibility: string }; settingSection: { visibility: string } };
+  setVisibility: React.Dispatch<
+    React.SetStateAction<{ textSection: { visibility: string }; settingSection: { visibility: string } }>
+  >;
 }
 
-const TextArea: VFC<Props> = ({ setGoBack, title, setTitle, content, setContent }) => {
+const TextArea: VFC<Props> = ({ visibility, setVisibility }) => {
   const history = useHistory();
 
+  const { detailPost } = useSelector((store: RootState) => store.post);
+
+  const [title, setTitle] = useInput(detailPost.title);
+  const [content, setContent] = useInput(detailPost.content);
+
   return (
-    <section className="container-section">
+    <section className="container-section" style={visibility.textSection as React.CSSProperties}>
       <article className="write-container">
         <div className="post-title">
-          <textarea
-            defaultValue={title}
-            name=""
-            id=""
-            placeholder="제목을 입력하세요"
-            onChange={(e) => {
-              setTitle(e.target.value);
-            }}
-          />
+          <textarea defaultValue={title} name="title" placeholder="제목을 입력하세요" onChange={setTitle} />
         </div>
         <div className="post-contents">
           <textarea
+            name="content"
             defaultValue={content}
             className="post-textarea"
             placeholder="내용을 입력하세요"
-            onChange={(e) => {
-              setContent(e.target.value);
-            }}
+            onChange={setContent}
           />
           <div>
             <div className="contents-scroll">
@@ -53,11 +51,12 @@ const TextArea: VFC<Props> = ({ setGoBack, title, setTitle, content, setContent 
           </button>
           <div>
             <button
-              type="button"
+              type="submit"
+              name="settingPropsButton"
               className="transparent-btn"
-              onClick={() => {
-                setGoBack(true);
-              }}
+              onClick={() =>
+                setVisibility({ textSection: { visibility: 'hidden' }, settingSection: { visibility: 'visible' } })
+              }
             >
               수정
             </button>
@@ -70,7 +69,7 @@ const TextArea: VFC<Props> = ({ setGoBack, title, setTitle, content, setContent 
           <div className="view-content">
             <div>
               <p>
-                {content.split('\n').map((line, i) => {
+                {content.split('\n').map((line: string, i: number) => {
                   return (
                     // eslint-disable-next-line react/no-array-index-key
                     <span key={i}>

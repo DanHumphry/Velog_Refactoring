@@ -19,7 +19,7 @@ import PageLoader from '@loader/PageLoader';
 
 function App() {
   const dispatch = useDispatch();
-  const { showLoginModal } = useSetModal();
+  const { showLoginModal, closeSetModal } = useSetModal();
   const { loginModal } = useSelector((store: RootState) => store.user);
 
   const [loading, setLoading] = useState(false);

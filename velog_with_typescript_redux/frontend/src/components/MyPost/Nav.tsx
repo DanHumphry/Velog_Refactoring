@@ -1,19 +1,24 @@
 import React, { useRef } from 'react';
 
-function Nav() {
-  const filterModal = useRef<HTMLDivElement | null>(null);
+interface Props {
+  navModal: boolean;
+  setNavModal: React.Dispatch<React.SetStateAction<boolean>>;
+  navOption: string;
+  setNavOption: React.Dispatch<React.SetStateAction<string>>;
+}
 
-  const onClickFilterModal = () => {
-    if (filterModal.current?.style.visibility === 'hidden' || filterModal.current?.style.visibility === '')
-      filterModal.current.style.visibility = 'visible';
-    else if (filterModal.current !== null) filterModal.current.style.visibility = 'hidden';
+const Nav: React.VFC<Props> = ({ navModal, setNavModal, navOption, setNavOption }) => {
+  const onClickMenu = (v: string) => {
+    setNavOption(v);
+    setNavModal(false);
   };
+  const menu = ['최신순', '좋아요순'];
   return (
     <div className="nav-section">
       <div className="nav-margin">
         {/* eslint-disable-next-line jsx-a11y/click-events-have-key-events */}
-        <h2 onClick={onClickFilterModal}>
-          최신순
+        <h2 onClick={() => setNavModal(true)}>
+          {navOption}
           <svg
             stroke="currentColor"
             fill="currentColor"
@@ -26,14 +31,22 @@ function Nav() {
             <path d="M7 10l5 5 5-5z" />
           </svg>
         </h2>
-        <div className="filterModalBox" ref={filterModal}>
-          <ul>
-            <li>최신순</li>
-            <li>좋아요순</li>
-          </ul>
-        </div>
+        {navModal ? (
+          <div className="filterModalBox">
+            <ul>
+              {menu.map((item, idx) => {
+                return (
+                  // eslint-disable-next-line react/no-array-index-key,jsx-a11y/click-events-have-key-events
+                  <li key={idx} onClick={() => onClickMenu(item)}>
+                    {item}
+                  </li>
+                );
+              })}
+            </ul>
+          </div>
+        ) : null}
       </div>
     </div>
   );
-}
+};
 export default Nav;

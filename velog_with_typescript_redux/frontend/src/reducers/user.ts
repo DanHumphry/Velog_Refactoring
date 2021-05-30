@@ -24,9 +24,7 @@ export const initialState = {
   updateProfileImgDone: false,
   updateProfileImgError: null,
 
-  userInfo: [
-    { id: 0, username: '1234', password: '1234', email: '', mygit: '', nickname: '1234', myInfo: '', userPhoto: '' },
-  ],
+  userInfo: [],
   me: {},
 };
 

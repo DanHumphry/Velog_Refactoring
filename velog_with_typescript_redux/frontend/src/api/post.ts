@@ -22,3 +22,15 @@ export const updatePostAPI = (id: string, data: any) => {
 export const removePostAPI = (id: string) => {
   return axios.delete(`post/${id}/delete`);
 };
+
+export const likePostAPI = (data: { userId: number; postId: number }) => {
+  return axios.post(`post/${data.postId}/like`, data);
+};
+
+export const unlikePostAPI = (data: { userId: number; postId: number }) => {
+  return axios.post(`post/${data.postId}/unlike`, data);
+};
+
+export const PostCommentAPI = (data: any) => {
+  return axios.post(`post/${data.postId}/comment`, data);
+};

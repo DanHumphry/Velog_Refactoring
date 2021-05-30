@@ -14,6 +14,15 @@ import {
   REMOVE_POST_FAILURE,
   REMOVE_POST_REQUEST,
   REMOVE_POST_SUCCESS,
+  LIKE_POST_FAILURE,
+  LIKE_POST_SUCCESS,
+  LIKE_POST_REQUEST,
+  UNLIKE_POST_FAILURE,
+  UNLIKE_POST_REQUEST,
+  UNLIKE_POST_SUCCESS,
+  ADD_COMMENT_FAILURE,
+  ADD_COMMENT_SUCCESS,
+  ADD_COMMENT_REQUEST,
 } from '@reducers/post';
 
 export const ADD_POST_REQUEST_ACTION = () => ({ type: ADD_POST_REQUEST });
@@ -35,3 +44,15 @@ export const UPDATE_POST_FAILURE_ACTION = (error: Error | any) => ({ type: UPDAT
 export const REMOVE_POST_REQUEST_ACTION = () => ({ type: REMOVE_POST_REQUEST });
 export const REMOVE_POST_SUCCESS_ACTION = (data: any) => ({ type: REMOVE_POST_SUCCESS, data });
 export const REMOVE_POST_FAILURE_ACTION = (error: Error | any) => ({ type: REMOVE_POST_FAILURE, data: error });
+
+export const LIKE_POST_REQUEST_ACTION = () => ({ type: LIKE_POST_REQUEST });
+export const LIKE_POST_SUCCESS_ACTION = (data: any) => ({ type: LIKE_POST_SUCCESS, data });
+export const LIKE_POST_FAILURE_ACTION = (error: Error | any) => ({ type: LIKE_POST_FAILURE, data: error });
+
+export const UNLIKE_POST_REQUEST_ACTION = () => ({ type: UNLIKE_POST_REQUEST });
+export const UNLIKE_POST_SUCCESS_ACTION = (data: any) => ({ type: UNLIKE_POST_SUCCESS, data });
+export const UNLIKE_POST_FAILURE_ACTION = (error: Error | any) => ({ type: UNLIKE_POST_FAILURE, data: error });
+
+export const ADD_POST_COMMENT_REQUEST_ACTION = () => ({ type: ADD_COMMENT_REQUEST });
+export const ADD_POST_COMMENT_SUCCESS_ACTION = (data: any) => ({ type: ADD_COMMENT_SUCCESS, data });
+export const ADD_POST_COMMENT_FAILURE_ACTION = (error: Error | any) => ({ type: ADD_COMMENT_FAILURE, data: error });

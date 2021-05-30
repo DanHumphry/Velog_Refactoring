@@ -19,10 +19,10 @@ import PageLoader from '@loader/PageLoader';
 
 function App() {
   const dispatch = useDispatch();
-  const { showLoginModal, closeSetModal } = useSetModal();
+  const { showLoginModal } = useSetModal();
   const { loginModal } = useSelector((store: RootState) => store.user);
 
-  const [loading, setLoading] = useState(false);
+  const [loading] = useState(false);
 
   useEffect(() => {
     getUser()
@@ -42,7 +42,7 @@ function App() {
         {loginModal ? (
           <>
             {/* eslint-disable-next-line jsx-a11y/no-static-element-interactions,jsx-a11y/click-events-have-key-events */}
-            <div className="overlay" onClick={showLoginModal} />
+            <div id="withBackground" className="overlay" onClick={showLoginModal} />
             <AccountModal />
           </>
         ) : null}

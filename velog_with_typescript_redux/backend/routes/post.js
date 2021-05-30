@@ -3,7 +3,7 @@ const multer = require("multer");
 const path = require("path");
 const fs = require("fs");
 
-const { Post, User } = require("../models");
+const { Post, User, Comment } = require("../models");
 
 const router = express.Router();
 
@@ -77,6 +77,15 @@ router.get("/:postId", async (req, res, next) => {
           model: User, // 게시글 작성자
           attributes: ["id", "nickname", "profileImg", "myIntroduce"],
         },
+        {
+          model: Comment,
+          include: [
+            {
+              model: User,
+              attributes: ["id", "nickname", "profileImg"],
+            },
+          ],
+        },
       ],
     });
 
@@ -138,5 +147,86 @@ router.post(
     }
   }
 );
+
+router.post("/:postId/like", async (req, res, next) => {
+  try {
+    const post = await Post.findOne({ where: { id: req.params.postId } });
+    let liker = post.dataValues.liker;
+    if (liker) liker += `,${req.body.userId}`;
+    else liker = `${req.body.userId}`;
+
+    await Post.update(
+      {
+        like: post.dataValues.like + 1,
+        liker,
+      },
+      {
+        where: { id: req.params.postId },
+      }
+    );
+
+    res
+      .status(200)
+      .json({ postId: +req.params.postId, userId: req.body.userId });
+  } catch (error) {
+    console.error(error);
+    next(error);
+  }
+});
+
+router.post("/:postId/unlike", async (req, res, next) => {
+  try {
+    const post = await Post.findOne({ where: { id: req.params.postId } });
+    const liker = post.dataValues.liker.split(",");
+    const idx = liker.find((v) => +v === req.body.userId);
+    liker.splice(idx, 1);
+
+    await Post.update(
+      {
+        like: post.dataValues.like - 1,
+        liker: liker.join(""),
+      },
+      {
+        where: { id: req.params.postId },
+      }
+    );
+
+    res
+      .status(200)
+      .json({ postId: +req.params.postId, userId: req.body.userId });
+  } catch (error) {
+    console.error(error);
+    next(error);
+  }
+});
+
+router.post("/:postId/comment", async (req, res, next) => {
+  try {
+    const post = await Post.findOne({
+      where: { id: req.params.postId },
+    });
+    if (!post) {
+      return res.status(403).send("존재하지 않는 게시글입니다.");
+    }
+    const comment = await Comment.create({
+      content: req.body.content,
+      PostId: +req.params.postId,
+      UserId: req.body.userId,
+    });
+    const fullComment = await Comment.findOne({
+      where: { id: comment.id },
+      include: [
+        {
+          model: User,
+          attributes: ["id", "nickname", "profileImg"],
+        },
+      ],
+    });
+    res.status(201).json(fullComment);
+  } catch (error) {
+    console.error(error);
+    next(error);
+  }
+});
 
 module.exports = router;

@@ -28,7 +28,7 @@ function Content() {
 
   const loadPost = async (id: string) => {
     await dispatch(LOAD_POST_REQUEST(id));
-    await history.push(`/detail/${id}`);
+    history.push(`/detail/${id}`);
   };
 
   return (

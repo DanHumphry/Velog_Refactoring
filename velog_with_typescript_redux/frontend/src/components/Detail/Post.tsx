@@ -1,18 +1,26 @@
 import { RootState } from '@reducers/index';
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useHistory } from 'react-router';
 import { Link } from 'react-router-dom';
-import { REMOVE_POST_REQUEST } from '@thunks/post';
+import { LIKE_POST_REQUEST, REMOVE_POST_REQUEST, UNLIKE_POST_REQUEST } from '@thunks/post';
+import { loadPostAPI } from '@api/post';
 
-const Post = () => {
+interface Props {
+  detailPost: any;
+  me: any;
+}
+
+const Post: React.VFC<Props> = ({ detailPost, me }) => {
   const history = useHistory();
   const dispatch = useDispatch();
 
-  const { detailPost } = useSelector((store: RootState) => store.post);
-  const { me } = useSelector((store: RootState) => store.user);
+  const [post, setPost] = useState({ ...detailPost });
 
-  const [svgColor] = useState({});
+  const [isLiked, setIsLiked] = useState(
+    { ...detailPost }.liker?.split(',').filter((v: string) => +v === me.id).length || 0,
+  );
+  const [svgColor, setSvgColor] = useState({ color: 'gray' });
 
   const updatePost = () => {
     if (detailPost.UserId === me.id) history.push(`/update/${detailPost.id}`);
@@ -27,6 +35,26 @@ const Post = () => {
       }
     } else alert('권한이 없습니다.');
   };
+
+  const submitLike = () => {
+    if (isLiked) dispatch(UNLIKE_POST_REQUEST({ userId: me.id, postId: detailPost.id }));
+    else dispatch(LIKE_POST_REQUEST({ userId: me.id, postId: detailPost.id }));
+  };
+
+  useEffect(() => {
+    loadPostAPI(window.location.href.split('/')[4])
+      .then((res) => {
+        setPost(res.data);
+        const currentLiked = res.data.liker?.split(',').filter((v: string) => +v === me.id).length || 0;
+        setIsLiked(currentLiked);
+        return currentLiked;
+      })
+      .then((res) => {
+        if (res) setSvgColor({ color: 'black' });
+        else setSvgColor({ color: 'gray' });
+      })
+      .catch((error) => console.log(error));
+  }, [detailPost]);
 
   return (
     <>
@@ -52,14 +80,6 @@ const Post = () => {
               detailPost.createdAt.split('-')[2].split('T')[0]
             }일`}</span>
           </div>
-          <div className="detail__head-mobileLike">
-            <button type="button" className="likeBtn">
-              <svg width="24" height="24" viewBox="0 0 24 24">
-                <path fill="currentColor" d="M18 1l-6 4-6-4-6 5v7l12 10 12-10v-7z" />
-              </svg>
-              <span>{detailPost.like}</span>
-            </button>
-          </div>
         </div>
 
         <div className="detail__head-like">
@@ -73,10 +93,21 @@ const Post = () => {
           </div>
         </div>
         <div className="filetrList">
-          {detailPost.language.split(',').map((a: string, i: number) => {
-            // eslint-disable-next-line react/no-array-index-key
-            return <p key={i}>{a}</p>;
-          })}
+          <div>
+            {detailPost.language.split(',').map((a: string, i: number) => {
+              // eslint-disable-next-line react/no-array-index-key
+              return <p key={i}>{a}</p>;
+            })}
+          </div>
+
+          <div className="detail__head-mobileLike">
+            <button type="button" className="likeBtn" onClick={submitLike}>
+              <svg style={svgColor} width="24" height="24" viewBox="0 0 24 24">
+                <path fill="currentColor" d="M18 1l-6 4-6-4-6 5v7l12 10 12-10v-7z" />
+              </svg>
+              <span>{detailPost.like}</span>
+            </button>
+          </div>
         </div>
         {detailPost.image === null ? null : <img src={detailPost.image} alt="" />}
       </div>

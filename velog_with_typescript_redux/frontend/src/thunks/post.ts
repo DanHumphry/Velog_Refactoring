@@ -14,6 +14,15 @@ import {
   REMOVE_POST_FAILURE_ACTION,
   REMOVE_POST_REQUEST_ACTION,
   REMOVE_POST_SUCCESS_ACTION,
+  LIKE_POST_FAILURE_ACTION,
+  LIKE_POST_REQUEST_ACTION,
+  LIKE_POST_SUCCESS_ACTION,
+  UNLIKE_POST_FAILURE_ACTION,
+  UNLIKE_POST_REQUEST_ACTION,
+  UNLIKE_POST_SUCCESS_ACTION,
+  ADD_POST_COMMENT_FAILURE_ACTION,
+  ADD_POST_COMMENT_REQUEST_ACTION,
+  ADD_POST_COMMENT_SUCCESS_ACTION,
 } from '@actions/post';
 import * as postAPI from '@api/post';
 
@@ -64,5 +73,35 @@ export const REMOVE_POST_REQUEST = (id: string) => async (dispatch: any) => {
     dispatch(REMOVE_POST_SUCCESS_ACTION(res.data));
   } catch (error) {
     dispatch(REMOVE_POST_FAILURE_ACTION(error.response.data));
+  }
+};
+
+export const LIKE_POST_REQUEST = (data: { userId: number; postId: number }) => async (dispatch: any) => {
+  try {
+    dispatch(LIKE_POST_REQUEST_ACTION());
+    const res = await postAPI.likePostAPI(data);
+    dispatch(LIKE_POST_SUCCESS_ACTION(res.data));
+  } catch (error) {
+    dispatch(LIKE_POST_FAILURE_ACTION(error.response.data));
+  }
+};
+
+export const UNLIKE_POST_REQUEST = (data: { userId: number; postId: number }) => async (dispatch: any) => {
+  try {
+    dispatch(UNLIKE_POST_REQUEST_ACTION());
+    const res = await postAPI.unlikePostAPI(data);
+    dispatch(UNLIKE_POST_SUCCESS_ACTION(res.data));
+  } catch (error) {
+    dispatch(UNLIKE_POST_FAILURE_ACTION(error.response.data));
+  }
+};
+
+export const ADD_POST_COMMENT_REQUEST = (data: any) => async (dispatch: any) => {
+  try {
+    dispatch(ADD_POST_COMMENT_REQUEST_ACTION());
+    const res = await postAPI.PostCommentAPI(data);
+    dispatch(ADD_POST_COMMENT_SUCCESS_ACTION(res.data));
+  } catch (error) {
+    dispatch(ADD_POST_COMMENT_FAILURE_ACTION(error.response.data));
   }
 };

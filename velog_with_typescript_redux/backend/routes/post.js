@@ -3,7 +3,7 @@ const multer = require("multer");
 const path = require("path");
 const fs = require("fs");
 
-const { Post, User, Comment } = require("../models");
+const { Post, User, Comment, ReComment } = require("../models");
 
 const router = express.Router();
 
@@ -83,6 +83,15 @@ router.get("/:postId", async (req, res, next) => {
             {
               model: User,
               attributes: ["id", "nickname", "profileImg"],
+            },
+            {
+              model: ReComment,
+              include: [
+                {
+                  model: User,
+                  attributes: ["id", "nickname", "profileImg"],
+                },
+              ],
             },
           ],
         },
@@ -223,6 +232,96 @@ router.post("/:postId/comment", async (req, res, next) => {
       ],
     });
     res.status(201).json(fullComment);
+  } catch (error) {
+    console.error(error);
+    next(error);
+  }
+});
+
+router.post("/:postId/comment/update", async (req, res, next) => {
+  try {
+    await Comment.update(
+      {
+        title: req.body.title,
+        content: req.body.content,
+        image,
+        language: req.body.language,
+      },
+      {
+        where: { id: req.params.postId },
+      }
+    );
+
+    const fullPost = await Post.findOne({
+      where: { id: req.params.postId },
+      include: [
+        {
+          model: User, // 게시글 작성자
+          attributes: ["id", "nickname", "profileImg", "myIntroduce"],
+        },
+      ],
+    });
+
+    res.status(201).json(fullPost);
+  } catch (error) {
+    console.error(error);
+    next(error);
+  }
+});
+
+router.delete("/:commentId/comment/delete", async (req, res, next) => {
+  try {
+    await Comment.destroy({
+      where: {
+        id: req.params.commentId,
+        UserId: req.user.id,
+      },
+    });
+    res.status(200).json({ commentId: +req.params.commentId });
+  } catch (error) {
+    console.error(error);
+    next(error);
+  }
+});
+
+router.post("/:commentId/reComment", async (req, res, next) => {
+  try {
+    const post = await Comment.findOne({
+      where: { id: req.params.commentId },
+    });
+    if (!post) {
+      return res.status(403).send("존재하지 않는 게시글입니다.");
+    }
+    const reComment = await ReComment.create({
+      content: req.body.content,
+      UserId: req.body.userId,
+      CommentId: req.params.commentId,
+    });
+    const fullReComment = await ReComment.findOne({
+      where: { id: reComment.id },
+      include: [
+        {
+          model: User,
+          attributes: ["id", "nickname", "profileImg"],
+        },
+      ],
+    });
+    res.status(201).json(fullReComment);
+  } catch (error) {
+    console.error(error);
+    next(error);
+  }
+});
+
+router.delete("/:reCommentId/reComment/delete", async (req, res, next) => {
+  try {
+    await ReComment.destroy({
+      where: {
+        id: req.params.reCommentId,
+        UserId: req.user.id,
+      },
+    });
+    res.status(200).json({ reCommentId: +req.params.reCommentId });
   } catch (error) {
     console.error(error);
     next(error);

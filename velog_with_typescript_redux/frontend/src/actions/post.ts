@@ -23,6 +23,21 @@ import {
   ADD_COMMENT_FAILURE,
   ADD_COMMENT_SUCCESS,
   ADD_COMMENT_REQUEST,
+  UPDATE_COMMENT_FAILURE,
+  UPDATE_COMMENT_REQUEST,
+  UPDATE_COMMENT_SUCCESS,
+  REMOVE_COMMENT_REQUEST,
+  REMOVE_COMMENT_SUCCESS,
+  REMOVE_COMMENT_FAILURE,
+  ADD_RECOMMENT_FAILURE,
+  ADD_RECOMMENT_REQUEST,
+  ADD_RECOMMENT_SUCCESS,
+  UPDATE_RECOMMENT_SUCCESS,
+  UPDATE_RECOMMENT_FAILURE,
+  UPDATE_RECOMMENT_REQUEST,
+  REMOVE_RECOMMENT_FAILURE,
+  REMOVE_RECOMMENT_REQUEST,
+  REMOVE_RECOMMENT_SUCCESS,
 } from '@reducers/post';
 
 export const ADD_POST_REQUEST_ACTION = () => ({ type: ADD_POST_REQUEST });
@@ -56,3 +71,35 @@ export const UNLIKE_POST_FAILURE_ACTION = (error: Error | any) => ({ type: UNLIK
 export const ADD_POST_COMMENT_REQUEST_ACTION = () => ({ type: ADD_COMMENT_REQUEST });
 export const ADD_POST_COMMENT_SUCCESS_ACTION = (data: any) => ({ type: ADD_COMMENT_SUCCESS, data });
 export const ADD_POST_COMMENT_FAILURE_ACTION = (error: Error | any) => ({ type: ADD_COMMENT_FAILURE, data: error });
+
+export const UPDATE_POST_COMMENT_REQUEST_ACTION = () => ({ type: UPDATE_COMMENT_REQUEST });
+export const UPDATE_POST_COMMENT_SUCCESS_ACTION = (data: any) => ({ type: UPDATE_COMMENT_SUCCESS, data });
+export const UPDATE_POST_COMMENT_FAILURE_ACTION = (error: Error | any) => ({
+  type: UPDATE_COMMENT_FAILURE,
+  data: error,
+});
+
+export const REMOVE_POST_COMMENT_REQUEST_ACTION = () => ({ type: REMOVE_COMMENT_REQUEST });
+export const REMOVE_POST_COMMENT_SUCCESS_ACTION = (data: any) => ({ type: REMOVE_COMMENT_SUCCESS, data });
+export const REMOVE_POST_COMMENT_FAILURE_ACTION = (error: Error | any) => ({
+  type: REMOVE_COMMENT_FAILURE,
+  data: error,
+});
+
+export const ADD_POST_RECOMMENT_REQUEST_ACTION = () => ({ type: ADD_RECOMMENT_REQUEST });
+export const ADD_POST_RECOMMENT_SUCCESS_ACTION = (data: any) => ({ type: ADD_RECOMMENT_SUCCESS, data });
+export const ADD_POST_RECOMMENT_FAILURE_ACTION = (error: Error | any) => ({ type: ADD_RECOMMENT_FAILURE, data: error });
+
+export const UPDATE_POST_RECOMMENT_REQUEST_ACTION = () => ({ type: UPDATE_RECOMMENT_REQUEST });
+export const UPDATE_POST_RECOMMENT_SUCCESS_ACTION = (data: any) => ({ type: UPDATE_RECOMMENT_SUCCESS, data });
+export const UPDATE_POST_RECOMMENT_FAILURE_ACTION = (error: Error | any) => ({
+  type: UPDATE_RECOMMENT_FAILURE,
+  data: error,
+});
+
+export const REMOVE_POST_RECOMMENT_REQUEST_ACTION = () => ({ type: REMOVE_RECOMMENT_REQUEST });
+export const REMOVE_POST_RECOMMENT_SUCCESS_ACTION = (data: any) => ({ type: REMOVE_RECOMMENT_SUCCESS, data });
+export const REMOVE_POST_RECOMMENT_FAILURE_ACTION = (error: Error | any) => ({
+  type: REMOVE_RECOMMENT_FAILURE,
+  data: error,
+});

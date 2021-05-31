@@ -322,10 +322,11 @@
   font-size: 0.875rem;
   color: rgb(134, 142, 150);
 }
-.actions span {
-  cursor: pointer;
+.actions button {
+  color: rgb(134, 142, 150);
 }
-.actions span + span {
+
+.actions button + button {
   margin-left: 0.5rem;
 }
 .comment-info {

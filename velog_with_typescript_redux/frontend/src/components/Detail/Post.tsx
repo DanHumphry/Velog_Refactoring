@@ -1,10 +1,8 @@
-import { RootState } from '@reducers/index';
 import React, { useState, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useHistory } from 'react-router';
 import { Link } from 'react-router-dom';
 import { LIKE_POST_REQUEST, REMOVE_POST_REQUEST, UNLIKE_POST_REQUEST } from '@thunks/post';
-import { loadPostAPI } from '@api/post';
 
 interface Props {
   detailPost: any;
@@ -14,8 +12,6 @@ interface Props {
 const Post: React.VFC<Props> = ({ detailPost, me }) => {
   const history = useHistory();
   const dispatch = useDispatch();
-
-  const [post, setPost] = useState({ ...detailPost });
 
   const [isLiked, setIsLiked] = useState(
     { ...detailPost }.liker?.split(',').filter((v: string) => +v === me.id).length || 0,
@@ -27,10 +23,10 @@ const Post: React.VFC<Props> = ({ detailPost, me }) => {
     else alert('권한이 없습니다.');
   };
 
-  const delPost = async () => {
+  const delPost = () => {
     if (detailPost.UserId === me.id) {
       if (window.confirm('정말 삭제하시겠습니까 ?')) {
-        await dispatch(REMOVE_POST_REQUEST(detailPost.id));
+        dispatch(REMOVE_POST_REQUEST(detailPost.id));
         history.push('/');
       }
     } else alert('권한이 없습니다.');
@@ -40,21 +36,6 @@ const Post: React.VFC<Props> = ({ detailPost, me }) => {
     if (isLiked) dispatch(UNLIKE_POST_REQUEST({ userId: me.id, postId: detailPost.id }));
     else dispatch(LIKE_POST_REQUEST({ userId: me.id, postId: detailPost.id }));
   };
-
-  useEffect(() => {
-    loadPostAPI(window.location.href.split('/')[4])
-      .then((res) => {
-        setPost(res.data);
-        const currentLiked = res.data.liker?.split(',').filter((v: string) => +v === me.id).length || 0;
-        setIsLiked(currentLiked);
-        return currentLiked;
-      })
-      .then((res) => {
-        if (res) setSvgColor({ color: 'black' });
-        else setSvgColor({ color: 'gray' });
-      })
-      .catch((error) => console.log(error));
-  }, [detailPost]);
 
   return (
     <>
@@ -120,7 +101,7 @@ const Post: React.VFC<Props> = ({ detailPost, me }) => {
       <div className="detail__footer-wrapper">
         <div className="detail__writerInfo">
           <div className="detail__topInfo">
-            <Link to={`/mysite/${detailPost.UserId}`}>
+            <Link to={`/myPost/${detailPost.UserId}`}>
               <img src={detailPost.User.profileImg} alt="" />
             </Link>
             <div className="detail__userInfo">

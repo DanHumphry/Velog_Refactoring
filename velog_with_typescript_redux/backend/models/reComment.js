@@ -1,7 +1,7 @@
 const DataTypes = require("sequelize");
 const { Model } = DataTypes;
 
-module.exports = class Comment extends Model {
+module.exports = class ReComment extends Model {
   static init(sequelize) {
     return super.init(
       {
@@ -12,8 +12,8 @@ module.exports = class Comment extends Model {
         },
       },
       {
-        modelName: "Comment",
-        tableName: "comments",
+        modelName: "reComment",
+        tableName: "reComments",
         charset: "utf8mb4",
         collate: "utf8mb4_general_ci", // 이모티콘 저장
         sequelize,
@@ -22,8 +22,7 @@ module.exports = class Comment extends Model {
   }
 
   static associate(db) {
-    db.Comment.belongsTo(db.User);
-    db.Comment.belongsTo(db.Post);
-    db.Comment.hasMany(db.ReComment);
+    db.ReComment.belongsTo(db.User);
+    db.ReComment.belongsTo(db.Comment);
   }
 };

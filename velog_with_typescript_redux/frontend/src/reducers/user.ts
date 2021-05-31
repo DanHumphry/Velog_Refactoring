@@ -24,7 +24,6 @@ export const initialState = {
   updateProfileImgDone: false,
   updateProfileImgError: null,
 
-  userInfo: [],
   me: {},
 };
 

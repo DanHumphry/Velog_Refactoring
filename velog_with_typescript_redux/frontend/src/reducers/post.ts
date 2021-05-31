@@ -27,13 +27,24 @@ export const initialState = {
   addCommentLoading: false, // 댓글작성중
   addCommentDone: false,
   addCommentError: null,
+  updateCommentLoading: false, // 댓글 수정중
+  updateCommentDone: false,
+  updateCommentError: null,
+  removeCommentLoading: false, // 댓글 제거중
+  removeCommentDone: false,
+  removeCommentError: null,
+  addReCommentLoading: false, // 대댓글작성중
+  addReCommentDone: false,
+  addReCommentError: null,
+  updateReCommentLoading: false, // 댓글 수정중
+  updateReCommentDone: false,
+  updateReCommentError: null,
+  removeReCommentLoading: false, // 댓글 제거중
+  removeReCommentDone: false,
+  removeReCommentError: null,
 
   newOrRec: false,
-
-  singlePost: null,
-  imagePaths: [],
   hasMorePosts: true,
-
   myPostNavModal: false,
 };
 
@@ -69,13 +80,25 @@ export const ADD_COMMENT_REQUEST = 'ADD_COMMENT_REQUEST';
 export const ADD_COMMENT_SUCCESS = 'ADD_COMMENT_SUCCESS';
 export const ADD_COMMENT_FAILURE = 'ADD_COMMENT_FAILURE';
 
-export const LOAD_USER_POSTS_REQUEST = 'LOAD_USER_POSTS_REQUEST';
-export const LOAD_USER_POSTS_SUCCESS = 'LOAD_USER_POSTS_SUCCESS';
-export const LOAD_USER_POSTS_FAILURE = 'LOAD_USER_POSTS_FAILURE';
+export const UPDATE_COMMENT_REQUEST = 'UPDATE_COMMENT_REQUEST';
+export const UPDATE_COMMENT_SUCCESS = 'UPDATE_COMMENT_SUCCESS';
+export const UPDATE_COMMENT_FAILURE = 'UPDATE_COMMENT_FAILURE';
 
-export const LOAD_HASHTAG_POSTS_REQUEST = 'LOAD_HASHTAG_POSTS_REQUEST';
-export const LOAD_HASHTAG_POSTS_SUCCESS = 'LOAD_HASHTAG_POSTS_SUCCESS';
-export const LOAD_HASHTAG_POSTS_FAILURE = 'LOAD_HASHTAG_POSTS_FAILURE';
+export const REMOVE_COMMENT_REQUEST = 'REMOVE_COMMENT_REQUEST';
+export const REMOVE_COMMENT_SUCCESS = 'REMOVE_COMMENT_SUCCESS';
+export const REMOVE_COMMENT_FAILURE = 'REMOVE_COMMENT_FAILURE';
+
+export const ADD_RECOMMENT_REQUEST = 'ADD_RECOMMENT_REQUEST';
+export const ADD_RECOMMENT_SUCCESS = 'ADD_RECOMMENT_SUCCESS';
+export const ADD_RECOMMENT_FAILURE = 'ADD_RECOMMENT_FAILURE';
+
+export const UPDATE_RECOMMENT_REQUEST = 'UPDATE_RECOMMENT_REQUEST';
+export const UPDATE_RECOMMENT_SUCCESS = 'UPDATE_RECOMMENT_SUCCESS';
+export const UPDATE_RECOMMENT_FAILURE = 'UPDATE_RECOMMENT_FAILURE';
+
+export const REMOVE_RECOMMENT_REQUEST = 'REMOVE_RECOMMENT_REQUEST';
+export const REMOVE_RECOMMENT_SUCCESS = 'REMOVE_RECOMMENT_SUCCESS';
+export const REMOVE_RECOMMENT_FAILURE = 'REMOVE_RECOMMENT_FAILURE';
 
 export const FILTER_REQUEST = 'FILTER_REQUEST';
 export const FILTER_SUCCESS = 'FILTER_SUCCESS';
@@ -135,8 +158,8 @@ const Post = (state = initialState, action: any) => {
     case REMOVE_POST_REQUEST:
       return { ...state, removePostLoading: true, removePostDone: false, removePostError: null };
     case REMOVE_POST_SUCCESS: {
-      const posts: any[] = [...state.mainPosts];
-      posts.filter((v) => v.id !== action.data.PostId);
+      let posts: any[] = [...state.mainPosts];
+      posts = posts.filter((v) => v.id !== action.data.PostId);
       return {
         ...state,
         removePostLoading: false,
@@ -152,8 +175,7 @@ const Post = (state = initialState, action: any) => {
     case LIKE_POST_REQUEST:
       return { ...state, likePostLoading: true, likePostDone: false, likePostError: null };
     case LIKE_POST_SUCCESS: {
-      const posts: any[] = [...state.mainPosts];
-      const post = posts.find((v) => v.id === action.data.postId);
+      const post: any = { ...state.detailPost };
       if (post.liker) post.liker += `,${action.data.userId}`;
       else post.liker = `${action.data.userId}`;
       post.like += 1;
@@ -164,12 +186,11 @@ const Post = (state = initialState, action: any) => {
     case UNLIKE_POST_REQUEST:
       return { ...state, unlikePostLoading: true, unlikePostDone: false, unlikePostError: null };
     case UNLIKE_POST_SUCCESS: {
-      const posts: any[] = [...state.mainPosts];
-      const post = posts.find((v) => v.id === action.data.postId);
-      const liker = post.liker.split(',');
-      const idx = liker.find((v: string) => +v === action.data.userId);
-      liker.splice(idx, 1);
-      post.liker = liker.join('');
+      const post: any = { ...state.detailPost };
+      post.liker = post.liker
+        .split(',')
+        .filter((v: string) => +v !== action.data.userId)
+        .join('');
       post.like -= 1;
       return { ...state, unlikePostLoading: false, unlikePostDone: true, unlikePostError: null, detailPost: post };
     }
@@ -180,11 +201,74 @@ const Post = (state = initialState, action: any) => {
       return { ...state, addCommentLoading: true, addCommentDone: false, addCommentError: null };
     case ADD_COMMENT_SUCCESS: {
       const post: any = { ...state.detailPost };
-      post.Comments.push(action.data);
+      if (post.Comments) post.Comments.push(action.data);
+      else post.Comments = [action.data];
       return { ...state, addCommentLoading: false, addCommentDone: true, addCommentError: null, detailPost: post };
     }
     case ADD_COMMENT_FAILURE:
       return { ...state, addCommentLoading: false, addCommentDone: false, addCommentError: action.data };
+    case UPDATE_COMMENT_REQUEST:
+      return { ...state, updateCommentLoading: true, updateCommentDone: false, updateCommentError: null };
+    case UPDATE_COMMENT_SUCCESS:
+      return { ...state, updateCommentLoading: false, updateCommentDone: true, updateCommentError: null };
+    case UPDATE_COMMENT_FAILURE:
+      return { ...state, updateCommentLoading: false, updateCommentDone: false, updateCommentError: action.data };
+    case REMOVE_COMMENT_REQUEST:
+      return { ...state, removeCommentLoading: true, removeCommentDone: false, removeCommentError: null };
+    case REMOVE_COMMENT_SUCCESS: {
+      let post: any = { ...state.detailPost };
+      post = post.Comments.filter((v: any) => v.id !== action.data.commentId);
+      return {
+        ...state,
+        removeCommentLoading: false,
+        removeCommentDone: true,
+        removeCommentError: null,
+        detailPost: post,
+      };
+    }
+    case REMOVE_COMMENT_FAILURE:
+      return { ...state, removeCommentLoading: false, removeCommentDone: false, removeCommentError: action.data };
+
+    case ADD_RECOMMENT_REQUEST:
+      return { ...state, addReCommentLoading: true, addReCommentDone: false, addReCommentError: null };
+    case ADD_RECOMMENT_SUCCESS: {
+      const post: any = { ...state.detailPost };
+      const postComment = post.Comments.find((v: any) => v.id === action.data.CommentId);
+      if (postComment.reComments) postComment.reComments.push(action.data);
+      else postComment.reComments = [action.data];
+      return {
+        ...state,
+        addReCommentLoading: false,
+        addReCommentDone: true,
+        addReCommentError: null,
+        detailPost: post,
+      };
+    }
+    case ADD_RECOMMENT_FAILURE:
+      return { ...state, addReCommentLoading: false, addReCommentDone: false, addReCommentError: action.data };
+    case UPDATE_RECOMMENT_REQUEST:
+      return { ...state, updateReCommentLoading: true, updateReCommentDone: false, updateReCommentError: null };
+    case UPDATE_RECOMMENT_SUCCESS:
+      return { ...state, updateReCommentLoading: false, updateReCommentDone: true, updateReCommentError: null };
+    case UPDATE_RECOMMENT_FAILURE:
+      return { ...state, updateReCommentLoading: false, updateReCommentDone: false, updateReCommentError: action.data };
+    case REMOVE_RECOMMENT_REQUEST:
+      return { ...state, removeReCommentLoading: true, removeReCommentDone: false, removeReCommentError: null };
+    case REMOVE_RECOMMENT_SUCCESS: {
+      let post: any = { ...state.detailPost };
+      post = post.Comments.map((comment: any) =>
+        comment.reComments.filter((reComment: any) => reComment.id !== action.data.reCommentId),
+      );
+      return {
+        ...state,
+        removeReCommentLoading: false,
+        removeReCommentDone: true,
+        removeReCommentError: null,
+        detailPost: post,
+      };
+    }
+    case REMOVE_RECOMMENT_FAILURE:
+      return { ...state, removeReCommentLoading: false, removeReCommentDone: false, removeReCommentError: action.data };
 
     case FILTER_SUCCESS:
       return { ...state, filterList: action.data };

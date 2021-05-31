@@ -77,7 +77,6 @@ export const LOG_OUT_REQUEST = () => async (dispatch: any) => {
     await userAPI.logOutAPI();
     await dispatch(LOG_OUT_SUCCESS_ACTION());
   } catch (e) {
-    console.log(e);
     dispatch(LOG_OUT_FAILURE_ACTION(e));
   }
 };
@@ -88,7 +87,6 @@ export const UPDATE_PROFILE_REQUEST = (v: any) => async (dispatch: any) => {
     const res = await userAPI.updateProfileAPI(v);
     await dispatch(UPDATE_PROFILE_SUCCESS_ACTION(res.data));
   } catch (e) {
-    console.log(e);
     dispatch(UPDATE_PROFILE_FAILURE_ACTION(e));
   }
 };
@@ -99,7 +97,6 @@ export const UPDATE_PROFILE_IMG_REQUEST = (v: FormData) => async (dispatch: any)
     const res = await userAPI.updateProfileImgAPI(v);
     await dispatch(UPDATE_PROFILE_IMG_SUCCESS_ACTION(res.data));
   } catch (e) {
-    console.log(e);
     dispatch(UPDATE_PROFILE_IMG_FAILURE_ACTION(e));
   }
 };

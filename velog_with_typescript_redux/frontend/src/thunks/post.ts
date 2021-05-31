@@ -23,6 +23,21 @@ import {
   ADD_POST_COMMENT_FAILURE_ACTION,
   ADD_POST_COMMENT_REQUEST_ACTION,
   ADD_POST_COMMENT_SUCCESS_ACTION,
+  ADD_POST_RECOMMENT_FAILURE_ACTION,
+  ADD_POST_RECOMMENT_REQUEST_ACTION,
+  ADD_POST_RECOMMENT_SUCCESS_ACTION,
+  UPDATE_POST_COMMENT_REQUEST_ACTION,
+  UPDATE_POST_COMMENT_SUCCESS_ACTION,
+  UPDATE_POST_COMMENT_FAILURE_ACTION,
+  REMOVE_POST_COMMENT_REQUEST_ACTION,
+  REMOVE_POST_COMMENT_SUCCESS_ACTION,
+  REMOVE_POST_COMMENT_FAILURE_ACTION,
+  UPDATE_POST_RECOMMENT_FAILURE_ACTION,
+  UPDATE_POST_RECOMMENT_REQUEST_ACTION,
+  UPDATE_POST_RECOMMENT_SUCCESS_ACTION,
+  REMOVE_POST_RECOMMENT_FAILURE_ACTION,
+  REMOVE_POST_RECOMMENT_REQUEST_ACTION,
+  REMOVE_POST_RECOMMENT_SUCCESS_ACTION,
 } from '@actions/post';
 import * as postAPI from '@api/post';
 
@@ -103,5 +118,53 @@ export const ADD_POST_COMMENT_REQUEST = (data: any) => async (dispatch: any) => 
     dispatch(ADD_POST_COMMENT_SUCCESS_ACTION(res.data));
   } catch (error) {
     dispatch(ADD_POST_COMMENT_FAILURE_ACTION(error.response.data));
+  }
+};
+
+export const UPDATE_POST_COMMENT_REQUEST = (data: any) => async (dispatch: any) => {
+  try {
+    dispatch(UPDATE_POST_COMMENT_REQUEST_ACTION());
+    const res = await postAPI.updateCommentAPI(data);
+    dispatch(UPDATE_POST_COMMENT_SUCCESS_ACTION(res.data));
+  } catch (error) {
+    dispatch(UPDATE_POST_COMMENT_FAILURE_ACTION(error.response.data));
+  }
+};
+export const REMOVE_POST_COMMENT_REQUEST = (data: any) => async (dispatch: any) => {
+  try {
+    dispatch(REMOVE_POST_COMMENT_REQUEST_ACTION());
+    const res = await postAPI.removeCommentAPI(data);
+    dispatch(REMOVE_POST_COMMENT_SUCCESS_ACTION(res.data));
+  } catch (error) {
+    dispatch(REMOVE_POST_COMMENT_FAILURE_ACTION(error.response.data));
+  }
+};
+
+export const ADD_POST_RECOMMENT_REQUEST = (data: any) => async (dispatch: any) => {
+  try {
+    dispatch(ADD_POST_RECOMMENT_REQUEST_ACTION());
+    const res = await postAPI.PostReCommentAPI(data);
+    dispatch(ADD_POST_RECOMMENT_SUCCESS_ACTION(res.data));
+  } catch (error) {
+    dispatch(ADD_POST_RECOMMENT_FAILURE_ACTION(error.response.data));
+  }
+};
+
+export const UPDATE_POST_RECOMMENT_REQUEST = (data: any) => async (dispatch: any) => {
+  try {
+    dispatch(UPDATE_POST_RECOMMENT_REQUEST_ACTION());
+    const res = await postAPI.updateReCommentAPI(data);
+    dispatch(UPDATE_POST_RECOMMENT_SUCCESS_ACTION(res.data));
+  } catch (error) {
+    dispatch(UPDATE_POST_RECOMMENT_FAILURE_ACTION(error.response.data));
+  }
+};
+export const REMOVE_POST_RECOMMENT_REQUEST = (data: any) => async (dispatch: any) => {
+  try {
+    dispatch(REMOVE_POST_RECOMMENT_REQUEST_ACTION());
+    const res = await postAPI.removeReCommentAPI(data);
+    dispatch(REMOVE_POST_RECOMMENT_SUCCESS_ACTION(res.data));
+  } catch (error) {
+    dispatch(REMOVE_POST_RECOMMENT_FAILURE_ACTION(error.response.data));
   }
 };

@@ -34,3 +34,23 @@ export const unlikePostAPI = (data: { userId: number; postId: number }) => {
 export const PostCommentAPI = (data: any) => {
   return axios.post(`post/${data.postId}/comment`, data);
 };
+
+export const updateCommentAPI = (data: any) => {
+  return axios.post(`post/${data.commentId}/comment/update`, data);
+};
+
+export const removeCommentAPI = (data: any) => {
+  return axios.delete(`post/${data.commentId}/comment/delete`);
+};
+
+export const PostReCommentAPI = (data: any) => {
+  return axios.post(`post/${data.commentId}/reComment`, data);
+};
+
+export const updateReCommentAPI = (data: any) => {
+  return axios.post(`post/${data.reCommentId}/reComment/update`, data);
+};
+
+export const removeReCommentAPI = (data: any) => {
+  return axios.delete(`post/${data.reCommentId}/reComment/delete`);
+};

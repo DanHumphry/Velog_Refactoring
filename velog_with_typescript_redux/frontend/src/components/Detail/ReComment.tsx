@@ -1,10 +1,6 @@
 import useInput from '@hooks/useInput';
-import {
-  ADD_POST_RECOMMENT_REQUEST,
-  LOAD_POST_REQUEST,
-  REMOVE_POST_RECOMMENT_REQUEST,
-  UPDATE_POST_RECOMMENT_REQUEST,
-} from '@thunks/post';
+import { ADD_POST_RECOMMENT_REQUEST, REMOVE_POST_RECOMMENT_REQUEST, UPDATE_POST_RECOMMENT_REQUEST } from '@thunks/post';
+import gravatar from 'gravatar';
 import React from 'react';
 import { useDispatch } from 'react-redux';
 import { Link } from 'react-router-dom';
@@ -53,7 +49,11 @@ const ReComment: React.VFC<Props> = ({ comment, me }) => {
                 <div className="sc-jwKygS ezDpwK">
                   <div className="profile">
                     <Link to={`/myPost/${reComment.UserId}`}>
-                      <img src={reComment.User.profileImg} alt="comment-user-thumbnail" />
+                      {reComment.User.profileImg ? (
+                        <img src={reComment.User.profileImg} alt="comment-user-thumbnail" />
+                      ) : (
+                        <img src={gravatar.url(me.nickname, { s: '20px', d: 'retro' })} alt="" />
+                      )}
                     </Link>
                     <div className="comment-info">
                       <div className="username">

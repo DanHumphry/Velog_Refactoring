@@ -41,7 +41,7 @@ function Header() {
                 {/* eslint-disable-next-line jsx-a11y/click-events-have-key-events,jsx-a11y/no-static-element-interactions */}
                 <div className="user-container" onClick={clickProfileModal}>
                   {me.profileImg === '' || me.profileImg === null || me.profileImg === undefined ? (
-                    <img src={gravatar.url(me.username, { s: '20px', d: 'retro' })} className="user-image" alt="/" />
+                    <img src={gravatar.url(me.nickname, { s: '20px', d: 'retro' })} className="user-image" alt="/" />
                   ) : (
                     <img src={me.profileImg} className="user-image" alt="/" />
                   )}

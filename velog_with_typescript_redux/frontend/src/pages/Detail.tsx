@@ -1,4 +1,3 @@
-import { loadPostAPI } from '@api/post';
 import PageLoader from '@loader/PageLoader';
 import { RootState } from '@reducers/index';
 import { LOAD_POST_REQUEST } from '@thunks/post';
@@ -13,15 +12,13 @@ function Detail() {
   const { detailPost, loadPostLoading } = useSelector((store: RootState) => store.post);
   const { me } = useSelector((store: RootState) => store.user);
 
-  // useEffect(() => {
-  //   if (!Object.keys(detailPost).length) dispatch(LOAD_POST_REQUEST(window.location.href.split('/')[4]));
-  // }, []);
+  useEffect(() => {
+    if (Object.keys(detailPost).length === 0) {
+      dispatch(LOAD_POST_REQUEST(window.location.href.split('/')[4]));
+    }
+  }, []);
 
-  // if (!detailPost.id) {
-  //   dispatch(LOAD_POST_REQUEST(window.location.href.split('/')[4]));
-  // }
-
-  if (loadPostLoading) return <PageLoader />;
+  if (Object.keys(detailPost).length === 0 || loadPostLoading) return <PageLoader />;
 
   return (
     <div className="detail__container">

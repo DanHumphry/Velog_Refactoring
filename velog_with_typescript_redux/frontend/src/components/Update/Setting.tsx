@@ -8,9 +8,11 @@ interface Props {
     React.SetStateAction<{ textSection: { visibility: string }; settingSection: { visibility: string } }>
   >;
   inp: { title: string; content: string };
+  imgURL: string;
+  setImgURL: React.Dispatch<React.SetStateAction<string>>;
 }
 
-const Setting: VFC<Props> = ({ visibility, setVisibility, inp }) => {
+const Setting: VFC<Props> = ({ visibility, setVisibility, inp, imgURL, setImgURL }) => {
   const { detailPost } = useSelector((store: RootState) => store.post);
 
   const [filterList] = useState([
@@ -23,9 +25,28 @@ const Setting: VFC<Props> = ({ visibility, setVisibility, inp }) => {
     { id: 7, language: 'GO' },
     { id: 8, language: 'Javascript' },
   ]);
-  const [imgURL, setImgURL] = useState(detailPost.image as string);
 
   const refImgFiles: any = useRef(null);
+
+  const onChangeImg = (e: React.ChangeEvent<HTMLInputElement>) => {
+    e.preventDefault();
+    const reader = new FileReader();
+    let file: any;
+    if (e.target.files !== null) {
+      // eslint-disable-next-line prefer-destructuring
+      file = e.target.files[0];
+    }
+    reader.onloadend = () => {
+      if (reader.result !== null && typeof reader.result === 'string') setImgURL(reader.result);
+    };
+    reader.readAsDataURL(file);
+  };
+
+  const delImg = () => {
+    refImgFiles.current.files = null;
+    refImgFiles.current.value = null;
+    setImgURL('');
+  };
 
   return (
     <div className="thumbnail_container" style={visibility.settingSection as React.CSSProperties}>
@@ -41,30 +62,12 @@ const Setting: VFC<Props> = ({ visibility, setVisibility, inp }) => {
                   type="file"
                   id="file"
                   accept=".jpg, .png, .jpeg, .gif"
-                  onChange={(e) => {
-                    e.preventDefault();
-                    const reader = new FileReader();
-                    let file: any;
-                    if (e.target.files !== null) {
-                      // eslint-disable-next-line prefer-destructuring
-                      file = e.target.files[0];
-                    }
-                    reader.onloadend = () => {
-                      if (reader.result !== null && typeof reader.result === 'string') setImgURL(reader.result);
-                    };
-                    reader.readAsDataURL(file);
-                  }}
+                  onChange={onChangeImg}
                 />
                 이미지 업로드
               </label>
             </button>
-            <button
-              type="button"
-              className="upButton"
-              onClick={() => {
-                setImgURL('');
-              }}
-            >
+            <button type="button" className="upButton" onClick={delImg}>
               이미지 제거
             </button>
             <div className="left_container2">
@@ -102,7 +105,7 @@ const Setting: VFC<Props> = ({ visibility, setVisibility, inp }) => {
               <ul>
                 {filterList.map((a) => {
                   let checked = false;
-                  if (detailPost.language.indexOf(a.language) !== -1) checked = true;
+                  if (detailPost.language.split(',').indexOf(a.language) !== -1) checked = true;
                   return (
                     <li key={a.id}>
                       <input

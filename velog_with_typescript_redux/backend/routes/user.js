@@ -112,7 +112,7 @@ router.post("/update/image", upload.single("image"), async (req, res, next) => {
       { profileImg: `http://localhost:3065/${req.file.path}` },
       { where: { id: req.body.id } }
     );
-    await res.status(200).json(req.file.path);
+    await res.status(200).json(`http://localhost:3065/${req.file.path}`);
   } catch (error) {
     console.log(error);
     next(error);

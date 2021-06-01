@@ -27,7 +27,6 @@ function App() {
         if (res.data) dispatch(LOG_IN_SUCCESS_ACTION(res.data));
       })
       .catch((error) => console.log(error));
-    dispatch(LOAD_POSTS_REQUEST());
   }, []);
 
   return (

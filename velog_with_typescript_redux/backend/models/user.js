@@ -23,7 +23,7 @@ module.exports = class User extends Model {
           allowNull: true,
         },
         profileImg: {
-          type: DataTypes.STRING(100),
+          type: DataTypes.STRING(255),
           allowNull: true,
         },
         myIntroduce: {
@@ -44,5 +44,6 @@ module.exports = class User extends Model {
     db.User.hasMany(db.Post);
     db.User.hasMany(db.Comment);
     db.User.hasMany(db.ReComment);
+    db.User.belongsToMany(db.Post, { through: "Like", as: "Liked" });
   }
 };

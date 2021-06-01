@@ -7,8 +7,8 @@ export const postWriteAPI = (data: any) => {
   return axios.post('post/', data);
 };
 
-export const loadPostsAPI = () => {
-  return axios.get('posts/');
+export const loadPostsAPI = (href: string) => {
+  return axios.post('posts/', { href });
 };
 
 export const loadPostAPI = (id: string) => {
@@ -24,11 +24,11 @@ export const removePostAPI = (id: string) => {
 };
 
 export const likePostAPI = (data: { userId: number; postId: number }) => {
-  return axios.post(`post/${data.postId}/like`, data);
+  return axios.patch(`post/${data.postId}/like`);
 };
 
 export const unlikePostAPI = (data: { userId: number; postId: number }) => {
-  return axios.post(`post/${data.postId}/unlike`, data);
+  return axios.delete(`post/${data.postId}/like`);
 };
 
 export const PostCommentAPI = (data: any) => {

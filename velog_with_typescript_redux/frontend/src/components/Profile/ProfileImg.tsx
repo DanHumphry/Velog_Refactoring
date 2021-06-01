@@ -40,7 +40,7 @@ const ProfileImg = () => {
       {imgURL !== '' ? (
         <img src={imgURL} alt="" />
       ) : me.profileImg === '' || me.profileImg === null || me.profileImg === undefined ? (
-        <img src={gravatar.url(me.username, { s: '20px', d: 'retro' })} alt="" />
+        <img src={gravatar.url(me.nickname, { s: '20px', d: 'retro' })} alt="" />
       ) : (
         <img src={me.profileImg} alt="" />
       )}

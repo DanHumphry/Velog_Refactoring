@@ -176,9 +176,7 @@ const Post = (state = initialState, action: any) => {
       return { ...state, likePostLoading: true, likePostDone: false, likePostError: null };
     case LIKE_POST_SUCCESS: {
       const post: any = { ...state.detailPost };
-      if (post.liker) post.liker += `,${action.data.userId}`;
-      else post.liker = `${action.data.userId}`;
-      post.like += 1;
+      post.Likers.push({ id: action.data.userId });
       return { ...state, likePostLoading: false, likePostDone: true, likePostError: null, detailPost: post };
     }
     case LIKE_POST_FAILURE:
@@ -187,11 +185,7 @@ const Post = (state = initialState, action: any) => {
       return { ...state, unlikePostLoading: true, unlikePostDone: false, unlikePostError: null };
     case UNLIKE_POST_SUCCESS: {
       const post: any = { ...state.detailPost };
-      post.liker = post.liker
-        .split(',')
-        .filter((v: string) => +v !== action.data.userId)
-        .join('');
-      post.like -= 1;
+      post.Likers = post.Likers.filter((v: any) => v.id !== action.data.userId);
       return { ...state, unlikePostLoading: false, unlikePostDone: true, unlikePostError: null, detailPost: post };
     }
     case UNLIKE_POST_FAILURE:
@@ -216,8 +210,10 @@ const Post = (state = initialState, action: any) => {
     case REMOVE_COMMENT_REQUEST:
       return { ...state, removeCommentLoading: true, removeCommentDone: false, removeCommentError: null };
     case REMOVE_COMMENT_SUCCESS: {
-      let post: any = { ...state.detailPost };
-      post = post.Comments.filter((v: any) => v.id !== action.data.commentId);
+      console.log({ ...state.detailPost });
+      const post: any = { ...state.detailPost };
+      post.Comments = post.Comments.filter((comment: any) => comment.id !== action.data.commentId);
+      console.log(post);
       return {
         ...state,
         removeCommentLoading: false,
@@ -255,10 +251,15 @@ const Post = (state = initialState, action: any) => {
     case REMOVE_RECOMMENT_REQUEST:
       return { ...state, removeReCommentLoading: true, removeReCommentDone: false, removeReCommentError: null };
     case REMOVE_RECOMMENT_SUCCESS: {
-      let post: any = { ...state.detailPost };
-      post = post.Comments.map((comment: any) =>
-        comment.reComments.filter((reComment: any) => reComment.id !== action.data.reCommentId),
-      );
+      const post: any = { ...state.detailPost };
+      let idx;
+      for (let l = 0; l < post.Comments.length; l += 1) {
+        idx = post.Comments[l].reComments.findIndex((reComment: any) => reComment.id === action.data.reCommentId);
+        if (idx !== -1) {
+          post.Comments[l].reComments.splice(idx, 1);
+          break;
+        }
+      }
       return {
         ...state,
         removeReCommentLoading: false,

@@ -51,10 +51,10 @@ export const ADD_POST_REQUEST = (v: any) => async (dispatch: any) => {
   }
 };
 
-export const LOAD_POSTS_REQUEST = () => async (dispatch: any) => {
+export const LOAD_POSTS_REQUEST = (href: string) => async (dispatch: any) => {
   try {
     dispatch(LOAD_POSTS_REQUEST_ACTION());
-    const res = await postAPI.loadPostsAPI();
+    const res = await postAPI.loadPostsAPI(href);
     dispatch(LOAD_POSTS_SUCCESS_ACTION(res.data));
   } catch (error) {
     dispatch(LOAD_POSTS_FAILURE_ACTION(error.response.data));

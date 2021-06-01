@@ -32,17 +32,16 @@ function Content() {
             const date = `${temp[0]}년 ${temp[1]}월 ${temp[2].split('T')[0]}일`;
 
             return (
-              <div className="contents-article" key={a.id}>
+              // eslint-disable-next-line jsx-a11y/click-events-have-key-events,jsx-a11y/no-static-element-interactions
+              <div className="contents-article" key={a.id} onClick={() => loadPost(a.id)}>
                 {a.image === null || a.image === undefined || a.image === '' ? null : (
-                  // eslint-disable-next-line jsx-a11y/click-events-have-key-events,jsx-a11y/no-static-element-interactions
-                  <div onClick={() => loadPost(a.id)}>
+                  <div>
                     <div className="article-thumbnail">
                       <img src={a.image} alt="/" />
                     </div>
                   </div>
                 )}
-                {/* eslint-disable-next-line jsx-a11y/click-events-have-key-events,jsx-a11y/no-static-element-interactions */}
-                <div onClick={() => loadPost(a.id)}>
+                <div>
                   <h2>{a.title}</h2>
                 </div>
                 <p>{a.content}</p>

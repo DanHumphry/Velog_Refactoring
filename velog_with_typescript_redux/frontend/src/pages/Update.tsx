@@ -1,5 +1,5 @@
 import { RootState } from '@reducers/index';
-import { ADD_POST_REQUEST, UPDATE_POST_REQUEST } from '@thunks/post';
+import { UPDATE_POST_REQUEST } from '@thunks/post';
 import React, { useState } from 'react';
 import '@styles/Write.css';
 import '@styles/Thumbnail.css';
@@ -19,6 +19,7 @@ function Update() {
     settingSection: { visibility: 'hidden' },
   });
   const [inp, setInp] = useState({ title: '', content: '' });
+  const [imgURL, setImgURL] = useState(detailPost.image as string);
 
   const submitWrite = async (e: any) => {
     e.preventDefault();
@@ -38,6 +39,8 @@ function Update() {
       formData.append('language', langs);
       if (e.target.elements.imgFile.value) {
         formData.append('image', e.target.elements.imgFile.files[0]);
+      } else if (detailPost.image && imgURL !== '') {
+        formData.append('image', detailPost.image);
       }
 
       await dispatch(UPDATE_POST_REQUEST(detailPost.id, formData));
@@ -48,7 +51,7 @@ function Update() {
   return (
     <form encType="multipart/form-data" onSubmit={(e) => submitWrite(e)}>
       <TextArea visibility={visibility} setVisibility={setVisibility} />
-      <Setting visibility={visibility} setVisibility={setVisibility} inp={inp} />
+      <Setting visibility={visibility} setVisibility={setVisibility} inp={inp} imgURL={imgURL} setImgURL={setImgURL} />
     </form>
   );
 }

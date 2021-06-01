@@ -1,5 +1,6 @@
 import { RootState } from '@reducers/index';
 import { LOAD_POST_REQUEST } from '@thunks/post';
+import gravatar from 'gravatar';
 import React, { useEffect, useState } from 'react';
 import '@styles/Board.css';
 import SideCheckBox from '@components/Home/SideCheckBox';
@@ -35,52 +36,63 @@ function Content() {
     <div className="trend-section">
       <main className="trend-main">
         <div className="main-section">
-          {filterPost.map((a: any) => {
-            const temp = a.createdAt.split('-');
+          {filterPost.map((post: any) => {
+            let commentCnt = post.Comments.length;
+            for (let i = 0; i < post.Comments.length; i += 1) commentCnt += post.Comments[i].reComments.length;
+
+            const temp = post.createdAt.split('-');
             const date = `${temp[0]}년 ${temp[1]}월 ${temp[2].split('T')[0]}일`;
 
             return (
-              <div className="article" key={a.id}>
-                {a.image === null || a.image === undefined || a.image === '' ? null : (
+              <div className="article" key={post.id}>
+                {post.image === null || post.image === undefined || post.image === '' ? null : (
                   // eslint-disable-next-line jsx-a11y/click-events-have-key-events,jsx-a11y/no-static-element-interactions
-                  <div onClick={() => loadPost(a.id)}>
+                  <div onClick={() => loadPost(post.id)}>
                     <div className="arcticle-img">
-                      <img src={a.image || ''} alt="" />
+                      <img src={post.image || ''} alt="" />
                     </div>
                   </div>
                 )}
                 {/* eslint-disable-next-line jsx-a11y/click-events-have-key-events,jsx-a11y/no-static-element-interactions */}
-                <div className="article-content" onClick={() => loadPost(a.id)}>
+                <div className="article-content" onClick={() => loadPost(post.id)}>
                   <div>
-                    <h4>{a.title}</h4>
+                    <h4>{post.title}</h4>
                     <div className="desc-wrapper">
-                      <p>{a.content}</p>
+                      <p>{post.content}</p>
                     </div>
                   </div>
                   <div className="sub-info">
                     <span>{date}</span>
                     <span className="separator">·</span>
-                    <span>0개의 댓글</span>
+                    <span>{commentCnt}개의 댓글</span>
                   </div>
                   <div className="filter-info">
-                    {a.language.split(',').map((L: string, i: number) => {
+                    {post.language.split(',').map((L: string, i: number) => {
                       // eslint-disable-next-line react/no-array-index-key
                       return <p key={i}>{L}</p>;
                     })}
                   </div>
                 </div>
                 <div className="article-footer">
-                  <Link to={`/myPost/${a.User.id}`}>
-                    <img src={a.User.profileImg} alt="" />
+                  <Link to={`/myPost/${post.User.id}`}>
+                    {post.User.profileImg ? (
+                      <img src={post.User.profileImg} alt="" />
+                    ) : (
+                      <img
+                        src={gravatar.url(post.User.nickname, { s: '20px', d: 'retro' })}
+                        className="user-image"
+                        alt="/"
+                      />
+                    )}
                     <span>
-                      by <b>{a.User.nickname}</b>
+                      by <b>{post.User.nickname}</b>
                     </span>
                   </Link>
                   <div className="likes">
                     <svg width="24" height="24" viewBox="0 0 24 24">
                       <path fill="currentColor" d="M18 1l-6 4-6-4-6 5v7l12 10 12-10v-7z" />
                     </svg>
-                    {a.like}
+                    {post.Likers.length}
                   </div>
                 </div>
               </div>

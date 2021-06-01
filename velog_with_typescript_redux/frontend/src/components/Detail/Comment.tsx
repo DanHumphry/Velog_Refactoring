@@ -1,12 +1,8 @@
 import ReComment from '@components/Detail/ReComment';
 import useInput from '@hooks/useInput';
-import {
-  ADD_POST_COMMENT_REQUEST,
-  LOAD_POST_REQUEST,
-  REMOVE_POST_COMMENT_REQUEST,
-  UPDATE_POST_COMMENT_REQUEST,
-} from '@thunks/post';
-import React, { useState } from 'react';
+import { ADD_POST_COMMENT_REQUEST, REMOVE_POST_COMMENT_REQUEST, UPDATE_POST_COMMENT_REQUEST } from '@thunks/post';
+import gravatar from 'gravatar';
+import React, { useEffect, useState } from 'react';
 import { useDispatch } from 'react-redux';
 import { Link } from 'react-router-dom';
 
@@ -38,18 +34,26 @@ const Comment: React.VFC<Props> = ({ detailPost, me }) => {
     dispatch(UPDATE_POST_COMMENT_REQUEST({}));
   };
 
-  const removeComment = async (data: { writtenUser: number; commentId: number }) => {
+  const removeComment = (data: { writtenUser: number; commentId: number }) => {
     if (data.writtenUser === me.id) {
       if (window.confirm('정말 삭제하시겠습니까 ?')) {
-        await dispatch(REMOVE_POST_COMMENT_REQUEST(data));
-        await dispatch(LOAD_POST_REQUEST(detailPost.id));
+        dispatch(REMOVE_POST_COMMENT_REQUEST(data));
       }
     } else alert('권한이 없습니다.');
   };
 
+  const [commentCnt, setCommentCnt] = useState(0);
+  useEffect(() => {
+    let cnt = 0;
+    for (let i = 0; i < detailPost.Comments?.length; i += 1) {
+      cnt += detailPost.Comments[i].reComments?.length + 1;
+    }
+    setCommentCnt(cnt);
+  }, [detailPost]);
+
   return (
     <div className="detail__comment-wrapper">
-      <h4>0개의 댓글</h4>
+      <h4>{commentCnt}개의 댓글</h4>
       <div className="detail__comment-width">
         <div>
           <textarea
@@ -74,7 +78,13 @@ const Comment: React.VFC<Props> = ({ detailPost, me }) => {
                 <div className="commentUserInfo">
                   <div className="commentProfile">
                     <Link to={`/myPost/${comment.UserId}`}>
-                      <img src={comment.User.profileImg} alt="" />
+                      {comment.User.profileImg === null ||
+                      comment.User.profileImg === '' ||
+                      comment.User.profileImg === undefined ? (
+                        <img src={gravatar.url(me.nickname, { s: '20px', d: 'retro' })} alt="" />
+                      ) : (
+                        <img src={comment.User.profileImg} alt="" />
+                      )}
                     </Link>
                     <div className="comment-info">
                       <div className="commentUsername">

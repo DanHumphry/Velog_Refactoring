@@ -21,15 +21,6 @@ module.exports = class Post extends Model {
           type: DataTypes.STRING(200),
           allowNull: true,
         },
-        like: {
-          type: DataTypes.INTEGER,
-          defaultValue: 0,
-          allowNull: true,
-        },
-        liker: {
-          type: DataTypes.STRING,
-          allowNull: true,
-        },
       },
       {
         modelName: "Post",
@@ -43,5 +34,6 @@ module.exports = class Post extends Model {
   static associate(db) {
     db.Post.belongsTo(db.User);
     db.Post.hasMany(db.Comment); // post.addComments, post.getComments
+    db.Post.belongsToMany(db.User, { through: "Like", as: "Likers" }); // post.addLikers, post.removeLikers
   }
 };

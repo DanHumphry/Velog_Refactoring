@@ -49,6 +49,21 @@ router.post("/", upload.single("image"), async (req, res, next) => {
           model: User, // 게시글 작성자
           attributes: ["id", "nickname", "profileImg", "myIntroduce"],
         },
+        {
+          model: Comment,
+          attributes: ["id"],
+          include: [
+            {
+              model: ReComment,
+              attributes: ["id"],
+            },
+          ],
+        },
+        {
+          model: User, // 좋아요 누른 사람
+          as: "Likers",
+          attributes: ["id"],
+        },
       ],
     });
 
@@ -61,8 +76,6 @@ router.post("/", upload.single("image"), async (req, res, next) => {
 
 router.get("/:postId", async (req, res, next) => {
   try {
-    console.log("t:", req.params.postId);
-
     const post = await Post.findOne({
       where: { id: req.params.postId },
     });
@@ -95,6 +108,11 @@ router.get("/:postId", async (req, res, next) => {
             },
           ],
         },
+        {
+          model: User, // 좋아요 누른 사람
+          as: "Likers",
+          attributes: ["id"],
+        },
       ],
     });
 
@@ -125,7 +143,14 @@ router.post(
   upload.single("image"),
   async (req, res, next) => {
     try {
-      const image = req.file ? `http://localhost:3065/${req.file.path}` : null;
+      console.log(req.file);
+      console.log(req.body.image);
+      const image =
+        req.file !== undefined
+          ? `http://localhost:3065/${req.file.path}`
+          : req.body.image
+          ? req.body.image
+          : null;
 
       await Post.update(
         {
@@ -146,6 +171,29 @@ router.post(
             model: User, // 게시글 작성자
             attributes: ["id", "nickname", "profileImg", "myIntroduce"],
           },
+          {
+            model: Comment,
+            include: [
+              {
+                model: User,
+                attributes: ["id", "nickname", "profileImg"],
+              },
+              {
+                model: ReComment,
+                include: [
+                  {
+                    model: User,
+                    attributes: ["id", "nickname", "profileImg"],
+                  },
+                ],
+              },
+            ],
+          },
+          {
+            model: User, // 좋아요 누른 사람
+            as: "Likers",
+            attributes: ["id"],
+          },
         ],
       });
 
@@ -157,52 +205,28 @@ router.post(
   }
 );
 
-router.post("/:postId/like", async (req, res, next) => {
+router.patch("/:postId/like", async (req, res, next) => {
   try {
     const post = await Post.findOne({ where: { id: req.params.postId } });
-    let liker = post.dataValues.liker;
-    if (liker) liker += `,${req.body.userId}`;
-    else liker = `${req.body.userId}`;
-
-    await Post.update(
-      {
-        like: post.dataValues.like + 1,
-        liker,
-      },
-      {
-        where: { id: req.params.postId },
-      }
-    );
-
-    res
-      .status(200)
-      .json({ postId: +req.params.postId, userId: req.body.userId });
+    if (!post) {
+      return res.status(403).send("게시글이 존재하지 않습니다.");
+    }
+    await post.addLikers(req.user.id);
+    res.json({ postId: post.id, userId: req.user.id });
   } catch (error) {
     console.error(error);
     next(error);
   }
 });
 
-router.post("/:postId/unlike", async (req, res, next) => {
+router.delete("/:postId/like", async (req, res, next) => {
   try {
     const post = await Post.findOne({ where: { id: req.params.postId } });
-    const liker = post.dataValues.liker.split(",");
-    const idx = liker.find((v) => +v === req.body.userId);
-    liker.splice(idx, 1);
-
-    await Post.update(
-      {
-        like: post.dataValues.like - 1,
-        liker: liker.join(""),
-      },
-      {
-        where: { id: req.params.postId },
-      }
-    );
-
-    res
-      .status(200)
-      .json({ postId: +req.params.postId, userId: req.body.userId });
+    if (!post) {
+      return res.status(403).send("게시글이 존재하지 않습니다.");
+    }
+    await post.removeLikers(req.user.id);
+    res.json({ postId: post.id, userId: req.user.id });
   } catch (error) {
     console.error(error);
     next(error);
@@ -228,6 +252,15 @@ router.post("/:postId/comment", async (req, res, next) => {
         {
           model: User,
           attributes: ["id", "nickname", "profileImg"],
+        },
+        {
+          model: ReComment,
+          include: [
+            {
+              model: User,
+              attributes: ["id", "nickname", "profileImg"],
+            },
+          ],
         },
       ],
     });
@@ -258,6 +291,15 @@ router.post("/:postId/comment/update", async (req, res, next) => {
         {
           model: User, // 게시글 작성자
           attributes: ["id", "nickname", "profileImg", "myIntroduce"],
+        },
+        {
+          model: ReComment,
+          include: [
+            {
+              model: User,
+              attributes: ["id", "nickname", "profileImg"],
+            },
+          ],
         },
       ],
     });

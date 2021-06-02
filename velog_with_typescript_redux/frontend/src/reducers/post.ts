@@ -1,14 +1,20 @@
+import { stat } from 'fs';
+
 export const initialState = {
   mainPosts: [],
   detailPost: {},
-  myPosts: [],
+  myPosts: { User: {}, Posts: [] },
   filterList: [],
+  hasMorePosts: true,
   addPostLoading: false, // 포스트 작성중
   addPostDone: false,
   addPostError: null,
   loadPostsLoading: false, // 포스트들 가져오는중
   loadPostsDone: false,
   loadPostsError: null,
+  loadMyPostsLoading: false, // 나의 포스트들 가져오는중
+  loadMyPostsDone: false,
+  loadMyPostsError: null,
   loadPostLoading: false, // 포스트 가져오는중
   loadPostDone: false,
   loadPostError: null,
@@ -44,7 +50,6 @@ export const initialState = {
   removeReCommentError: null,
 
   newOrRec: false,
-  hasMorePosts: true,
   myPostNavModal: false,
 };
 
@@ -55,6 +60,10 @@ export const ADD_POST_FAILURE = 'ADD_POST_FAILURE';
 export const LOAD_POSTS_REQUEST = 'LOAD_POSTS_REQUEST';
 export const LOAD_POSTS_SUCCESS = 'LOAD_POSTS_SUCCESS';
 export const LOAD_POSTS_FAILURE = 'LOAD_POSTS_FAILURE';
+
+export const LOAD_MYPOSTS_REQUEST = 'LOAD_MYPOSTS_REQUEST';
+export const LOAD_MYPOSTS_SUCCESS = 'LOAD_MYPOSTS_SUCCESS';
+export const LOAD_MYPOSTS_FAILURE = 'LOAD_MYPOSTS_FAILURE';
 
 export const LOAD_POST_REQUEST = 'LOAD_POST_REQUEST';
 export const LOAD_POST_SUCCESS = 'LOAD_POST_SUCCESS';
@@ -130,10 +139,34 @@ const Post = (state = initialState, action: any) => {
 
     case LOAD_POSTS_REQUEST:
       return { ...state, loadPostsLoading: true, loadPostsDone: false, loadPostsError: null };
-    case LOAD_POSTS_SUCCESS:
-      return { ...state, loadPostsLoading: false, loadPostsDone: true, loadPostsError: null, mainPosts: action.data };
+    case LOAD_POSTS_SUCCESS: {
+      const prevPosts = [...state.mainPosts];
+      const nextPosts = prevPosts.concat(action.data);
+      const isHasMore = action.data.length === 10;
+      return {
+        ...state,
+        loadPostsLoading: false,
+        loadPostsDone: true,
+        loadPostsError: null,
+        mainPosts: nextPosts,
+        hasMorePosts: isHasMore,
+      };
+    }
     case LOAD_POSTS_FAILURE:
       return { ...state, loadPostsLoading: false, loadPostsDone: false, loadPostsError: action.data };
+
+    case LOAD_MYPOSTS_REQUEST:
+      return { ...state, loadMyPostsLoading: true, loadMyPostsDone: false, loadMyPostsError: null };
+    case LOAD_MYPOSTS_SUCCESS:
+      return {
+        ...state,
+        loadMyPostsLoading: false,
+        loadMyPostsDone: true,
+        loadMyPostsError: null,
+        myPosts: action.data,
+      };
+    case LOAD_MYPOSTS_FAILURE:
+      return { ...state, loadMyPostsLoading: false, loadMyPostsDone: false, loadMyPostsError: action.data };
 
     case LOAD_POST_REQUEST:
       return { ...state, loadPostLoading: true, loadPostDone: false, loadPostError: null };
@@ -203,17 +236,25 @@ const Post = (state = initialState, action: any) => {
       return { ...state, addCommentLoading: false, addCommentDone: false, addCommentError: action.data };
     case UPDATE_COMMENT_REQUEST:
       return { ...state, updateCommentLoading: true, updateCommentDone: false, updateCommentError: null };
-    case UPDATE_COMMENT_SUCCESS:
-      return { ...state, updateCommentLoading: false, updateCommentDone: true, updateCommentError: null };
+    case UPDATE_COMMENT_SUCCESS: {
+      const post: any = { ...state.detailPost };
+      const idx = post.Comments.findIndex((comment: any) => comment.id === action.data.id);
+      post.Comments[idx] = action.data;
+      return {
+        ...state,
+        updateCommentLoading: false,
+        updateCommentDone: true,
+        updateCommentError: null,
+        detailPost: post,
+      };
+    }
     case UPDATE_COMMENT_FAILURE:
       return { ...state, updateCommentLoading: false, updateCommentDone: false, updateCommentError: action.data };
     case REMOVE_COMMENT_REQUEST:
       return { ...state, removeCommentLoading: true, removeCommentDone: false, removeCommentError: null };
     case REMOVE_COMMENT_SUCCESS: {
-      console.log({ ...state.detailPost });
       const post: any = { ...state.detailPost };
       post.Comments = post.Comments.filter((comment: any) => comment.id !== action.data.commentId);
-      console.log(post);
       return {
         ...state,
         removeCommentLoading: false,
@@ -230,8 +271,8 @@ const Post = (state = initialState, action: any) => {
     case ADD_RECOMMENT_SUCCESS: {
       const post: any = { ...state.detailPost };
       const postComment = post.Comments.find((v: any) => v.id === action.data.CommentId);
-      if (postComment.reComments) postComment.reComments.push(action.data);
-      else postComment.reComments = [action.data];
+      postComment.reComments.push(action.data);
+      // else postComment.reComments = [action.data];
       return {
         ...state,
         addReCommentLoading: false,
@@ -244,8 +285,19 @@ const Post = (state = initialState, action: any) => {
       return { ...state, addReCommentLoading: false, addReCommentDone: false, addReCommentError: action.data };
     case UPDATE_RECOMMENT_REQUEST:
       return { ...state, updateReCommentLoading: true, updateReCommentDone: false, updateReCommentError: null };
-    case UPDATE_RECOMMENT_SUCCESS:
-      return { ...state, updateReCommentLoading: false, updateReCommentDone: true, updateReCommentError: null };
+    case UPDATE_RECOMMENT_SUCCESS: {
+      const post: any = { ...state.detailPost };
+      const commentIdx = post.Comments.findIndex((v: any) => v.id === action.data.CommentId);
+      const reCommentIdx = post.Comments[commentIdx].reComments.findIndex((v: any) => v.id === action.data.id);
+      post.Comments[commentIdx].reComments[reCommentIdx] = action.data;
+      return {
+        ...state,
+        updateReCommentLoading: false,
+        updateReCommentDone: true,
+        updateReCommentError: null,
+        detailPost: post,
+      };
+    }
     case UPDATE_RECOMMENT_FAILURE:
       return { ...state, updateReCommentLoading: false, updateReCommentDone: false, updateReCommentError: action.data };
     case REMOVE_RECOMMENT_REQUEST:

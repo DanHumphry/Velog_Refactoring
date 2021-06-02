@@ -152,6 +152,7 @@
 }
 .detail__head-username {
   font-weight: bold;
+  cursor: pointer;
 }
 /* header wrapper */
 
@@ -184,13 +185,14 @@
   -webkit-box-align: center;
   align-items: center;
 }
-.detail__topInfo a img {
+.detail__topInfo div img {
   display: block;
   width: 8rem;
   height: 8rem;
   border-radius: 50%;
   object-fit: cover;
   box-shadow: rgba(0, 0, 0, 0.06) 0px 0px 4px 0px;
+  cursor: pointer;
 }
 .detail__userInfo {
   display: flex;
@@ -311,12 +313,13 @@
   -webkit-box-align: center;
   align-items: center;
 }
-.commentProfile a img {
+.commentProfile div img {
   width: 3.375rem;
   height: 3.375rem;
   display: block;
   border-radius: 50%;
   object-fit: cover;
+  cursor: pointer;
 }
 .actions {
   font-size: 0.875rem;
@@ -337,6 +340,10 @@
   font-size: 1rem;
   font-weight: bold;
   color: rgb(52, 58, 64);
+  cursor: pointer;
+}
+.diaLmo {
+  padding-top: 35px;
 }
 .commentDate {
   margin-top: 0.5rem;
@@ -472,6 +479,7 @@
   letter-spacing: -0.004em;
   word-break: keep-all;
   overflow-wrap: break-word;
+  padding: 5px;
 }
 .gYWEjZ {
   margin-top: 2rem;
@@ -495,11 +503,13 @@
   display: block;
   border-radius: 50%;
   object-fit: cover;
+  cursor: pointer;
 }
 .ezDpwK .profile .comment-info .username {
   font-size: 1rem;
   font-weight: bold;
   color: rgb(52, 58, 64);
+  cursor: pointer;
 }
 .ezDpwK .profile .comment-info .username a {
   color: inherit;

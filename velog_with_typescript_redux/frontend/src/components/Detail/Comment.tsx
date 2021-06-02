@@ -1,10 +1,10 @@
 import ReComment from '@components/Detail/ReComment';
+import myFunctions from '@hooks/myFunctions';
 import useInput from '@hooks/useInput';
 import { ADD_POST_COMMENT_REQUEST, REMOVE_POST_COMMENT_REQUEST, UPDATE_POST_COMMENT_REQUEST } from '@thunks/post';
 import gravatar from 'gravatar';
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import { useDispatch } from 'react-redux';
-import { Link } from 'react-router-dom';
 
 interface Props {
   detailPost: any;
@@ -14,12 +14,18 @@ interface Props {
 const Comment: React.VFC<Props> = ({ detailPost, me }) => {
   const dispatch = useDispatch();
   const [comment, setComment, resetInput] = useInput('');
+  const { loadMyPost } = myFunctions();
+
+  const [updateCommentInput, setUpdateCommentInput, resetUpdateComment] = useInput('');
+  const [updateCommentModal, setUpdateCommentModal] = useState<number | null>(null);
 
   const [reCommentModal, setReCommentModal] = useState([] as any);
 
   const submitComment = () => {
-    dispatch(ADD_POST_COMMENT_REQUEST({ content: comment, postId: detailPost.id, userId: me.id }));
-    resetInput('');
+    if (comment !== '') {
+      dispatch(ADD_POST_COMMENT_REQUEST({ content: comment, postId: detailPost.id, userId: me.id }));
+      resetInput('');
+    }
   };
 
   const showReCommentModal = (id: number) => {
@@ -30,8 +36,14 @@ const Comment: React.VFC<Props> = ({ detailPost, me }) => {
     setReCommentModal(temp);
   };
 
-  const updateComment = () => {
-    dispatch(UPDATE_POST_COMMENT_REQUEST({}));
+  const showCommentUpdateInput = (id: number | null) => {
+    setUpdateCommentModal(id);
+    resetUpdateComment('');
+  };
+
+  const updateComment = async (commentId: number) => {
+    await dispatch(UPDATE_POST_COMMENT_REQUEST({ content: updateCommentInput, commentId }));
+    setUpdateCommentModal(null);
   };
 
   const removeComment = (data: { writtenUser: number; commentId: number }) => {
@@ -42,14 +54,8 @@ const Comment: React.VFC<Props> = ({ detailPost, me }) => {
     } else alert('권한이 없습니다.');
   };
 
-  const [commentCnt, setCommentCnt] = useState(0);
-  useEffect(() => {
-    let cnt = 0;
-    for (let i = 0; i < detailPost.Comments?.length; i += 1) {
-      cnt += detailPost.Comments[i].reComments?.length + 1;
-    }
-    setCommentCnt(cnt);
-  }, [detailPost]);
+  let commentCnt = 0;
+  for (let i = 0; i < detailPost.Comments?.length; i += 1) commentCnt += detailPost.Comments[i].reComments?.length + 1;
 
   return (
     <div className="detail__comment-wrapper">
@@ -77,7 +83,8 @@ const Comment: React.VFC<Props> = ({ detailPost, me }) => {
               <div className="commentList__article">
                 <div className="commentUserInfo">
                   <div className="commentProfile">
-                    <Link to={`/myPost/${comment.UserId}`}>
+                    {/* eslint-disable-next-line jsx-a11y/click-events-have-key-events,jsx-a11y/no-static-element-interactions */}
+                    <div onClick={() => loadMyPost(`${comment.UserId}`)}>
                       {comment.User.profileImg === null ||
                       comment.User.profileImg === '' ||
                       comment.User.profileImg === undefined ? (
@@ -85,10 +92,11 @@ const Comment: React.VFC<Props> = ({ detailPost, me }) => {
                       ) : (
                         <img src={comment.User.profileImg} alt="" />
                       )}
-                    </Link>
+                    </div>
                     <div className="comment-info">
                       <div className="commentUsername">
-                        <Link to={`/myPost/${comment.UserId}`}>{comment.User.nickname}</Link>
+                        {/* eslint-disable-next-line jsx-a11y/click-events-have-key-events,jsx-a11y/no-static-element-interactions */}
+                        <div onClick={() => loadMyPost(`${comment.UserId}`)}>{comment.User.nickname}</div>
                       </div>
                       <div className="commentDate">
                         {`${comment.createdAt.split('-')[0]}년 ${comment.createdAt.split('-')[1]}월 ${
@@ -100,7 +108,9 @@ const Comment: React.VFC<Props> = ({ detailPost, me }) => {
                   </div>
                   {comment.UserId === me.id ? (
                     <div className="actions">
-                      <button type="button">수정</button>
+                      <button type="button" onClick={() => showCommentUpdateInput(comment.id)}>
+                        수정
+                      </button>
                       <button
                         type="button"
                         onClick={() => removeComment({ writtenUser: comment.UserId, commentId: comment.id })}
@@ -110,15 +120,36 @@ const Comment: React.VFC<Props> = ({ detailPost, me }) => {
                     </div>
                   ) : null}
                 </div>
-                <div className="commentContent">
-                  <div className="sc-CtfFt jUJTZI">
-                    <div className="sc-kafWEX hQjZHl">
-                      <div className="sc-feJyhm gzDGWh atom-one-light">
-                        <p>{comment.content}</p>
+
+                {updateCommentModal !== comment.id ? (
+                  <div className="commentContent">
+                    <div className="sc-CtfFt jUJTZI">
+                      <div className="sc-kafWEX hQjZHl">
+                        <div className="sc-feJyhm gzDGWh atom-one-light">
+                          <p>{comment.content}</p>
+                        </div>
                       </div>
                     </div>
                   </div>
-                </div>
+                ) : (
+                  <div className="sc-hEsumM diaLmo">
+                    <textarea
+                      placeholder="댓글을 작성하세요"
+                      className="sc-ktHwxA kMZaKo"
+                      defaultValue={comment.content}
+                      onChange={setUpdateCommentInput}
+                    />
+                    <div className="buttons-wrapper">
+                      <button type="button" className="sc-dnqmqq eLHDzq" onClick={() => showCommentUpdateInput(null)}>
+                        취소
+                      </button>
+                      <button type="button" className="sc-dnqmqq gzELJz" onClick={() => updateComment(comment.id)}>
+                        댓글 수정
+                      </button>
+                    </div>
+                  </div>
+                )}
+
                 <div className="reCommentOpen">
                   <div className="sc-hGoxap cHbAfK">
                     <svg width="12" height="12" fill="none" viewBox="0 0 12 12">

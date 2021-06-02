@@ -6,6 +6,7 @@ const path = require("path");
 const fs = require("fs");
 
 const { User } = require("../models");
+const { isLoggedIn, isNotLoggedIn } = require("./middlewares");
 
 const router = express.Router();
 
@@ -53,7 +54,7 @@ router.post("/signUp", async (req, res, next) => {
   }
 });
 
-router.post("/login", (req, res, next) => {
+router.post("/login", isNotLoggedIn, (req, res, next) => {
   passport.authenticate("local", (serverErr, user, clientErr) => {
     if (serverErr) {
       console.error(serverErr);
@@ -81,13 +82,13 @@ router.post("/login", (req, res, next) => {
   })(req, res, next);
 });
 
-router.post("/logout", (req, res) => {
+router.post("/logout", isLoggedIn, (req, res) => {
   req.logout();
   req.session.destroy();
   res.send("ok");
 });
 
-router.patch("/update", async (req, res, next) => {
+router.patch("/update", isLoggedIn, async (req, res, next) => {
   try {
     await User.update(
       {
@@ -106,20 +107,25 @@ router.patch("/update", async (req, res, next) => {
   }
 });
 
-router.post("/update/image", upload.single("image"), async (req, res, next) => {
-  try {
-    await User.update(
-      { profileImg: `http://localhost:3065/${req.file.path}` },
-      { where: { id: req.body.id } }
-    );
-    await res.status(200).json(`http://localhost:3065/${req.file.path}`);
-  } catch (error) {
-    console.log(error);
-    next(error);
+router.post(
+  "/update/image",
+  isLoggedIn,
+  upload.single("image"),
+  async (req, res, next) => {
+    try {
+      await User.update(
+        { profileImg: `http://localhost:3065/${req.file.path}` },
+        { where: { id: req.body.id } }
+      );
+      await res.status(200).json(`http://localhost:3065/${req.file.path}`);
+    } catch (error) {
+      console.log(error);
+      next(error);
+    }
   }
-});
+);
 
-router.post("/findEmail", async (req, res) => {
+router.post("/findEmail", isNotLoggedIn, async (req, res) => {
   const exUser = await User.findOne({
     where: { email: req.body.email },
   });
@@ -133,6 +139,7 @@ router.get("/getUser", (req, res) => {
 
 router.get(
   "/auth/google",
+  isNotLoggedIn,
   passport.authenticate("google", {
     scope: ["profile", "email"],
   })
@@ -140,6 +147,7 @@ router.get(
 
 router.get(
   "/auth/google/redirect",
+  isNotLoggedIn,
   passport.authenticate("google", {
     failureRedirect: "/login",
   }),
@@ -150,6 +158,7 @@ router.get(
 
 router.get(
   "/auth/kakao",
+  isNotLoggedIn,
   passport.authenticate("kakao", {
     failureRedirect: "#!/login",
   })
@@ -157,6 +166,7 @@ router.get(
 
 router.get(
   "/auth/kakao/redirect",
+  isNotLoggedIn,
   passport.authenticate("kakao", {
     failureRedirect: "#!/login",
   }),
@@ -165,10 +175,11 @@ router.get(
   }
 );
 
-router.get("/auth/github", passport.authenticate("github"));
+router.get("/auth/github", isNotLoggedIn, passport.authenticate("github"));
 
 router.get(
   "/auth/github/redirect",
+  isNotLoggedIn,
   passport.authenticate("github", { failureRedirect: "/login" }),
   function (req, res) {
     res.redirect("http://localhost:3000");

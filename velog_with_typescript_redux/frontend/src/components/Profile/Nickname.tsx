@@ -1,21 +1,15 @@
+import myFunctions from '@hooks/myFunctions';
 import useInput from '@hooks/useInput';
-import { RootState } from '@reducers/index';
-import { UPDATE_PROFILE_REQUEST } from '@thunks/user';
 import React, { useState } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
 
-const Nickname = () => {
-  const { me } = useSelector((store: RootState) => store.user);
+interface Props {
+  me: any;
+}
 
+const Nickname: React.VFC<Props> = ({ me }) => {
   const [nicknameModal, setNicknameModal] = useState(false);
   const [nickname, setNickname] = useInput(me.nickanme);
-
-  const dispatch = useDispatch();
-
-  const submit = async () => {
-    await dispatch(UPDATE_PROFILE_REQUEST({ ...me, nickname }));
-    await setNicknameModal(false);
-  };
+  const { updateProfile } = myFunctions();
 
   return (
     <div className="myProfile">
@@ -30,7 +24,11 @@ const Nickname = () => {
                 <input className="nickname-input" placeholder={me.nickname} onChange={setNickname} />
               </form>
               <div className="edit-wrapper">
-                <button type="button" className="save-button" onClick={submit}>
+                <button
+                  type="button"
+                  className="save-button"
+                  onClick={() => updateProfile({ info: { ...me, nickname }, modal: setNicknameModal })}
+                >
                   저장
                 </button>
               </div>

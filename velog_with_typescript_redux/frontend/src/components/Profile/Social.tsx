@@ -1,21 +1,15 @@
+import myFunctions from '@hooks/myFunctions';
 import useInput from '@hooks/useInput';
-import { RootState } from '@reducers/index';
-import { UPDATE_PROFILE_REQUEST } from '@thunks/user';
 import React, { useState } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
 
-const Social = () => {
-  const { me } = useSelector((store: RootState) => store.user);
+interface Props {
+  me: any;
+}
 
+const Social: React.VFC<Props> = ({ me }) => {
   const [socialModal, setSocialModal] = useState(false);
   const [git, setGit] = useInput(me.git === null ? '' : me.git);
-
-  const dispatch = useDispatch();
-
-  const submit = async () => {
-    await dispatch(UPDATE_PROFILE_REQUEST({ ...me, git }));
-    await setSocialModal(false);
-  };
+  const { updateProfile } = myFunctions();
 
   return (
     <div className="myProfile">
@@ -53,7 +47,11 @@ const Social = () => {
                 </ul>
               </form>
               <div className="edit-wrapper">
-                <button type="button" className="save-button" onClick={submit}>
+                <button
+                  type="button"
+                  className="save-button"
+                  onClick={() => updateProfile({ info: { ...me, git }, modal: setSocialModal })}
+                >
                   저장
                 </button>
               </div>

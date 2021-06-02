@@ -3,7 +3,7 @@ import React, { useEffect, useState } from 'react';
 import { useDispatch } from 'react-redux';
 
 function SideCheckBox() {
-  const disPatch = useDispatch();
+  // const disPatch = useDispatch();
 
   const [filterList] = useState([
     { id: 1, language: 'Python' },
@@ -16,12 +16,13 @@ function SideCheckBox() {
     { id: 8, language: 'Javascript' },
   ]);
   const [languagefilterList, setLanguagefilterList] = useState<string[]>([]);
-  useEffect(() => {
-    disPatch({
-      type: FILTER_SUCCESS,
-      data: languagefilterList,
-    });
-  }, [languagefilterList]);
+
+  // useEffect(() => {
+  //   disPatch({
+  //     type: FILTER_SUCCESS,
+  //     data: languagefilterList,
+  //   });
+  // }, [languagefilterList]);
 
   const ClickFilter = (lang: string) => {
     let Num = 0;

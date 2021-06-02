@@ -1,21 +1,28 @@
-import { RootState } from '@reducers/index';
+import gravatar from 'gravatar';
 import React from 'react';
-import { useSelector } from 'react-redux';
 
-function Profile() {
-  const { me } = useSelector((store: RootState) => store.user);
+interface Props {
+  writtenUser: any;
+}
+
+const Profile: React.VFC<Props> = ({ writtenUser }) => {
   const githubLink = () => {
-    if (!me.git || me.git === '') {
+    if (!writtenUser.git || writtenUser.git === '') {
       alert('github주소가 등록되지 않은 사용자입니다.');
-    } else window.open(me.git);
+    } else window.open(writtenUser.git);
   };
 
   return (
     <div className="header-section">
       <div className="profile">
-        <img src={me.profileImg} alt="/" />
+        {writtenUser.profileImg === null || writtenUser.profileImg === undefined || writtenUser.profileImg === '' ? (
+          <img src={gravatar.url(writtenUser.nickname, { s: '20px', d: 'retro' })} className="user-image" alt="/" />
+        ) : (
+          <img src={writtenUser.profileImg} alt="/" />
+        )}
+
         <div className="profile-info">
-          <div className="desc">{me.myIntroduce}</div>
+          <div className="desc">{writtenUser.myIntroduce}</div>
         </div>
       </div>
       <div className="line" />
@@ -39,5 +46,5 @@ function Profile() {
       </div>
     </div>
   );
-}
+};
 export default Profile;

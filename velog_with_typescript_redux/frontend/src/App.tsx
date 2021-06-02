@@ -1,7 +1,6 @@
 import { LOG_IN_SUCCESS_ACTION } from '@actions/user';
 import { getUser } from '@api/user';
 import { RootState } from '@reducers/index';
-import { LOAD_POSTS_REQUEST } from '@thunks/post';
 import React, { useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { Route } from 'react-router-dom';

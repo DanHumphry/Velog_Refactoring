@@ -1,12 +1,14 @@
-import { RootState } from '@reducers/index';
 import React, { useState } from 'react';
 import gravatar from 'gravatar';
-import { useSelector, useDispatch } from 'react-redux';
+import { useDispatch } from 'react-redux';
 import { UPDATE_PROFILE_IMG_REQUEST } from '@thunks/user';
 
-const ProfileImg = () => {
+interface Props {
+  me: any;
+}
+
+const ProfileImg: React.VFC<Props> = ({ me }) => {
   const dispatch = useDispatch();
-  const { me } = useSelector((store: RootState) => store.user);
   const [imgURL, setImgURL] = useState<string>('');
   const [imgFile, setImgFile] = useState<null | File>(null);
 

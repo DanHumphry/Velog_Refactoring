@@ -14,7 +14,7 @@ function Detail() {
 
   useEffect(() => {
     if (Object.keys(detailPost).length === 0) {
-      dispatch(LOAD_POST_REQUEST(window.location.href.split('/')[4]));
+      dispatch(LOAD_POST_REQUEST({ postId: window.location.href.split('/')[4] }));
     }
   }, []);
 

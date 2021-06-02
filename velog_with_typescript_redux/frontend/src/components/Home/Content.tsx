@@ -1,42 +1,51 @@
+import myFunctions from '@hooks/myFunctions';
 import { RootState } from '@reducers/index';
-import { LOAD_POST_REQUEST } from '@thunks/post';
+import { LOAD_POSTS_REQUEST } from '@thunks/post';
 import gravatar from 'gravatar';
 import React, { useEffect, useState } from 'react';
 import '@styles/Board.css';
 import SideCheckBox from '@components/Home/SideCheckBox';
 import { useDispatch, useSelector } from 'react-redux';
-import { Link, useHistory } from 'react-router-dom';
 
 function Content() {
   const dispatch = useDispatch();
-  const history = useHistory();
+  const { loadMyPost, loadPost } = myFunctions();
+  const { mainPosts, loadPostsLoading, hasMorePosts } = useSelector((store: RootState) => store.post);
 
-  const { mainPosts, filterList } = useSelector((store: RootState) => store.post);
-  const [filterPost, setFilterPost] = useState<any[]>([...mainPosts]);
+  // const [filterPost, setFilterPost] = useState<any[]>([...mainPosts]);
+  // useEffect(() => {
+  //   setFilterPost(
+  //     [...mainPosts].filter((v: { language: string }) => {
+  //       let inc = true;
+  //       [...filterList].forEach((item: string) => {
+  //         if (v.language.split(',').indexOf(item) === -1) inc = false;
+  //       });
+  //       if (inc) return v;
+  //       return null;
+  //     }),
+  //   );
+  // }, [mainPosts, filterList]);
 
   useEffect(() => {
-    setFilterPost(
-      [...mainPosts].filter((v: { language: string }) => {
-        let inc = true;
-        [...filterList].forEach((item: string) => {
-          if (v.language.split(',').indexOf(item) === -1) inc = false;
-        });
-        if (inc) return v;
-        return null;
-      }),
-    );
-  }, [mainPosts, filterList]);
-
-  const loadPost = async (id: string) => {
-    await dispatch(LOAD_POST_REQUEST(id));
-    history.push(`/detail/${id}`);
-  };
+    function onScroll() {
+      if (window.pageYOffset + document.documentElement.clientHeight > document.documentElement.scrollHeight - 300) {
+        if (hasMorePosts && !loadPostsLoading) {
+          const lastId: number = mainPosts[mainPosts.length - 1]?.id;
+          dispatch(LOAD_POSTS_REQUEST(lastId));
+        }
+      }
+    }
+    window.addEventListener('scroll', onScroll);
+    return () => {
+      window.removeEventListener('scroll', onScroll);
+    };
+  }, [hasMorePosts, loadPostsLoading, mainPosts]);
 
   return (
     <div className="trend-section">
       <main className="trend-main">
         <div className="main-section">
-          {filterPost.map((post: any) => {
+          {mainPosts.map((post: any) => {
             let commentCnt = post.Comments.length;
             for (let i = 0; i < post.Comments.length; i += 1) commentCnt += post.Comments[i].reComments.length;
 
@@ -55,7 +64,7 @@ function Content() {
                 )}
                 {/* eslint-disable-next-line jsx-a11y/click-events-have-key-events,jsx-a11y/no-static-element-interactions */}
                 <div className="article-content" onClick={() => loadPost(post.id)}>
-                  <div>
+                  <div className="content__cursor">
                     <h4>{post.title}</h4>
                     <div className="desc-wrapper">
                       <p>{post.content}</p>
@@ -74,7 +83,8 @@ function Content() {
                   </div>
                 </div>
                 <div className="article-footer">
-                  <Link to={`/myPost/${post.User.id}`}>
+                  {/* eslint-disable-next-line jsx-a11y/click-events-have-key-events,jsx-a11y/no-static-element-interactions */}
+                  <div className="footer_userInfo" onClick={() => loadMyPost(post.User.id)}>
                     {post.User.profileImg ? (
                       <img src={post.User.profileImg} alt="" />
                     ) : (
@@ -87,7 +97,7 @@ function Content() {
                     <span>
                       by <b>{post.User.nickname}</b>
                     </span>
-                  </Link>
+                  </div>
                   <div className="likes">
                     <svg width="24" height="24" viewBox="0 0 24 24">
                       <path fill="currentColor" d="M18 1l-6 4-6-4-6 5v7l12 10 12-10v-7z" />

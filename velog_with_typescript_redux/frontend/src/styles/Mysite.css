@@ -258,3 +258,24 @@
   background-color: lightgray;
   cursor: pointer;
 }
+
+.ksEIiH {
+  width: 100%;
+  display: flex;
+  -webkit-box-align: center;
+  align-items: center;
+  flex-direction: column;
+  margin-top: 6rem;
+  margin-bottom: 3rem;
+}
+
+.ksEIiH img {
+  width: 20rem;
+}
+
+.ksEIiH .message {
+  font-size: 2rem;
+  color: rgb(134, 142, 150);
+  margin-top: 3rem;
+  margin-bottom: 2rem;
+}

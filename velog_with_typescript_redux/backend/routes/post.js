@@ -4,6 +4,7 @@ const path = require("path");
 const fs = require("fs");
 
 const { Post, User, Comment, ReComment } = require("../models");
+const { isLoggedIn } = require("./middlewares");
 
 const router = express.Router();
 
@@ -29,7 +30,7 @@ const upload = multer({
   limits: { fileSize: 20 * 1024 * 1024 }, // 20MB
 });
 
-router.post("/", upload.single("image"), async (req, res, next) => {
+router.post("/", isLoggedIn, upload.single("image"), async (req, res, next) => {
   // POST /post
   try {
     const image = req.file ? `http://localhost:3065/${req.file.path}` : null;
@@ -123,7 +124,7 @@ router.get("/:postId", async (req, res, next) => {
   }
 });
 
-router.delete("/:postId/delete", async (req, res, next) => {
+router.delete("/:postId/delete", isLoggedIn, async (req, res, next) => {
   try {
     await Post.destroy({
       where: {
@@ -140,6 +141,7 @@ router.delete("/:postId/delete", async (req, res, next) => {
 
 router.post(
   "/:postId/update",
+  isLoggedIn,
   upload.single("image"),
   async (req, res, next) => {
     try {
@@ -205,7 +207,7 @@ router.post(
   }
 );
 
-router.patch("/:postId/like", async (req, res, next) => {
+router.patch("/:postId/like", isLoggedIn, async (req, res, next) => {
   try {
     const post = await Post.findOne({ where: { id: req.params.postId } });
     if (!post) {
@@ -219,7 +221,7 @@ router.patch("/:postId/like", async (req, res, next) => {
   }
 });
 
-router.delete("/:postId/like", async (req, res, next) => {
+router.delete("/:postId/like", isLoggedIn, async (req, res, next) => {
   try {
     const post = await Post.findOne({ where: { id: req.params.postId } });
     if (!post) {
@@ -233,7 +235,7 @@ router.delete("/:postId/like", async (req, res, next) => {
   }
 });
 
-router.post("/:postId/comment", async (req, res, next) => {
+router.post("/:postId/comment", isLoggedIn, async (req, res, next) => {
   try {
     const post = await Post.findOne({
       where: { id: req.params.postId },
@@ -271,62 +273,67 @@ router.post("/:postId/comment", async (req, res, next) => {
   }
 });
 
-router.post("/:postId/comment/update", async (req, res, next) => {
-  try {
-    await Comment.update(
-      {
-        title: req.body.title,
-        content: req.body.content,
-        image,
-        language: req.body.language,
-      },
-      {
-        where: { id: req.params.postId },
-      }
-    );
-
-    const fullPost = await Post.findOne({
-      where: { id: req.params.postId },
-      include: [
+router.post(
+  "/:commentId/comment/update",
+  isLoggedIn,
+  async (req, res, next) => {
+    try {
+      await Comment.update(
         {
-          model: User, // 게시글 작성자
-          attributes: ["id", "nickname", "profileImg", "myIntroduce"],
+          content: req.body.content,
         },
         {
-          model: ReComment,
-          include: [
-            {
-              model: User,
-              attributes: ["id", "nickname", "profileImg"],
-            },
-          ],
+          where: { id: req.params.commentId },
+        }
+      );
+
+      const fullComment = await Comment.findOne({
+        where: { id: req.params.commentId },
+        include: [
+          {
+            model: User, // 게시글 작성자
+            attributes: ["id", "nickname", "profileImg"],
+          },
+          {
+            model: ReComment,
+            include: [
+              {
+                model: User,
+                attributes: ["id", "nickname", "profileImg"],
+              },
+            ],
+          },
+        ],
+      });
+
+      res.status(201).json(fullComment);
+    } catch (error) {
+      console.error(error);
+      next(error);
+    }
+  }
+);
+
+router.delete(
+  "/:commentId/comment/delete",
+  isLoggedIn,
+  async (req, res, next) => {
+    try {
+      await Comment.destroy({
+        where: {
+          id: req.params.commentId,
+          UserId: req.user.id,
         },
-      ],
-    });
-
-    res.status(201).json(fullPost);
-  } catch (error) {
-    console.error(error);
-    next(error);
+      });
+      res.status(200).json({ commentId: +req.params.commentId });
+    } catch (error) {
+      console.error(error);
+      next(error);
+    }
   }
-});
+);
 
-router.delete("/:commentId/comment/delete", async (req, res, next) => {
-  try {
-    await Comment.destroy({
-      where: {
-        id: req.params.commentId,
-        UserId: req.user.id,
-      },
-    });
-    res.status(200).json({ commentId: +req.params.commentId });
-  } catch (error) {
-    console.error(error);
-    next(error);
-  }
-});
-
-router.post("/:commentId/reComment", async (req, res, next) => {
+router.post("/:commentId/reComment", isLoggedIn, async (req, res, next) => {
   try {
     const post = await Comment.findOne({
       where: { id: req.params.commentId },
@@ -355,19 +362,55 @@ router.post("/:commentId/reComment", async (req, res, next) => {
   }
 });
 
-router.delete("/:reCommentId/reComment/delete", async (req, res, next) => {
-  try {
-    await ReComment.destroy({
-      where: {
-        id: req.params.reCommentId,
-        UserId: req.user.id,
-      },
-    });
-    res.status(200).json({ reCommentId: +req.params.reCommentId });
-  } catch (error) {
-    console.error(error);
-    next(error);
+router.post(
+  "/:reCommentId/reComment/update",
+  isLoggedIn,
+  async (req, res, next) => {
+    try {
+      await ReComment.update(
+        {
+          content: req.body.content,
+        },
+        {
+          where: { id: req.params.reCommentId },
+        }
+      );
+
+      const fullReComment = await ReComment.findOne({
+        where: { id: req.params.reCommentId },
+        include: [
+          {
+            model: User, // 게시글 작성자
+            attributes: ["id", "nickname", "profileImg"],
+          },
+        ],
+      });
+
+      res.status(201).json(fullReComment);
+    } catch (error) {
+      console.error(error);
+      next(error);
+    }
   }
-});
+);
+
+router.delete(
+  "/:reCommentId/reComment/delete",
+  isLoggedIn,
+  async (req, res, next) => {
+    try {
+      await ReComment.destroy({
+        where: {
+          id: req.params.reCommentId,
+          UserId: req.user.id,
+        },
+      });
+      res.status(200).json({ reCommentId: +req.params.reCommentId });
+    } catch (error) {
+      console.error(error);
+      next(error);
+    }
+  }
+);
 
 module.exports = router;

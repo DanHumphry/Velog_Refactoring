@@ -1,20 +1,18 @@
-import { RootState } from '@reducers/index';
+import myFunctions from '@hooks/myFunctions';
 import { UPDATE_PROFILE_REQUEST } from '@thunks/user';
 import React, { useState } from 'react';
 import useInput from '@hooks/useInput';
-import { useDispatch, useSelector } from 'react-redux';
+import { useDispatch } from 'react-redux';
 
-const Introduce = () => {
-  const dispatch = useDispatch();
-  const { me } = useSelector((store: RootState) => store.user);
+interface Props {
+  me: any;
+}
 
+const Introduce: React.VFC<Props> = ({ me }) => {
   const [infoModal, setInfoModal] = useState(false);
   const [info, setInfo] = useInput(me.myIntroduce || '');
 
-  const submit = async () => {
-    await dispatch(UPDATE_PROFILE_REQUEST({ ...me, myIntroduce: info }));
-    await setInfoModal(false);
-  };
+  const { updateProfile } = myFunctions();
 
   return (
     <div className="profile-info">
@@ -23,7 +21,12 @@ const Introduce = () => {
           <form>
             <textarea value={info} name="myInfo" placeholder={me.myIntroduce} onChange={setInfo} />
           </form>
-          <button type="button" className="myInfoButton" name="myInfo" onClick={submit}>
+          <button
+            type="button"
+            className="myInfoButton"
+            name="myInfo"
+            onClick={() => updateProfile({ info: { ...me, myIntroduce: info }, modal: setInfoModal })}
+          >
             저장
           </button>
         </>

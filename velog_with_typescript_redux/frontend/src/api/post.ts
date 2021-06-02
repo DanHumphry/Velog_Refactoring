@@ -7,20 +7,24 @@ export const postWriteAPI = (data: any) => {
   return axios.post('post/', data);
 };
 
-export const loadPostsAPI = (href: string) => {
-  return axios.post('posts/', { href });
+export const loadPostsAPI = (lastId: number | null) => {
+  return axios.post('posts/', { lastId });
 };
 
-export const loadPostAPI = (id: string) => {
-  return axios.get(`post/${id}`);
+export const loadMyPostsAPI = (data: { userId: string }) => {
+  return axios.get(`posts/${data.userId}`);
 };
 
-export const updatePostAPI = (id: string, data: any) => {
-  return axios.post(`post/${id}/update`, data);
+export const loadPostAPI = (data: { postId: string }) => {
+  return axios.get(`post/${data.postId}`);
 };
 
-export const removePostAPI = (id: string) => {
-  return axios.delete(`post/${id}/delete`);
+export const updatePostAPI = (data: { postId: string; data: any }) => {
+  return axios.post(`post/${data.postId}/update`, data);
+};
+
+export const removePostAPI = (data: { postId: string }) => {
+  return axios.delete(`post/${data.postId}/delete`);
 };
 
 export const likePostAPI = (data: { userId: number; postId: number }) => {

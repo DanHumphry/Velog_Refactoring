@@ -1,9 +1,9 @@
+import myFunctions from '@hooks/myFunctions';
 import useInput from '@hooks/useInput';
 import { ADD_POST_RECOMMENT_REQUEST, REMOVE_POST_RECOMMENT_REQUEST, UPDATE_POST_RECOMMENT_REQUEST } from '@thunks/post';
 import gravatar from 'gravatar';
-import React from 'react';
+import React, { useState } from 'react';
 import { useDispatch } from 'react-redux';
-import { Link } from 'react-router-dom';
 
 interface Props {
   comment: any;
@@ -12,21 +12,34 @@ interface Props {
 
 const ReComment: React.VFC<Props> = ({ comment, me }) => {
   const dispatch = useDispatch();
+  const { loadMyPost } = myFunctions();
+
   const [reCommentInput, setReCommentInput, resetInput] = useInput('');
 
-  const submitReComment = () => {
-    dispatch(
-      ADD_POST_RECOMMENT_REQUEST({
-        content: reCommentInput,
-        userId: me.id,
-        commentId: comment.id,
-      }),
-    );
-    resetInput('');
+  const [updateReCommentInput, setUpdateReCommentInput, resetUpdateReComment] = useInput('');
+  const [updateReCommentModal, setUpdateReCommentModal] = useState<number | null>(null);
+
+  const showReCommentUpdateInput = (id: number | null) => {
+    setUpdateReCommentModal(id);
+    resetUpdateReComment('');
   };
 
-  const updateReComment = () => {
-    dispatch(UPDATE_POST_RECOMMENT_REQUEST({}));
+  const submitReComment = () => {
+    if (reCommentInput !== '') {
+      dispatch(
+        ADD_POST_RECOMMENT_REQUEST({
+          content: reCommentInput,
+          userId: me.id,
+          commentId: comment.id,
+        }),
+      );
+      resetInput('');
+    }
+  };
+
+  const updateReComment = async (reCommentId: string) => {
+    await dispatch(UPDATE_POST_RECOMMENT_REQUEST({ content: updateReCommentInput, reCommentId }));
+    setUpdateReCommentModal(null);
   };
 
   const removeReComment = (data: { writtenUser: number; reCommentId: number }) => {
@@ -48,16 +61,18 @@ const ReComment: React.VFC<Props> = ({ comment, me }) => {
               <div className="sc-cmTdod kzRjyM comment">
                 <div className="sc-jwKygS ezDpwK">
                   <div className="profile">
-                    <Link to={`/myPost/${reComment.UserId}`}>
+                    {/* eslint-disable-next-line jsx-a11y/click-events-have-key-events,jsx-a11y/no-static-element-interactions */}
+                    <div onClick={() => loadMyPost(`${reComment.UserId}`)}>
                       {reComment.User.profileImg ? (
                         <img src={reComment.User.profileImg} alt="comment-user-thumbnail" />
                       ) : (
                         <img src={gravatar.url(me.nickname, { s: '20px', d: 'retro' })} alt="" />
                       )}
-                    </Link>
+                    </div>
                     <div className="comment-info">
                       <div className="username">
-                        <Link to={`/myPost/${reComment.UserId}`}>{reComment.User.nickname}</Link>
+                        {/* eslint-disable-next-line jsx-a11y/click-events-have-key-events,jsx-a11y/no-static-element-interactions */}
+                        <div onClick={() => loadMyPost(`${reComment.UserId}`)}>{reComment.User.nickname}</div>
                       </div>
                       <div className="date">
                         {`${reComment.createdAt.split('-')[0]}년 
@@ -69,7 +84,9 @@ const ReComment: React.VFC<Props> = ({ comment, me }) => {
                   </div>
                   {me.id === reComment.UserId ? (
                     <div className="actions">
-                      <button type="button">수정</button>
+                      <button type="button" onClick={() => showReCommentUpdateInput(reComment.id)}>
+                        수정
+                      </button>
                       <button
                         type="button"
                         onClick={() => removeReComment({ writtenUser: reComment.UserId, reCommentId: reComment.id })}
@@ -79,15 +96,34 @@ const ReComment: React.VFC<Props> = ({ comment, me }) => {
                     </div>
                   ) : null}
                 </div>
-                <div className="sc-uJMKN fbcLAc">
-                  <div className="sc-btzYZH dfktCZ">
-                    <div className="sc-uJMKN fbcLAc">
-                      <div className="sc-bbmXgH gDQvzU atom-one-light">
-                        <p>{reComment.content}</p>
+                {updateReCommentModal !== reComment.id ? (
+                  <div className="sc-uJMKN fbcLAc">
+                    <div className="sc-btzYZH dfktCZ">
+                      <div className="sc-uJMKN fbcLAc">
+                        <div className="sc-bbmXgH gDQvzU atom-one-light">
+                          <p>{reComment.content}</p>
+                        </div>
                       </div>
                     </div>
                   </div>
-                </div>
+                ) : (
+                  <div className="sc-hEsumM diaLmo">
+                    <textarea
+                      placeholder="댓글을 작성하세요"
+                      className="sc-ktHwxA kMZaKo"
+                      defaultValue={reComment.content}
+                      onChange={setUpdateReCommentInput}
+                    />
+                    <div className="buttons-wrapper">
+                      <button type="button" className="sc-dnqmqq eLHDzq" onClick={() => showReCommentUpdateInput(null)}>
+                        취소
+                      </button>
+                      <button type="button" className="sc-dnqmqq gzELJz" onClick={() => updateReComment(reComment.id)}>
+                        댓글 수정
+                      </button>
+                    </div>
+                  </div>
+                )}
               </div>
             </div>
             <div className="sc-feJyhm sMZHE" />

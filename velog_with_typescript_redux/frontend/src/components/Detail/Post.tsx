@@ -1,10 +1,10 @@
+import myFunctions from '@hooks/myFunctions';
 import PageLoader from '@loader/PageLoader';
 import { RootState } from '@reducers/index';
 import gravatar from 'gravatar';
 import React, { useState, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useHistory } from 'react-router';
-import { Link } from 'react-router-dom';
 import { LIKE_POST_REQUEST, REMOVE_POST_REQUEST, UNLIKE_POST_REQUEST } from '@thunks/post';
 
 interface Props {
@@ -15,8 +15,17 @@ interface Props {
 const Post: React.VFC<Props> = ({ detailPost, me }) => {
   const history = useHistory();
   const dispatch = useDispatch();
-
-  const { removeCommentLoading, removeReCommentLoading } = useSelector((store: RootState) => store.post);
+  const {
+    addCommentError,
+    addReCommentError,
+    updateCommentError,
+    updateReCommentError,
+    removeCommentError,
+    removeReCommentError,
+    likePostError,
+    unlikePostError,
+  } = useSelector((store: RootState) => store.post);
+  const { loadMyPost } = myFunctions();
 
   const [isLiked, setIsLiked] = useState(false);
   const [svgColor, setSvgColor] = useState({ color: 'gray' });
@@ -29,7 +38,7 @@ const Post: React.VFC<Props> = ({ detailPost, me }) => {
   const delPost = () => {
     if (detailPost.UserId === me.id) {
       if (window.confirm('정말 삭제하시겠습니까 ?')) {
-        dispatch(REMOVE_POST_REQUEST(detailPost.id));
+        dispatch(REMOVE_POST_REQUEST({ postId: detailPost.id }));
         history.push('/');
       }
     } else alert('권한이 없습니다.');
@@ -51,9 +60,38 @@ const Post: React.VFC<Props> = ({ detailPost, me }) => {
     }
   }, [detailPost]);
 
-  if (removeCommentLoading || removeReCommentLoading) {
-    return <PageLoader />;
-  }
+  useEffect(() => {
+    if (
+      addCommentError ||
+      addReCommentError ||
+      updateCommentError ||
+      updateReCommentError ||
+      removeCommentError ||
+      removeReCommentError ||
+      likePostError ||
+      unlikePostError
+    ) {
+      alert(
+        addCommentError ||
+          addReCommentError ||
+          updateCommentError ||
+          updateReCommentError ||
+          removeCommentError ||
+          removeReCommentError ||
+          likePostError ||
+          unlikePostError,
+      );
+    }
+  }, [
+    addCommentError,
+    addReCommentError,
+    updateCommentError,
+    updateReCommentError,
+    removeCommentError,
+    removeReCommentError,
+    likePostError,
+    unlikePostError,
+  ]);
 
   return (
     <>
@@ -73,7 +111,10 @@ const Post: React.VFC<Props> = ({ detailPost, me }) => {
         </div>
         <div className="detail__head-info">
           <div className="information">
-            <span className="detail__head-username">{detailPost.User.nickname}</span>
+            {/* eslint-disable-next-line jsx-a11y/click-events-have-key-events,jsx-a11y/no-static-element-interactions */}
+            <span className="detail__head-username" onClick={() => loadMyPost(`${detailPost.UserId}`)}>
+              {detailPost.User.nickname}
+            </span>
             <span className="separator">·</span>
             <span>
               {`${detailPost.createdAt.split('-')[0]}년 ${detailPost.createdAt.split('-')[1]}월 ${
@@ -86,7 +127,8 @@ const Post: React.VFC<Props> = ({ detailPost, me }) => {
 
         <div className="detail__head-like">
           <div className="iCfLcp">
-            <div className="dtrfkW">
+            {/* eslint-disable-next-line jsx-a11y/click-events-have-key-events,jsx-a11y/no-static-element-interactions */}
+            <div className="dtrfkW" onClick={submitLike}>
               <svg style={svgColor} width="24" height="24" viewBox="0 0 24 24">
                 <path fill="currentColor" d="M18 1l-6 4-6-4-6 5v7l12 10 12-10v-7z" />
               </svg>
@@ -122,7 +164,8 @@ const Post: React.VFC<Props> = ({ detailPost, me }) => {
       <div className="detail__footer-wrapper">
         <div className="detail__writerInfo">
           <div className="detail__topInfo">
-            <Link to={`/myPost/${detailPost.UserId}`}>
+            {/* eslint-disable-next-line jsx-a11y/click-events-have-key-events,jsx-a11y/no-static-element-interactions */}
+            <div onClick={() => loadMyPost(`${detailPost.UserId}`)}>
               {detailPost.User.profileImg ? (
                 <img src={detailPost.User.profileImg} alt="" />
               ) : (
@@ -132,7 +175,7 @@ const Post: React.VFC<Props> = ({ detailPost, me }) => {
                   alt="/"
                 />
               )}
-            </Link>
+            </div>
             <div className="detail__userInfo">
               <div className="description">{detailPost.User.myIntroduce}</div>
             </div>

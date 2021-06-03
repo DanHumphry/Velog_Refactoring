@@ -1,11 +1,10 @@
-import { stat } from 'fs';
-
 export const initialState = {
   mainPosts: [],
   detailPost: {},
-  myPosts: { User: {}, Posts: [] },
+  myPosts: [],
   filterList: [],
   hasMorePosts: true,
+  hasMoreMyPosts: true,
   addPostLoading: false, // 포스트 작성중
   addPostDone: false,
   addPostError: null,
@@ -50,7 +49,6 @@ export const initialState = {
   removeReCommentError: null,
 
   newOrRec: false,
-  myPostNavModal: false,
 };
 
 export const ADD_POST_REQUEST = 'ADD_POST_REQUEST';
@@ -117,8 +115,6 @@ export const NEWORREC_REQUEST = 'NEWORREC_REQUEST';
 export const NEWORREC_SUCCESS = 'NEWORREC_SUCCESS';
 export const NEWORREC_FAILURE = 'NEWORREC_FAILURE';
 
-export const SET_POST_NAV_MODAL = 'SET_POST_NAV_MODAL';
-
 const Post = (state = initialState, action: any) => {
   switch (action.type) {
     case ADD_POST_REQUEST:
@@ -157,14 +153,19 @@ const Post = (state = initialState, action: any) => {
 
     case LOAD_MYPOSTS_REQUEST:
       return { ...state, loadMyPostsLoading: true, loadMyPostsDone: false, loadMyPostsError: null };
-    case LOAD_MYPOSTS_SUCCESS:
+    case LOAD_MYPOSTS_SUCCESS: {
+      const prevPosts = [...state.myPosts];
+      const nextPosts = prevPosts.concat(action.data);
+      const isHasMore = action.data.length === 5;
       return {
         ...state,
         loadMyPostsLoading: false,
         loadMyPostsDone: true,
         loadMyPostsError: null,
-        myPosts: action.data,
+        myPosts: nextPosts,
+        hasMoreMyPosts: isHasMore,
       };
+    }
     case LOAD_MYPOSTS_FAILURE:
       return { ...state, loadMyPostsLoading: false, loadMyPostsDone: false, loadMyPostsError: action.data };
 
@@ -327,8 +328,7 @@ const Post = (state = initialState, action: any) => {
       return { ...state, filterList: action.data };
     case NEWORREC_SUCCESS:
       return { ...state, newOrRec: !state.newOrRec };
-    case SET_POST_NAV_MODAL:
-      return { ...state, myPostNavModal: action.data };
+
     default:
       return state;
   }

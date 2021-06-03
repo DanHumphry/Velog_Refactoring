@@ -2,27 +2,29 @@ import gravatar from 'gravatar';
 import React from 'react';
 
 interface Props {
-  writtenUser: any;
+  myPosts: any;
 }
 
-const Profile: React.VFC<Props> = ({ writtenUser }) => {
+const Profile: React.VFC<Props> = ({ myPosts }) => {
   const githubLink = () => {
-    if (!writtenUser.git || writtenUser.git === '') {
+    if (!myPosts[0].User.git || myPosts[0].User.git === '') {
       alert('github주소가 등록되지 않은 사용자입니다.');
-    } else window.open(writtenUser.git);
+    } else window.open(myPosts[0].User.git);
   };
 
   return (
     <div className="header-section">
       <div className="profile">
-        {writtenUser.profileImg === null || writtenUser.profileImg === undefined || writtenUser.profileImg === '' ? (
-          <img src={gravatar.url(writtenUser.nickname, { s: '20px', d: 'retro' })} className="user-image" alt="/" />
+        {myPosts[0].User.profileImg === null ||
+        myPosts[0].User.profileImg === undefined ||
+        myPosts[0].User.profileImg === '' ? (
+          <img src={gravatar.url(myPosts[0].User.nickname, { s: '20px', d: 'retro' })} className="user-image" alt="/" />
         ) : (
-          <img src={writtenUser.profileImg} alt="/" />
+          <img src={myPosts[0].User.profileImg} alt="/" />
         )}
 
         <div className="profile-info">
-          <div className="desc">{writtenUser.myIntroduce}</div>
+          <div className="desc">{myPosts[0].User.myIntroduce}</div>
         </div>
       </div>
       <div className="line" />

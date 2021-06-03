@@ -14,14 +14,18 @@ function Update() {
   const dispatch = useDispatch();
 
   const { me } = useSelector((store: RootState) => store.user);
-  const { detailPost, updatePostLoading } = useSelector((store: RootState) => store.post);
+  const { updatePostLoading } = useSelector((store: RootState) => store.post);
+  const detailPost: any = useSelector((store: RootState) => {
+    const { detailPost } = store.post;
+    return detailPost;
+  });
 
   const [visibility, setVisibility] = useState({
     textSection: { visibility: 'visible' },
     settingSection: { visibility: 'hidden' },
   });
   const [inp, setInp] = useState({ title: '', content: '' });
-  const [imgURL, setImgURL] = useState(detailPost.image as string);
+  const [imgURL, setImgURL] = useState<string>(detailPost.image);
 
   const submitWrite = async (e: any) => {
     e.preventDefault();

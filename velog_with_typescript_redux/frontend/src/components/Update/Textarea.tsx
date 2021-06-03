@@ -1,6 +1,7 @@
+import myFunctions from '@hooks/myFunctions';
 import useInput from '@hooks/useInput';
 import { RootState } from '@reducers/index';
-import React, { VFC } from 'react';
+import React, { useState, VFC } from 'react';
 import { useSelector } from 'react-redux';
 import { useHistory } from 'react-router';
 
@@ -14,16 +15,27 @@ interface Props {
 const TextArea: VFC<Props> = ({ visibility, setVisibility }) => {
   const history = useHistory();
 
-  const { detailPost } = useSelector((store: RootState) => store.post);
+  const { limitLengthOnKeyUpEvent } = myFunctions();
+  const { detailPost }: any = useSelector((store: RootState) => store.post);
 
-  const [title, setTitle] = useInput(detailPost.title);
+  const [title, setTitle, resetTitle] = useInput(detailPost.title);
   const [content, setContent] = useInput(detailPost.content);
+  const [titleLength, setTitleLength] = useState<number>(0);
 
   return (
     <section className="container-section" style={visibility.textSection as React.CSSProperties}>
       <article className="write-container">
         <div className="post-title">
-          <textarea defaultValue={title} name="title" placeholder="제목을 입력하세요" onChange={setTitle} />
+          <textarea
+            value={title}
+            name="title"
+            placeholder="제목을 입력하세요"
+            onChange={setTitle}
+            onKeyUp={(e) => limitLengthOnKeyUpEvent(e, resetTitle, setTitleLength, 80)}
+          />
+          <div className="title_maxLength">
+            <p>{titleLength} / 80</p>
+          </div>
         </div>
         <div className="post-contents">
           <textarea

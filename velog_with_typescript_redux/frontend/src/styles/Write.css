@@ -2,6 +2,14 @@
   margin: 0;
   padding: 0;
 }
+.title_maxLength {
+  right: 2px;
+  top: 53px;
+  position: absolute;
+}
+.title_maxLength p {
+  font-size: 12px;
+}
 .container-section {
   width: 100%;
   height: 100vh;

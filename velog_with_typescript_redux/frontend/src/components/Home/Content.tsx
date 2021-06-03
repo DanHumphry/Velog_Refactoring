@@ -11,8 +11,8 @@ function Content() {
   const dispatch = useDispatch();
   const { loadMyPost, loadPost } = myFunctions();
   const { mainPosts, loadPostsLoading, hasMorePosts } = useSelector((store: RootState) => store.post);
-
   // const [filterPost, setFilterPost] = useState<any[]>([...mainPosts]);
+
   // useEffect(() => {
   //   setFilterPost(
   //     [...mainPosts].filter((v: { language: string }) => {
@@ -30,7 +30,9 @@ function Content() {
     function onScroll() {
       if (window.pageYOffset + document.documentElement.clientHeight > document.documentElement.scrollHeight - 300) {
         if (hasMorePosts && !loadPostsLoading) {
-          const lastId: number = mainPosts[mainPosts.length - 1]?.id;
+          const posts = [...mainPosts];
+          let lastId: any = posts[[...mainPosts].length - 1];
+          if (lastId) lastId = lastId.id;
           dispatch(LOAD_POSTS_REQUEST(lastId));
         }
       }
@@ -45,7 +47,7 @@ function Content() {
     <div className="trend-section">
       <main className="trend-main">
         <div className="main-section">
-          {mainPosts.map((post: any) => {
+          {[...mainPosts].map((post: any) => {
             let commentCnt = post.Comments.length;
             for (let i = 0; i < post.Comments.length; i += 1) commentCnt += post.Comments[i].reComments.length;
 
@@ -84,7 +86,7 @@ function Content() {
                 </div>
                 <div className="article-footer">
                   {/* eslint-disable-next-line jsx-a11y/click-events-have-key-events,jsx-a11y/no-static-element-interactions */}
-                  <div className="footer_userInfo" onClick={() => loadMyPost(post.User.id)}>
+                  <div className="footer_userInfo" onClick={() => loadMyPost({ userId: post.User.id, lastId: null })}>
                     {post.User.profileImg ? (
                       <img src={post.User.profileImg} alt="" />
                     ) : (

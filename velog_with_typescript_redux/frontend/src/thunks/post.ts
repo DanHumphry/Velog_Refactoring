@@ -50,7 +50,6 @@ export const ADD_POST_REQUEST = (v: any) => async (dispatch: any) => {
     const res = await postAPI.postWriteAPI(v);
     dispatch(ADD_POST_SUCCESS_ACTION(res.data));
   } catch (error) {
-    console.log(error);
     dispatch(ADD_POST_FAILURE_ACTION(error.response.data));
     alert(error.response.data);
   }
@@ -66,7 +65,7 @@ export const LOAD_POSTS_REQUEST = (lastId: number | null) => async (dispatch: an
   }
 };
 
-export const LOAD_MYPOSTS_REQUEST = (data: { userId: string }) => async (dispatch: any) => {
+export const LOAD_MYPOSTS_REQUEST = (data: { userId: string; lastId: number | null }) => async (dispatch: any) => {
   try {
     dispatch(LOAD_MYPOSTS_REQUEST_ACTION());
     const res = await postAPI.loadMyPostsAPI(data);

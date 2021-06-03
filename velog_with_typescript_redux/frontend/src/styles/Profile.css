@@ -5,6 +5,14 @@
 div {
   display: block;
 }
+.info_maxLength {
+  bottom: 2px;
+  right: 12px;
+  position: absolute;
+}
+.profile-info form {
+  position: relative;
+}
 h2 {
   display: block;
   font-size: 1.5em;
@@ -148,7 +156,7 @@ svg {
   border-left: 1px solid rgb(233, 236, 239);
 }
 .section1 .profile-info h2 {
-  font-size: 2.25rem;
+  font-size: 2rem;
   line-height: 1.5;
   color: rgb(52, 58, 64);
   margin: 0px;
@@ -315,9 +323,16 @@ svg {
 
 /* section2 form */
 .nickname-form {
+  position: relative;
   display: flex;
   -webkit-box-align: center;
   align-items: center;
+}
+.nickname_maxLength {
+  right: 18px;
+  bottom: 0;
+  position: absolute;
+  font-size: 11px;
 }
 .nickname-input {
   margin-right: 1rem;

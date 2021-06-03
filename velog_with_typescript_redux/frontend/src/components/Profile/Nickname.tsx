@@ -8,8 +8,10 @@ interface Props {
 
 const Nickname: React.VFC<Props> = ({ me }) => {
   const [nicknameModal, setNicknameModal] = useState(false);
-  const [nickname, setNickname] = useInput(me.nickanme);
-  const { updateProfile } = myFunctions();
+  const [nickname, setNickname, resetNickname] = useInput('');
+  const [nicknameLength, setNicknameLength] = useState(0);
+
+  const { updateProfile, limitLengthOnKeyUpEvent } = myFunctions();
 
   return (
     <div className="myProfile">
@@ -21,7 +23,16 @@ const Nickname: React.VFC<Props> = ({ me }) => {
           {nicknameModal === true ? (
             <>
               <form className="nickname-form">
-                <input className="nickname-input" placeholder={me.nickname} onChange={setNickname} />
+                <input
+                  value={nickname}
+                  className="nickname-input"
+                  placeholder={me.nickname}
+                  onChange={setNickname}
+                  onKeyUp={(e) => limitLengthOnKeyUpEvent(e, resetNickname, setNicknameLength, 30)}
+                />
+                <div className="nickname_maxLength">
+                  <p>{nicknameLength} / 30</p>
+                </div>
               </form>
               <div className="edit-wrapper">
                 <button

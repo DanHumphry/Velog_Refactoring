@@ -10,7 +10,7 @@ module.exports = class Post extends Model {
           allowNull: false,
         },
         title: {
-          type: DataTypes.TEXT,
+          type: DataTypes.STRING(80),
           allowNull: false,
         },
         image: {

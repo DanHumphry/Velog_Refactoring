@@ -62,7 +62,7 @@ const ReComment: React.VFC<Props> = ({ comment, me }) => {
                 <div className="sc-jwKygS ezDpwK">
                   <div className="profile">
                     {/* eslint-disable-next-line jsx-a11y/click-events-have-key-events,jsx-a11y/no-static-element-interactions */}
-                    <div onClick={() => loadMyPost(`${reComment.UserId}`)}>
+                    <div onClick={() => loadMyPost({ userId: `${reComment.UserId}`, lastId: null })}>
                       {reComment.User.profileImg ? (
                         <img src={reComment.User.profileImg} alt="comment-user-thumbnail" />
                       ) : (
@@ -72,7 +72,9 @@ const ReComment: React.VFC<Props> = ({ comment, me }) => {
                     <div className="comment-info">
                       <div className="username">
                         {/* eslint-disable-next-line jsx-a11y/click-events-have-key-events,jsx-a11y/no-static-element-interactions */}
-                        <div onClick={() => loadMyPost(`${reComment.UserId}`)}>{reComment.User.nickname}</div>
+                        <div onClick={() => loadMyPost({ userId: `${reComment.UserId}`, lastId: null })}>
+                          {reComment.User.nickname}
+                        </div>
                       </div>
                       <div className="date">
                         {`${reComment.createdAt.split('-')[0]}년 
@@ -101,7 +103,13 @@ const ReComment: React.VFC<Props> = ({ comment, me }) => {
                     <div className="sc-btzYZH dfktCZ">
                       <div className="sc-uJMKN fbcLAc">
                         <div className="sc-bbmXgH gDQvzU atom-one-light">
-                          <p>{reComment.content}</p>
+                          {reComment.content.split('\n').map((line: string, idx: number) => (
+                            // eslint-disable-next-line react/no-array-index-key
+                            <p key={idx}>
+                              {line}
+                              <br />
+                            </p>
+                          ))}
                         </div>
                       </div>
                     </div>

@@ -84,7 +84,7 @@ const Comment: React.VFC<Props> = ({ detailPost, me }) => {
                 <div className="commentUserInfo">
                   <div className="commentProfile">
                     {/* eslint-disable-next-line jsx-a11y/click-events-have-key-events,jsx-a11y/no-static-element-interactions */}
-                    <div onClick={() => loadMyPost(`${comment.UserId}`)}>
+                    <div onClick={() => loadMyPost({ userId: `${comment.UserId}`, lastId: null })}>
                       {comment.User.profileImg === null ||
                       comment.User.profileImg === '' ||
                       comment.User.profileImg === undefined ? (
@@ -96,7 +96,9 @@ const Comment: React.VFC<Props> = ({ detailPost, me }) => {
                     <div className="comment-info">
                       <div className="commentUsername">
                         {/* eslint-disable-next-line jsx-a11y/click-events-have-key-events,jsx-a11y/no-static-element-interactions */}
-                        <div onClick={() => loadMyPost(`${comment.UserId}`)}>{comment.User.nickname}</div>
+                        <div onClick={() => loadMyPost({ userId: `${comment.UserId}`, lastId: null })}>
+                          {comment.User.nickname}
+                        </div>
                       </div>
                       <div className="commentDate">
                         {`${comment.createdAt.split('-')[0]}년 ${comment.createdAt.split('-')[1]}월 ${
@@ -126,7 +128,13 @@ const Comment: React.VFC<Props> = ({ detailPost, me }) => {
                     <div className="sc-CtfFt jUJTZI">
                       <div className="sc-kafWEX hQjZHl">
                         <div className="sc-feJyhm gzDGWh atom-one-light">
-                          <p>{comment.content}</p>
+                          {comment.content.split('\n').map((line: string, idx: number) => (
+                            // eslint-disable-next-line react/no-array-index-key
+                            <p key={idx}>
+                              {line}
+                              <br />
+                            </p>
+                          ))}
                         </div>
                       </div>
                     </div>

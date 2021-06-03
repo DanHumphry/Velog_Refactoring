@@ -1,8 +1,6 @@
 import myFunctions from '@hooks/myFunctions';
-import { UPDATE_PROFILE_REQUEST } from '@thunks/user';
 import React, { useState } from 'react';
 import useInput from '@hooks/useInput';
-import { useDispatch } from 'react-redux';
 
 interface Props {
   me: any;
@@ -10,16 +8,26 @@ interface Props {
 
 const Introduce: React.VFC<Props> = ({ me }) => {
   const [infoModal, setInfoModal] = useState(false);
-  const [info, setInfo] = useInput(me.myIntroduce || '');
+  const [info, setInfo, resetInfo] = useInput('');
+  const [infoLength, setInfoLength] = useState<number>(0);
 
-  const { updateProfile } = myFunctions();
+  const { updateProfile, limitLengthOnKeyUpEvent } = myFunctions();
 
   return (
     <div className="profile-info">
       {infoModal === true ? (
         <>
           <form>
-            <textarea value={info} name="myInfo" placeholder={me.myIntroduce} onChange={setInfo} />
+            <textarea
+              value={info}
+              name="myInfo"
+              placeholder={me.myIntroduce}
+              onChange={setInfo}
+              onKeyUp={(e) => limitLengthOnKeyUpEvent(e, resetInfo, setInfoLength, 120)}
+            />
+            <div className="info_maxLength">
+              <p>{infoLength} / 120</p>
+            </div>
           </form>
           <button
             type="button"
@@ -32,7 +40,13 @@ const Introduce: React.VFC<Props> = ({ me }) => {
         </>
       ) : (
         <>
-          <h2>{me.myIntroduce}</h2>
+          {me.myIntroduce?.split('\n').map((line: string, idx: number) => (
+            // eslint-disable-next-line react/no-array-index-key
+            <h2 key={idx}>
+              {line}
+              <br />
+            </h2>
+          ))}
           <button
             type="button"
             className="fix-button"

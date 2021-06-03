@@ -1,23 +1,12 @@
 import myFunctions from '@hooks/myFunctions';
-import { LOAD_MYPOSTS_REQUEST, LOAD_POST_REQUEST } from '@thunks/post';
-import React, { useEffect } from 'react';
-import { useDispatch } from 'react-redux';
-import { useHistory } from 'react-router-dom';
+import React from 'react';
 
 interface Props {
   myPosts: any;
 }
 
 const Content: React.VFC<Props> = ({ myPosts }) => {
-  const dispatch = useDispatch();
-  const pgN = document.location.href.split('/')[4];
   const { loadPost } = myFunctions();
-
-  useEffect(() => {
-    if (Object.keys(myPosts).length === 0) {
-      dispatch(LOAD_MYPOSTS_REQUEST({ userId: pgN }));
-    }
-  }, [pgN]);
 
   if (myPosts.length === 0) {
     return (

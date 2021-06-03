@@ -3,14 +3,12 @@ import React, { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Link } from 'react-router-dom';
 import '@styles/Header.css';
-import useSetModal from '@hooks/useSetModal';
 import gravatar from 'gravatar';
-import { LOG_OUT_REQUEST } from '@thunks/user';
+import { LOG_OUT_REQUEST, SET_LOGIN_MODAL } from '@thunks/user';
 
 function Header() {
   const dispatch = useDispatch();
   const { me } = useSelector((store: RootState) => store.user);
-  const { showLoginModal } = useSetModal();
 
   const [profileModal, setProfileModal] = useState(false);
 
@@ -30,7 +28,7 @@ function Header() {
               Velog
             </Link>
             {me.id === null || me.id === undefined ? (
-              <button type="button" className="header-btn" onClick={showLoginModal}>
+              <button type="button" className="header-btn" onClick={() => dispatch(SET_LOGIN_MODAL(true))}>
                 로그인
               </button>
             ) : (

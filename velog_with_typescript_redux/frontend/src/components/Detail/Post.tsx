@@ -112,7 +112,10 @@ const Post: React.VFC<Props> = ({ detailPost, me }) => {
         <div className="detail__head-info">
           <div className="information">
             {/* eslint-disable-next-line jsx-a11y/click-events-have-key-events,jsx-a11y/no-static-element-interactions */}
-            <span className="detail__head-username" onClick={() => loadMyPost(`${detailPost.UserId}`)}>
+            <span
+              className="detail__head-username"
+              onClick={() => loadMyPost({ userId: `${detailPost.UserId}`, lastId: null })}
+            >
               {detailPost.User.nickname}
             </span>
             <span className="separator">·</span>
@@ -157,7 +160,13 @@ const Post: React.VFC<Props> = ({ detailPost, me }) => {
       </div>
       <div className="detail__body-wrapper">
         <div className="detail__content">
-          <p>{detailPost.content}</p>
+          {detailPost.content.split('\n').map((line: string, idx: number) => (
+            // eslint-disable-next-line react/no-array-index-key
+            <p key={idx}>
+              {line}
+              <br />
+            </p>
+          ))}
         </div>
       </div>
 
@@ -165,7 +174,7 @@ const Post: React.VFC<Props> = ({ detailPost, me }) => {
         <div className="detail__writerInfo">
           <div className="detail__topInfo">
             {/* eslint-disable-next-line jsx-a11y/click-events-have-key-events,jsx-a11y/no-static-element-interactions */}
-            <div onClick={() => loadMyPost(`${detailPost.UserId}`)}>
+            <div onClick={() => loadMyPost({ userId: `${detailPost.UserId}`, lastId: null })}>
               {detailPost.User.profileImg ? (
                 <img src={detailPost.User.profileImg} alt="" />
               ) : (

@@ -1,18 +1,18 @@
-import useSetModal from '@hooks/useSetModal';
 import { RootState } from '@reducers/index';
-import React, { useState, useEffect } from 'react';
+import { SET_LOGIN_MODAL } from '@thunks/user';
+import React, { useEffect } from 'react';
 import '@styles/LoginModal.css';
 import Login from '@components/AccountModal/Login';
 import Join from '@components/AccountModal/Join';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 
 function AccountModal() {
-  const { showLoginModal } = useSetModal();
+  const dispatch = useDispatch();
   const { accountText } = useSelector((store: RootState) => store.user);
 
   useEffect(() => {
     const handleEsc = (event: KeyboardEvent) => {
-      if (event.keyCode === 27) showLoginModal();
+      if (event.keyCode === 27) dispatch(SET_LOGIN_MODAL(false));
     };
     window.addEventListener('keydown', handleEsc);
 

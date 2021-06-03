@@ -21,6 +21,8 @@ import {
   SEND_EMAIL_REQUEST_ACTION,
   SEND_EMAIL_FAILURE_ACTION,
   SEND_EMAIL_SUCCESS_ACTION,
+  SET_LOGIN_MODAL_ACTION,
+  SET_ACCOUNT_TEXT_ACTION,
 } from '@actions/user';
 
 export const LOG_IN_REQUEST = (v: { email: string; password: string }) => async (dispatch: any) => {
@@ -98,5 +100,21 @@ export const UPDATE_PROFILE_IMG_REQUEST = (v: FormData) => async (dispatch: any)
     await dispatch(UPDATE_PROFILE_IMG_SUCCESS_ACTION(res.data));
   } catch (e) {
     dispatch(UPDATE_PROFILE_IMG_FAILURE_ACTION(e));
+  }
+};
+
+export const SET_LOGIN_MODAL = (data: boolean) => async (dispatch: any) => {
+  try {
+    dispatch(SET_LOGIN_MODAL_ACTION(data));
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+export const SET_ACCOUNT_TEXT = (data: boolean) => async (dispatch: any) => {
+  try {
+    dispatch(SET_ACCOUNT_TEXT_ACTION(data));
+  } catch (error) {
+    console.log(error);
   }
 };

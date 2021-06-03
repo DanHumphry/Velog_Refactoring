@@ -11,8 +11,8 @@ export const loadPostsAPI = (lastId: number | null) => {
   return axios.post('posts/', { lastId });
 };
 
-export const loadMyPostsAPI = (data: { userId: string }) => {
-  return axios.get(`posts/${data.userId}`);
+export const loadMyPostsAPI = (data: { userId: string; lastId: number | null }) => {
+  return axios.post(`posts/${data.userId}`, data);
 };
 
 export const loadPostAPI = (data: { postId: string }) => {

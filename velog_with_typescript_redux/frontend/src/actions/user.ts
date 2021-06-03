@@ -20,6 +20,8 @@ import {
   SEND_EMAIL_REQUEST,
   SEND_EMAIL_FAILURE,
   SEND_EMAIL_SUCCESS,
+  SET_LOGIN_MODAL,
+  SET_ACCOUNT_TEXT,
 } from '@reducers/user';
 
 export const LOG_IN_REQUEST_ACTION = () => ({ type: LOG_IN_REQUEST });
@@ -55,3 +57,6 @@ export const UPDATE_PROFILE_IMG_FAILURE_ACTION = (error: Error | any) => ({
   type: UPDATE_PROFILE_IMG_FAILURE,
   data: error,
 });
+
+export const SET_LOGIN_MODAL_ACTION = (data: boolean) => ({ type: SET_LOGIN_MODAL, data });
+export const SET_ACCOUNT_TEXT_ACTION = (data: boolean) => ({ type: SET_ACCOUNT_TEXT, data });

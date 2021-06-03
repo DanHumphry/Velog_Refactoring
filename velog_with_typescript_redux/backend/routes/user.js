@@ -93,7 +93,7 @@ router.patch("/update", isLoggedIn, async (req, res, next) => {
     await User.update(
       {
         git: req.body.git,
-        email: req.body.email,
+        nickname: req.body.nickname,
         myIntroduce: req.body.myIntroduce,
       },
       {

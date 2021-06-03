@@ -15,7 +15,6 @@ function Home() {
   // href는 like 인지 없는지 , 백엔드에서 sortting할때 필요한 정보, 아직 mysql구문 에러때문에 sortting못하는중,,
 
   useEffect(() => {
-    console.log('S?D??');
     if (Object.keys(mainPosts).length === 0) {
       dispatch(LOAD_POSTS_REQUEST(null));
     }
@@ -25,7 +24,7 @@ function Home() {
     <>
       <Header />
       <Navi />
-      {loadPostsLoading ? <PageLoader /> : <Content />}
+      {loadPostsLoading && Object.keys(mainPosts).length === 0 ? <PageLoader /> : <Content />}
     </>
   );
 }

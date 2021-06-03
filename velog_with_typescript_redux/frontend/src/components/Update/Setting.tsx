@@ -13,8 +13,6 @@ interface Props {
 }
 
 const Setting: VFC<Props> = ({ visibility, setVisibility, inp, imgURL, setImgURL }) => {
-  const { detailPost } = useSelector((store: RootState) => store.post);
-
   const [filterList] = useState([
     { id: 1, language: 'Python' },
     { id: 2, language: 'React' },
@@ -104,8 +102,8 @@ const Setting: VFC<Props> = ({ visibility, setVisibility, inp, imgURL, setImgURL
             <section>
               <ul>
                 {filterList.map((a) => {
-                  let checked = false;
-                  if (detailPost.language.split(',').indexOf(a.language) !== -1) checked = true;
+                  // let checked = false;
+                  // if (detailPost.language.split(',').indexOf(a.language) !== -1) checked = true;
                   return (
                     <li key={a.id}>
                       <input
@@ -115,7 +113,7 @@ const Setting: VFC<Props> = ({ visibility, setVisibility, inp, imgURL, setImgURL
                         type="checkbox"
                         data-type="genres"
                         name="langs"
-                        defaultChecked={checked}
+                        // defaultChecked={checked}
                       />
                       {/* eslint-disable-next-line jsx-a11y/click-events-have-key-events */}
                       <label className="input__label | filters-input__label--checkbox" htmlFor={a.language}>

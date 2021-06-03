@@ -1,4 +1,3 @@
-import useSetModal from '@hooks/useSetModal';
 import ButtonLoader from '@loader/ButtonLoader';
 import { RootState } from '@reducers/index';
 import React, { useEffect } from 'react';
@@ -6,13 +5,12 @@ import '@styles/Login.css';
 import { useDispatch, useSelector } from 'react-redux';
 import JoinEmailSection from '@components/AccountModal/JoinEmailSection';
 import JoinPasswordSection from '@components/AccountModal/JoinPasswordSection';
-import { SIGN_UP_REQUEST } from '@thunks/user';
+import { SET_ACCOUNT_TEXT, SET_LOGIN_MODAL, SIGN_UP_REQUEST } from '@thunks/user';
 import SocialAPI from '@components/AccountModal/SocialAPI';
 
 function Join() {
   const dispatch = useDispatch();
-  const { showLoginModal, changeAccountText } = useSetModal();
-  const { signUpError, signUpLoading } = useSelector((store: RootState) => store.user);
+  const { signUpError, signUpLoading, loginModal, accountText } = useSelector((store: RootState) => store.user);
 
   const submitJoinButton = (e: any) => {
     e.preventDefault();
@@ -47,7 +45,7 @@ function Join() {
     <div className="login-container">
       <div className="join-box login-box">
         <div className="exit">
-          <button type="button" onClick={showLoginModal}>
+          <button type="button" onClick={() => dispatch(SET_LOGIN_MODAL(!loginModal))}>
             <svg
               stroke="currentColor"
               fill="currentColor"
@@ -77,7 +75,7 @@ function Join() {
         <div className="login-foot">
           <span className="spanText">이미 회원이신가요 ?</span>
           <div className="foot-link">
-            <button type="button" onClick={changeAccountText}>
+            <button type="button" onClick={() => dispatch(SET_ACCOUNT_TEXT(!accountText))}>
               로그인
             </button>
           </div>

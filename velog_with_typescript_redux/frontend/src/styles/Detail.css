@@ -135,6 +135,11 @@
   cursor: pointer;
   z-index: 5;
 }
+.dtrfkW:hover {
+  border: 1px solid black;
+  color: black !important;
+}
+
 .dtrfkW svg {
   width: 24px;
   height: 24px;

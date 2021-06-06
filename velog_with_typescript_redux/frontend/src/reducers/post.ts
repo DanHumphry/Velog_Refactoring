@@ -5,15 +5,23 @@ export const initialState = {
   filterList: [],
   hasMorePosts: true,
   hasMoreMyPosts: true,
+  hasPostsSorting: null,
+  hasMyPostsSorting: null,
   addPostLoading: false, // 포스트 작성중
   addPostDone: false,
   addPostError: null,
   loadPostsLoading: false, // 포스트들 가져오는중
   loadPostsDone: false,
   loadPostsError: null,
+  loadLikedPostsLoading: false, // (sortting)포스트들 가져오는중
+  loadLikedPostsDone: false,
+  loadLikedPostsError: null,
   loadMyPostsLoading: false, // 나의 포스트들 가져오는중
   loadMyPostsDone: false,
   loadMyPostsError: null,
+  loadLikedMyPostsLoading: false, // (sortting)나의 포스트들 가져오는중
+  loadLikedMyPostsDone: false,
+  loadLikedMyPostsError: null,
   loadPostLoading: false, // 포스트 가져오는중
   loadPostDone: false,
   loadPostError: null,
@@ -47,8 +55,6 @@ export const initialState = {
   removeReCommentLoading: false, // 댓글 제거중
   removeReCommentDone: false,
   removeReCommentError: null,
-
-  newOrRec: false,
 };
 
 export const ADD_POST_REQUEST = 'ADD_POST_REQUEST';
@@ -59,9 +65,17 @@ export const LOAD_POSTS_REQUEST = 'LOAD_POSTS_REQUEST';
 export const LOAD_POSTS_SUCCESS = 'LOAD_POSTS_SUCCESS';
 export const LOAD_POSTS_FAILURE = 'LOAD_POSTS_FAILURE';
 
+export const LOAD_LIKED_POSTS_REQUEST = 'LOAD_LIKED_POSTS_REQUEST';
+export const LOAD_LIKED_POSTS_SUCCESS = 'LOAD_LIKED_POSTS_SUCCESS';
+export const LOAD_LIKED_POSTS_FAILURE = 'LOAD_LIKED_POSTS_FAILURE';
+
 export const LOAD_MYPOSTS_REQUEST = 'LOAD_MYPOSTS_REQUEST';
 export const LOAD_MYPOSTS_SUCCESS = 'LOAD_MYPOSTS_SUCCESS';
 export const LOAD_MYPOSTS_FAILURE = 'LOAD_MYPOSTS_FAILURE';
+
+export const LOAD_LIKED_MYPOSTS_REQUEST = 'LOAD_LIKED_MYPOSTS_REQUEST';
+export const LOAD_LIKED_MYPOSTS_SUCCESS = 'LOAD_LIKED_MYPOSTS_SUCCESS';
+export const LOAD_LIKED_MYPOSTS_FAILURE = 'LOAD_LIKED_MYPOSTS_FAILURE';
 
 export const LOAD_POST_REQUEST = 'LOAD_POST_REQUEST';
 export const LOAD_POST_SUCCESS = 'LOAD_POST_SUCCESS';
@@ -133,12 +147,16 @@ const Post = (state = initialState, action: any) => {
     case ADD_POST_FAILURE:
       return { ...state, addPostLoading: false, addPostDone: false, addPostError: action.data };
 
-    case LOAD_POSTS_REQUEST:
+    case LOAD_POSTS_REQUEST: {
       return { ...state, loadPostsLoading: true, loadPostsDone: false, loadPostsError: null };
+    }
     case LOAD_POSTS_SUCCESS: {
       const prevPosts = [...state.mainPosts];
-      const nextPosts = prevPosts.concat(action.data);
+      let nextPosts = prevPosts.concat(action.data);
       const isHasMore = action.data.length === 10;
+      if (state.hasPostsSorting !== '') {
+        nextPosts = action.data;
+      }
       return {
         ...state,
         loadPostsLoading: false,
@@ -146,17 +164,49 @@ const Post = (state = initialState, action: any) => {
         loadPostsError: null,
         mainPosts: nextPosts,
         hasMorePosts: isHasMore,
+        hasPostsSorting: '',
       };
     }
     case LOAD_POSTS_FAILURE:
       return { ...state, loadPostsLoading: false, loadPostsDone: false, loadPostsError: action.data };
 
+    case LOAD_LIKED_POSTS_REQUEST:
+      return {
+        ...state,
+        loadLikedPostsLoading: true,
+        loadLikedPostsDone: false,
+        loadLikedPostsError: null,
+      };
+
+    case LOAD_LIKED_POSTS_SUCCESS: {
+      const prevPosts = [...state.mainPosts];
+      let nextPosts = prevPosts.concat(action.data);
+      const isHasMore = action.data.length === 10;
+      if (state.hasPostsSorting !== 'like') {
+        nextPosts = action.data;
+      }
+      return {
+        ...state,
+        loadLikedPostsLoading: false,
+        loadLikedPostsDone: true,
+        loadLikedPostsError: null,
+        mainPosts: nextPosts,
+        hasMorePosts: isHasMore,
+        hasPostsSorting: 'like',
+      };
+    }
+    case LOAD_LIKED_POSTS_FAILURE:
+      return { ...state, loadLikedPostsLoading: false, loadLikedPostsDone: false, loadLikedPostsError: action.data };
+
     case LOAD_MYPOSTS_REQUEST:
       return { ...state, loadMyPostsLoading: true, loadMyPostsDone: false, loadMyPostsError: null };
     case LOAD_MYPOSTS_SUCCESS: {
       const prevPosts = [...state.myPosts];
-      const nextPosts = prevPosts.concat(action.data);
+      let nextPosts = prevPosts.concat(action.data);
       const isHasMore = action.data.length === 5;
+      if (state.hasMyPostsSorting !== '') {
+        nextPosts = action.data;
+      }
       return {
         ...state,
         loadMyPostsLoading: false,
@@ -164,10 +214,40 @@ const Post = (state = initialState, action: any) => {
         loadMyPostsError: null,
         myPosts: nextPosts,
         hasMoreMyPosts: isHasMore,
+        hasMyPostsSorting: '',
       };
     }
     case LOAD_MYPOSTS_FAILURE:
       return { ...state, loadMyPostsLoading: false, loadMyPostsDone: false, loadMyPostsError: action.data };
+
+    case LOAD_LIKED_MYPOSTS_REQUEST:
+      return { ...state, loadLikedMyPostsLoading: true, loadLikedMyPostsDone: false, loadLikedMyPostsError: null };
+
+    case LOAD_LIKED_MYPOSTS_SUCCESS: {
+      const prevPosts = [...state.mainPosts];
+      let nextPosts = prevPosts.concat(action.data);
+      const isHasMore = action.data.length === 5;
+      if (state.hasMyPostsSorting !== 'like') {
+        console.log('이럴때만');
+        nextPosts = action.data;
+      }
+      return {
+        ...state,
+        loadLikedMyPostsLoading: false,
+        loadLikedMyPostsDone: true,
+        loadLikedMyPostsError: null,
+        myPosts: nextPosts,
+        hasMyPostsSorting: 'like',
+        hasMoreMyPosts: isHasMore,
+      };
+    }
+    case LOAD_LIKED_MYPOSTS_FAILURE:
+      return {
+        ...state,
+        loadLikedMyPostsLoading: false,
+        loadLikedMyPostsDone: false,
+        loadLikedMyPostsError: action.data,
+      };
 
     case LOAD_POST_REQUEST:
       return { ...state, loadPostLoading: true, loadPostDone: false, loadPostError: null };
@@ -326,8 +406,6 @@ const Post = (state = initialState, action: any) => {
 
     case FILTER_SUCCESS:
       return { ...state, filterList: action.data };
-    case NEWORREC_SUCCESS:
-      return { ...state, newOrRec: !state.newOrRec };
 
     default:
       return state;

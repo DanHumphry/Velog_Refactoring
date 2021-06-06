@@ -11,8 +11,16 @@ export const loadPostsAPI = (lastId: number | null) => {
   return axios.post('posts/', { lastId });
 };
 
+export const loadLikedPostsAPI = (lastIdx: number | null) => {
+  return axios.post('posts/liked', { lastIdx });
+};
+
 export const loadMyPostsAPI = (data: { userId: string; lastId: number | null }) => {
   return axios.post(`posts/${data.userId}`, data);
+};
+
+export const loadLikedMyPostsAPI = (data: { userId: string; lastIdx: number | null }) => {
+  return axios.post(`posts/${data.userId}/liked`, data);
 };
 
 export const loadPostAPI = (data: { postId: string }) => {

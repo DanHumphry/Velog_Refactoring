@@ -1,8 +1,8 @@
 import myFunctions from '@hooks/myFunctions';
 import { RootState } from '@reducers/index';
-import { LOAD_POSTS_REQUEST } from '@thunks/post';
+import { LOAD_POSTS_REQUEST, LOAD_LIKED_POSTS_REQUEST } from '@thunks/post';
 import gravatar from 'gravatar';
-import React, { useEffect, useState } from 'react';
+import React, { useEffect } from 'react';
 import '@styles/Board.css';
 import SideCheckBox from '@components/Home/SideCheckBox';
 import { useDispatch, useSelector } from 'react-redux';
@@ -12,7 +12,6 @@ function Content() {
   const { loadMyPost, loadPost } = myFunctions();
   const { mainPosts, loadPostsLoading, hasMorePosts } = useSelector((store: RootState) => store.post);
   // const [filterPost, setFilterPost] = useState<any[]>([...mainPosts]);
-
   // useEffect(() => {
   //   setFilterPost(
   //     [...mainPosts].filter((v: { language: string }) => {
@@ -26,14 +25,21 @@ function Content() {
   //   );
   // }, [mainPosts, filterList]);
 
+  const href = window.location.href.split('/')[3];
+
   useEffect(() => {
     function onScroll() {
       if (window.pageYOffset + document.documentElement.clientHeight > document.documentElement.scrollHeight - 300) {
         if (hasMorePosts && !loadPostsLoading) {
           const posts = [...mainPosts];
-          let lastId: any = posts[[...mainPosts].length - 1];
-          if (lastId) lastId = lastId.id;
-          dispatch(LOAD_POSTS_REQUEST(lastId));
+          if (href === '') {
+            let lastId: any = posts[[...mainPosts].length - 1];
+            if (lastId) lastId = lastId.id;
+            dispatch(LOAD_POSTS_REQUEST(lastId));
+          } else {
+            const lastIdx = posts.length;
+            dispatch(LOAD_LIKED_POSTS_REQUEST(lastIdx));
+          }
         }
       }
     }

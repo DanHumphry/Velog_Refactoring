@@ -41,15 +41,35 @@ import {
   LOAD_MYPOSTS_FAILURE,
   LOAD_MYPOSTS_SUCCESS,
   LOAD_MYPOSTS_REQUEST,
+  LOAD_LIKED_POSTS_FAILURE,
+  LOAD_LIKED_POSTS_SUCCESS,
+  LOAD_LIKED_POSTS_REQUEST,
+  LOAD_LIKED_MYPOSTS_FAILURE,
+  LOAD_LIKED_MYPOSTS_REQUEST,
+  LOAD_LIKED_MYPOSTS_SUCCESS,
 } from '@reducers/post';
 
 export const ADD_POST_REQUEST_ACTION = () => ({ type: ADD_POST_REQUEST });
 export const ADD_POST_SUCCESS_ACTION = (data: any) => ({ type: ADD_POST_SUCCESS, data });
 export const ADD_POST_FAILURE_ACTION = (error: Error | any) => ({ type: ADD_POST_FAILURE, data: error });
 
+export const LOAD_LIKED_MYPOSTS_REQUEST_ACTION = () => ({ type: LOAD_LIKED_MYPOSTS_REQUEST });
+export const LOAD_LIKED_MYPOSTS_SUCCESS_ACTION = (data: any) => ({ type: LOAD_LIKED_MYPOSTS_SUCCESS, data });
+export const LOAD_LIKED_MYPOSTS_FAILURE_ACTION = (error: Error | any) => ({
+  type: LOAD_LIKED_MYPOSTS_FAILURE,
+  data: error,
+});
+
 export const LOAD_MYPOSTS_REQUEST_ACTION = () => ({ type: LOAD_MYPOSTS_REQUEST });
 export const LOAD_MYPOSTS_SUCCESS_ACTION = (data: any) => ({ type: LOAD_MYPOSTS_SUCCESS, data });
 export const LOAD_MYPOSTS_FAILURE_ACTION = (error: Error | any) => ({ type: LOAD_MYPOSTS_FAILURE, data: error });
+
+export const LOAD_LIKED_POSTS_REQUEST_ACTION = () => ({ type: LOAD_LIKED_POSTS_REQUEST });
+export const LOAD_LIKED_POSTS_SUCCESS_ACTION = (data: any) => ({ type: LOAD_LIKED_POSTS_SUCCESS, data });
+export const LOAD_LIKED_POSTS_FAILURE_ACTION = (error: Error | any) => ({
+  type: LOAD_LIKED_POSTS_FAILURE,
+  data: error,
+});
 
 export const LOAD_POSTS_REQUEST_ACTION = () => ({ type: LOAD_POSTS_REQUEST });
 export const LOAD_POSTS_SUCCESS_ACTION = (data: any) => ({ type: LOAD_POSTS_SUCCESS, data });

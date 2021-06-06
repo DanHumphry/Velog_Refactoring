@@ -1,5 +1,4 @@
 import myFunctions from '@hooks/myFunctions';
-import PageLoader from '@loader/PageLoader';
 import { RootState } from '@reducers/index';
 import gravatar from 'gravatar';
 import React, { useState, useEffect } from 'react';
@@ -28,7 +27,10 @@ const Post: React.VFC<Props> = ({ detailPost, me }) => {
   const { loadMyPost } = myFunctions();
 
   const [isLiked, setIsLiked] = useState(false);
-  const [svgColor, setSvgColor] = useState({ color: 'gray' });
+  const [likeBtnStyle, setLikeBtnStyle] = useState({
+    svg: {} as any,
+    svgParent: {} as any,
+  });
 
   const updatePost = () => {
     if (detailPost.UserId === me.id) history.push(`/update/${detailPost.id}`);
@@ -52,10 +54,13 @@ const Post: React.VFC<Props> = ({ detailPost, me }) => {
   useEffect(() => {
     const liked = detailPost.Likers.find((v: any) => v.id === me.id);
     if (liked !== undefined) {
-      setSvgColor({ color: 'black' });
+      setLikeBtnStyle({
+        svg: { color: 'white' },
+        svgParent: { backgroundColor: 'rgb(56, 217, 169)', border: 'none' },
+      });
       setIsLiked(true);
     } else {
-      setSvgColor({ color: 'gray' });
+      setLikeBtnStyle({ svg: {}, svgParent: {} });
       setIsLiked(false);
     }
   }, [detailPost]);
@@ -131,8 +136,8 @@ const Post: React.VFC<Props> = ({ detailPost, me }) => {
         <div className="detail__head-like">
           <div className="iCfLcp">
             {/* eslint-disable-next-line jsx-a11y/click-events-have-key-events,jsx-a11y/no-static-element-interactions */}
-            <div className="dtrfkW" onClick={submitLike}>
-              <svg style={svgColor} width="24" height="24" viewBox="0 0 24 24">
+            <div style={likeBtnStyle.svgParent} className="dtrfkW" onClick={submitLike}>
+              <svg style={likeBtnStyle.svg} width="24" height="24" viewBox="0 0 24 24">
                 <path fill="currentColor" d="M18 1l-6 4-6-4-6 5v7l12 10 12-10v-7z" />
               </svg>
             </div>
@@ -148,8 +153,8 @@ const Post: React.VFC<Props> = ({ detailPost, me }) => {
           </div>
 
           <div className="detail__head-mobileLike">
-            <button type="button" className="likeBtn" onClick={submitLike}>
-              <svg style={svgColor} width="24" height="24" viewBox="0 0 24 24">
+            <button style={likeBtnStyle.svgParent} type="button" className="likeBtn" onClick={submitLike}>
+              <svg style={likeBtnStyle.svg} width="24" height="24" viewBox="0 0 24 24">
                 <path fill="currentColor" d="M18 1l-6 4-6-4-6 5v7l12 10 12-10v-7z" />
               </svg>
               <span>{detailPost.Likers.length}</span>

@@ -197,6 +197,8 @@
   color: rgb(73, 80, 87);
   word-break: keep-all;
   overflow-wrap: break-word;
+  overflow-y: hidden;
+  max-height: 90px;
 }
 .contents-filter {
   margin-bottom: -0.875rem;

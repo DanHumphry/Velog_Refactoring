@@ -1,6 +1,5 @@
-import { RootState } from '@reducers/index';
+import myFunctions from '@hooks/myFunctions';
 import React, { useRef, useState, VFC } from 'react';
-import { useSelector } from 'react-redux';
 
 interface Props {
   visibility: { textSection: { visibility: string }; settingSection: { visibility: string } };
@@ -13,6 +12,8 @@ interface Props {
 }
 
 const Setting: VFC<Props> = ({ visibility, setVisibility, inp, imgURL, setImgURL }) => {
+  const { onChangeImage } = myFunctions();
+
   const [filterList] = useState([
     { id: 1, language: 'Python' },
     { id: 2, language: 'React' },
@@ -25,20 +26,6 @@ const Setting: VFC<Props> = ({ visibility, setVisibility, inp, imgURL, setImgURL
   ]);
 
   const refImgFiles: any = useRef(null);
-
-  const onChangeImg = (e: React.ChangeEvent<HTMLInputElement>) => {
-    e.preventDefault();
-    const reader = new FileReader();
-    let file: any;
-    if (e.target.files !== null) {
-      // eslint-disable-next-line prefer-destructuring
-      file = e.target.files[0];
-    }
-    reader.onloadend = () => {
-      if (reader.result !== null && typeof reader.result === 'string') setImgURL(reader.result);
-    };
-    reader.readAsDataURL(file);
-  };
 
   const delImg = () => {
     refImgFiles.current.files = null;
@@ -60,7 +47,7 @@ const Setting: VFC<Props> = ({ visibility, setVisibility, inp, imgURL, setImgURL
                   type="file"
                   id="file"
                   accept=".jpg, .png, .jpeg, .gif"
-                  onChange={onChangeImg}
+                  onChange={(e) => onChangeImage(e, setImgURL)}
                 />
                 이미지 업로드
               </label>

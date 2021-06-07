@@ -5,16 +5,7 @@ import { useDispatch } from 'react-redux';
 function SideCheckBox() {
   // const disPatch = useDispatch();
 
-  const [filterList] = useState([
-    { id: 1, language: 'Python' },
-    { id: 2, language: 'React' },
-    { id: 3, language: 'Java' },
-    { id: 4, language: 'C#' },
-    { id: 5, language: 'C' },
-    { id: 6, language: 'C++' },
-    { id: 7, language: 'GO' },
-    { id: 8, language: 'Javascript' },
-  ]);
+  const [filterList] = useState([]);
   const [languagefilterList, setLanguagefilterList] = useState<string[]>([]);
 
   // useEffect(() => {
@@ -45,27 +36,32 @@ function SideCheckBox() {
 
   return (
     <aside className="pDRpR">
+      <div className="checkBox_searchInput">
+        <svg width="17" height="17" viewBox="0 0 17 17">
+          <path
+            fillRule="evenodd"
+            d="M13.66 7.36a6.3 6.3 0 1 1-12.598 0 6.3 6.3 0 0 1 12.598 0zm-1.73 5.772a7.36 7.36 0 1 1 1.201-1.201l3.636 3.635c.31.31.31.815 0 1.126l-.075.075a.796.796 0 0 1-1.126 0l-3.636-3.635z"
+            clipRule="evenodd"
+          />
+        </svg>
+        <input placeholder="검색어를 입력하세요" />
+      </div>
       <div className="eyrfCG">
         <div className="filter__head" />
         <section>
           <ul>
-            {filterList.map((a) => {
+            {filterList.map((a: string, idx: number) => {
               return (
-                <li key={a.id}>
-                  <input
-                    id={a.language}
-                    className="filters-input__checkbox"
-                    value="action"
-                    type="checkbox"
-                    data-type="genres"
-                  />
+                // eslint-disable-next-line react/no-array-index-key
+                <li key={idx}>
+                  <input id={a} className="filters-input__checkbox" value="action" type="checkbox" data-type="genres" />
                   {/* eslint-disable-next-line jsx-a11y/click-events-have-key-events */}
                   <label
                     className="input__label | filters-input__label--checkbox"
-                    htmlFor={a.language}
-                    onClick={() => ClickFilter(a.language)}
+                    htmlFor={a}
+                    onClick={() => ClickFilter(a)}
                   >
-                    <span>{a.language}</span>
+                    <span>{a}</span>
                     <span className="filters-input__tick">
                       <svg focusable="false" aria-hidden="true">
                         <use xlinkHref="#check">

@@ -7,6 +7,18 @@ import '@styles/Board.css';
 import SideCheckBox from '@components/Home/SideCheckBox';
 import { useDispatch, useSelector } from 'react-redux';
 
+// 1. model만들기 - 둘다 post hasMany로 hashTag, series, -> foreignKey는 postId
+// 2. Router - addPost 요청 받았을 때 둘다 존재한다면 넣어주기
+// 3. res로 나갈 fullPosts에 include 추가
+// 4. post요청할때 front에서 submit요청시 hashTag랑, series 넣어서 보내기
+// 5. 각 component lang대신 tag받는걸로 수정
+// 6. myPost는 좋아요순, 최신순 말고도 시리즈별 추가
+// 7. 시리즈별로 묶어서 포스팅 볼 수 있는 section 만들기
+
+// 0. 다했다고 생각들면 update도 고치기
+
+// 시간남으면 사람인 보기
+
 interface Props {
   isContent: boolean;
   mainPosts: any;
@@ -88,10 +100,10 @@ const Content: React.VFC<Props> = ({ isContent, mainPosts }) => {
                     <span>{commentCnt}개의 댓글</span>
                   </div>
                   <div className="filter-info">
-                    {post.language.split(',').map((L: string, i: number) => {
-                      // eslint-disable-next-line react/no-array-index-key
-                      return <p key={i}>{L}</p>;
-                    })}
+                    {/* {post.language.split(',').map((L: string, i: number) => { */}
+                    {/*  // eslint-disable-next-line react/no-array-index-key */}
+                    {/*  return <p key={i}>{L}</p>; */}
+                    {/* })} */}
                   </div>
                 </div>
                 <div className="article-footer">

@@ -13,6 +13,7 @@ function Write() {
   const history = useHistory();
   const dispatch = useDispatch();
 
+  const [tag, setTag] = useState<string[]>([]);
   const { addPostLoading } = useSelector((store: RootState) => store.post);
   const { me } = useSelector((store: RootState) => store.user);
 
@@ -27,27 +28,20 @@ function Write() {
 
     if (e.target.elements.title.value === '' || e.target.elements.content.value === '') {
       alert('제목과 내용은 필수입력사항입니다.');
+    } else if (e.nativeEvent.submitter.name === 'settingPropsButton') {
+      setInp({ title: e.target.elements.title.value, content: e.target.elements.content.value });
+      setVisibility({ textSection: { visibility: 'hidden' }, settingSection: { visibility: 'visible' } });
     } else {
-      let langs = '';
+      const formData = new FormData();
+      formData.append('content', inp.content);
+      formData.append('title', inp.title);
+      formData.append('tag', tag.join(','));
 
-      if (e.nativeEvent.submitter.name === 'settingPropsButton') {
-        setInp({ title: e.target.elements.title.value, content: e.target.elements.content.value });
-      } else {
-        await e.target.elements.langs.forEach((item: HTMLInputElement) => {
-          if (item.checked && langs === '') langs += `${item.id}`;
-          else if (item.checked) langs += `,${item.id}`;
-        });
-
-        const formData = new FormData();
-        formData.append('content', inp.content);
-        formData.append('title', inp.title);
-        formData.append('language', langs);
-        if (e.target.elements.imgFile.value) {
-          formData.append('image', e.target.elements.imgFile.files[0]);
-        }
-        await dispatch(ADD_POST_REQUEST(formData));
-        history.push('/');
+      if (e.target.elements.imgFile.value) {
+        formData.append('image', e.target.elements.imgFile.files[0]);
       }
+      await dispatch(ADD_POST_REQUEST(formData));
+      history.push('/');
     }
   };
 
@@ -62,8 +56,8 @@ function Write() {
 
   return (
     <form encType="multipart/form-data" onSubmit={(e) => submitWrite(e)}>
-      <TextArea visibility={visibility} setVisibility={setVisibility} />
-      <Setting visibility={visibility} setVisibility={setVisibility} inp={inp} />
+      <TextArea visibility={visibility} />
+      <Setting visibility={visibility} setVisibility={setVisibility} inp={inp} tag={tag} setTag={setTag} />
     </form>
   );
 }

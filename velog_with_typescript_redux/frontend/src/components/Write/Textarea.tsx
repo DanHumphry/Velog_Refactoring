@@ -5,12 +5,9 @@ import { useHistory } from 'react-router';
 
 interface Props {
   visibility: { textSection: { visibility: string }; settingSection: { visibility: string } };
-  setVisibility: React.Dispatch<
-    React.SetStateAction<{ textSection: { visibility: string }; settingSection: { visibility: string } }>
-  >;
 }
 
-const TextArea: VFC<Props> = ({ visibility, setVisibility }) => {
+const TextArea: VFC<Props> = ({ visibility }) => {
   const history = useHistory();
 
   const { limitLengthOnKeyUpEvent } = myFunctions();
@@ -36,8 +33,8 @@ const TextArea: VFC<Props> = ({ visibility, setVisibility }) => {
         </div>
         <div className="post-contents">
           <textarea
+            value={content}
             name="content"
-            defaultValue={content}
             className="post-textarea"
             placeholder="내용을 입력하세요"
             onChange={setContent}
@@ -59,14 +56,7 @@ const TextArea: VFC<Props> = ({ visibility, setVisibility }) => {
             ✔ 나가기
           </button>
           <div>
-            <button
-              type="submit"
-              name="settingPropsButton"
-              className="transparent-btn"
-              onClick={() =>
-                setVisibility({ textSection: { visibility: 'hidden' }, settingSection: { visibility: 'visible' } })
-              }
-            >
+            <button type="submit" name="settingPropsButton" className="transparent-btn">
               발행
             </button>
           </div>

@@ -24,6 +24,7 @@
   height: 3rem;
   text-decoration: none;
   text-align: center;
+  cursor: pointer;
 }
 .navi-underline {
   width: 50%;

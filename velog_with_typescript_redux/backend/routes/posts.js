@@ -1,7 +1,7 @@
 const express = require("express");
 const sequelize = require("sequelize");
 
-const { Post, User, Comment, ReComment } = require("../models");
+const { Post, User, Comment, ReComment, Tag } = require("../models");
 
 const router = express.Router();
 
@@ -27,6 +27,10 @@ router.post("/liked", async (req, res, next) => {
           model: User, // 좋아요 누른 사람
           as: "Likers",
           attributes: ["id"],
+        },
+        {
+          model: Tag,
+          attributes: ["id", "name"],
         },
       ],
       order: [["createdAt", "DESC"]],
@@ -80,6 +84,10 @@ router.post("/", async (req, res, next) => {
           as: "Likers",
           attributes: ["id"],
         },
+        {
+          model: Tag,
+          attributes: ["id", "name"],
+        },
       ],
       order: [["createdAt", "DESC"]],
     });
@@ -114,6 +122,10 @@ router.post("/:userId/liked", async (req, res, next) => {
           model: User, // 좋아요 누른 사람
           as: "Likers",
           attributes: ["id"],
+        },
+        {
+          model: Tag,
+          attributes: ["id", "name"],
         },
       ],
       order: [["createdAt", "DESC"]],
@@ -165,6 +177,10 @@ router.post("/:userId", async (req, res, next) => {
           model: User, // 좋아요 누른 사람
           as: "Likers",
           attributes: ["id"],
+        },
+        {
+          model: Tag,
+          attributes: ["id", "name"],
         },
       ],
     });

@@ -1,4 +1,3 @@
-import PageLoader from '@loader/PageLoader';
 import gravatar from 'gravatar';
 import React from 'react';
 
@@ -13,7 +12,7 @@ const Profile: React.VFC<Props> = ({ myPosts }) => {
     } else window.open(myPosts[0].User.git);
   };
 
-  if (Object.keys(myPosts).length === 0) return <PageLoader />;
+  if (Object.keys(myPosts).length === 0) return null;
 
   return (
     <div className="header-section">

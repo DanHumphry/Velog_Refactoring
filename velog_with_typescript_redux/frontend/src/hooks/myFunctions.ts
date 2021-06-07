@@ -69,5 +69,22 @@ export default function myFunctions() {
     } else setState(byte);
   };
 
-  return { loadPost, loadMyPost, updateProfile, limitLengthOnKeyUpEvent };
+  const onChangeImage = (
+    e: React.ChangeEvent<HTMLInputElement>,
+    setImgURL: React.Dispatch<React.SetStateAction<string>>,
+  ) => {
+    e.preventDefault();
+    const reader = new FileReader();
+    let file: any;
+    if (e.target.files !== null) {
+      // eslint-disable-next-line prefer-destructuring
+      file = e.target.files[0];
+    }
+    reader.onloadend = () => {
+      if (reader.result !== null && typeof reader.result === 'string') setImgURL(reader.result);
+    };
+    reader.readAsDataURL(file);
+  };
+
+  return { loadPost, loadMyPost, updateProfile, limitLengthOnKeyUpEvent, onChangeImage };
 }

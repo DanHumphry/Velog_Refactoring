@@ -3,6 +3,7 @@ const user = require("./user");
 const post = require("./post");
 const comment = require("./comment");
 const reComment = require("./reComment");
+const tag = require("./tag");
 
 const env = process.env.NODE_ENV || "development";
 const config = require("../config/config")[env];
@@ -19,6 +20,7 @@ db.Post = post;
 db.User = user;
 db.Comment = comment;
 db.ReComment = reComment;
+db.Tag = tag;
 
 Object.keys(db).forEach((modelName) => {
   db[modelName].init(sequelize);

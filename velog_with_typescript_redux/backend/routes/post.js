@@ -3,7 +3,7 @@ const multer = require("multer");
 const path = require("path");
 const fs = require("fs");
 
-const { Post, User, Comment, ReComment } = require("../models");
+const { Post, User, Comment, ReComment, Tag } = require("../models");
 const { isLoggedIn } = require("./middlewares");
 
 const router = express.Router();
@@ -32,16 +32,27 @@ const upload = multer({
 
 router.post("/", isLoggedIn, upload.single("image"), async (req, res, next) => {
   // POST /post
+
   try {
     const image = req.file ? `http://localhost:3065/${req.file.path}` : null;
     const post = await Post.create({
       title: req.body.title,
       content: req.body.content,
       image,
-      like: 0,
-      language: req.body.language,
       UserId: req.user.id,
     });
+
+    if (req.body.tag) {
+      const tags = req.body.tag.split(",");
+      const result = await Promise.all(
+        tags.map((tag) =>
+          Tag.findOrCreate({
+            where: { name: tag.toLowerCase() },
+          })
+        )
+      );
+      await post.addTags(result.map((v) => v[0]));
+    }
 
     const fullPost = await Post.findOne({
       where: { id: post.id },
@@ -64,6 +75,10 @@ router.post("/", isLoggedIn, upload.single("image"), async (req, res, next) => {
           model: User, // 좋아요 누른 사람
           as: "Likers",
           attributes: ["id"],
+        },
+        {
+          model: Tag,
+          attributes: ["id", "name"],
         },
       ],
     });
@@ -113,6 +128,10 @@ router.get("/:postId", async (req, res, next) => {
           model: User, // 좋아요 누른 사람
           as: "Likers",
           attributes: ["id"],
+        },
+        {
+          model: Tag,
+          attributes: ["id", "name"],
         },
       ],
     });

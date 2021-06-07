@@ -1,3 +1,4 @@
+import PageLoader from '@loader/PageLoader';
 import gravatar from 'gravatar';
 import React from 'react';
 
@@ -11,6 +12,8 @@ const Profile: React.VFC<Props> = ({ myPosts }) => {
       alert('github주소가 등록되지 않은 사용자입니다.');
     } else window.open(myPosts[0].User.git);
   };
+
+  if (Object.keys(myPosts).length === 0) return <PageLoader />;
 
   return (
     <div className="header-section">

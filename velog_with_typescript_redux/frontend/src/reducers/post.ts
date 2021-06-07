@@ -1,12 +1,12 @@
 export const initialState = {
   mainPosts: [],
+  likedPosts: [],
   detailPost: {},
   myPosts: [],
+  myLikedPosts: [],
   filterList: [],
   hasMorePosts: true,
   hasMoreMyPosts: true,
-  hasPostsSorting: null,
-  hasMyPostsSorting: null,
   addPostLoading: false, // 포스트 작성중
   addPostDone: false,
   addPostError: null,
@@ -152,11 +152,8 @@ const Post = (state = initialState, action: any) => {
     }
     case LOAD_POSTS_SUCCESS: {
       const prevPosts = [...state.mainPosts];
-      let nextPosts = prevPosts.concat(action.data);
+      const nextPosts = prevPosts.concat(action.data);
       const isHasMore = action.data.length === 10;
-      if (state.hasPostsSorting !== '') {
-        nextPosts = action.data;
-      }
       return {
         ...state,
         loadPostsLoading: false,
@@ -164,7 +161,6 @@ const Post = (state = initialState, action: any) => {
         loadPostsError: null,
         mainPosts: nextPosts,
         hasMorePosts: isHasMore,
-        hasPostsSorting: '',
       };
     }
     case LOAD_POSTS_FAILURE:
@@ -179,20 +175,16 @@ const Post = (state = initialState, action: any) => {
       };
 
     case LOAD_LIKED_POSTS_SUCCESS: {
-      const prevPosts = [...state.mainPosts];
-      let nextPosts = prevPosts.concat(action.data);
+      const prevPosts = [...state.likedPosts];
+      const nextPosts = prevPosts.concat(action.data);
       const isHasMore = action.data.length === 10;
-      if (state.hasPostsSorting !== 'like') {
-        nextPosts = action.data;
-      }
       return {
         ...state,
         loadLikedPostsLoading: false,
         loadLikedPostsDone: true,
         loadLikedPostsError: null,
-        mainPosts: nextPosts,
+        likedPosts: nextPosts,
         hasMorePosts: isHasMore,
-        hasPostsSorting: 'like',
       };
     }
     case LOAD_LIKED_POSTS_FAILURE:
@@ -202,11 +194,8 @@ const Post = (state = initialState, action: any) => {
       return { ...state, loadMyPostsLoading: true, loadMyPostsDone: false, loadMyPostsError: null };
     case LOAD_MYPOSTS_SUCCESS: {
       const prevPosts = [...state.myPosts];
-      let nextPosts = prevPosts.concat(action.data);
+      const nextPosts = prevPosts.concat(action.data);
       const isHasMore = action.data.length === 5;
-      if (state.hasMyPostsSorting !== '') {
-        nextPosts = action.data;
-      }
       return {
         ...state,
         loadMyPostsLoading: false,
@@ -214,7 +203,6 @@ const Post = (state = initialState, action: any) => {
         loadMyPostsError: null,
         myPosts: nextPosts,
         hasMoreMyPosts: isHasMore,
-        hasMyPostsSorting: '',
       };
     }
     case LOAD_MYPOSTS_FAILURE:
@@ -224,20 +212,15 @@ const Post = (state = initialState, action: any) => {
       return { ...state, loadLikedMyPostsLoading: true, loadLikedMyPostsDone: false, loadLikedMyPostsError: null };
 
     case LOAD_LIKED_MYPOSTS_SUCCESS: {
-      const prevPosts = [...state.mainPosts];
-      let nextPosts = prevPosts.concat(action.data);
+      const prevPosts = [...state.myLikedPosts];
+      const nextPosts = prevPosts.concat(action.data);
       const isHasMore = action.data.length === 5;
-      if (state.hasMyPostsSorting !== 'like') {
-        console.log('이럴때만');
-        nextPosts = action.data;
-      }
       return {
         ...state,
         loadLikedMyPostsLoading: false,
         loadLikedMyPostsDone: true,
         loadLikedMyPostsError: null,
-        myPosts: nextPosts,
-        hasMyPostsSorting: 'like',
+        myLikedPosts: nextPosts,
         hasMoreMyPosts: isHasMore,
       };
     }

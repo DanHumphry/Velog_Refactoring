@@ -1,12 +1,43 @@
 import myFunctions from '@hooks/myFunctions';
-import React from 'react';
+import { RootState } from '@reducers/index';
+import { LOAD_LIKED_MYPOSTS_REQUEST, LOAD_MYPOSTS_REQUEST } from '@thunks/post';
+import React, { useEffect } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 
 interface Props {
   myPosts: any;
+  navOption: string;
 }
 
-const Content: React.VFC<Props> = ({ myPosts }) => {
+const Content: React.VFC<Props> = ({ myPosts, navOption }) => {
+  const dispatch = useDispatch();
+
+  const { loadMyPostsLoading, hasMoreMyPosts, loadLikedMyPostsLoading } = useSelector((store: RootState) => store.post);
   const { loadPost } = myFunctions();
+
+  const userId: string = window.location.href.split('/')[4];
+
+  useEffect(() => {
+    function onScroll() {
+      if (window.pageYOffset + document.documentElement.clientHeight > document.documentElement.scrollHeight - 300) {
+        if (hasMoreMyPosts && !loadMyPostsLoading && !loadLikedMyPostsLoading) {
+          if (navOption === '최신순') {
+            let lastId: any = myPosts[[...myPosts].length - 1];
+            if (lastId) lastId = lastId.id;
+            dispatch(LOAD_MYPOSTS_REQUEST({ userId, lastId }));
+          } else {
+            const lastIdx = [...myPosts].length;
+            dispatch(LOAD_LIKED_MYPOSTS_REQUEST({ userId, lastIdx }));
+          }
+        }
+      }
+    }
+
+    window.addEventListener('scroll', onScroll);
+    return () => {
+      window.removeEventListener('scroll', onScroll);
+    };
+  }, [hasMoreMyPosts, loadMyPostsLoading, loadLikedMyPostsLoading, myPosts, navOption]);
 
   if (myPosts.length === 0) {
     return (

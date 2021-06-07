@@ -1,10 +1,11 @@
+import { RootState } from '@reducers/index';
 import { LOAD_MYPOSTS_REQUEST, LOAD_POST_REQUEST } from '@thunks/post';
 import { UPDATE_PROFILE_REQUEST } from '@thunks/user';
-import * as events from 'events';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { useHistory } from 'react-router-dom';
 
 export default function myFunctions() {
+  const { myPosts } = useSelector((store: RootState) => store.post);
   const dispatch = useDispatch();
   const history = useHistory();
 
@@ -14,7 +15,7 @@ export default function myFunctions() {
   };
 
   const loadMyPost = async (data: { userId: string; lastId: number | null }) => {
-    await dispatch(LOAD_MYPOSTS_REQUEST(data));
+    if (Object.keys(myPosts).length === 0) await dispatch(LOAD_MYPOSTS_REQUEST(data));
     history.push(`/myPost/${data.userId}`);
   };
 

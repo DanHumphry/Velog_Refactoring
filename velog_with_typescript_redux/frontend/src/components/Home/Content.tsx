@@ -7,10 +7,16 @@ import '@styles/Board.css';
 import SideCheckBox from '@components/Home/SideCheckBox';
 import { useDispatch, useSelector } from 'react-redux';
 
-function Content() {
+interface Props {
+  isContent: boolean;
+  mainPosts: any;
+}
+
+const Content: React.VFC<Props> = ({ isContent, mainPosts }) => {
   const dispatch = useDispatch();
   const { loadMyPost, loadPost } = myFunctions();
-  const { mainPosts, loadPostsLoading, hasMorePosts } = useSelector((store: RootState) => store.post);
+  const { loadPostsLoading, hasMorePosts } = useSelector((store: RootState) => store.post);
+
   // const [filterPost, setFilterPost] = useState<any[]>([...mainPosts]);
   // useEffect(() => {
   //   setFilterPost(
@@ -25,14 +31,12 @@ function Content() {
   //   );
   // }, [mainPosts, filterList]);
 
-  const href = window.location.href.split('/')[3];
-
   useEffect(() => {
     function onScroll() {
       if (window.pageYOffset + document.documentElement.clientHeight > document.documentElement.scrollHeight - 300) {
         if (hasMorePosts && !loadPostsLoading) {
           const posts = [...mainPosts];
-          if (href === '') {
+          if (isContent) {
             let lastId: any = posts[[...mainPosts].length - 1];
             if (lastId) lastId = lastId.id;
             dispatch(LOAD_POSTS_REQUEST(lastId));
@@ -47,7 +51,7 @@ function Content() {
     return () => {
       window.removeEventListener('scroll', onScroll);
     };
-  }, [hasMorePosts, loadPostsLoading, mainPosts]);
+  }, [hasMorePosts, loadPostsLoading, mainPosts, isContent]);
 
   return (
     <div className="trend-section">
@@ -121,5 +125,5 @@ function Content() {
       <SideCheckBox />
     </div>
   );
-}
+};
 export default Content;

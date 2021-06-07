@@ -42,10 +42,6 @@ function App() {
           <Home />
         </Route>
 
-        <Route exact path="/like">
-          <Home />
-        </Route>
-
         <Route exact path="/write">
           <Write />
         </Route>

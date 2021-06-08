@@ -146,10 +146,9 @@ const Post: React.VFC<Props> = ({ detailPost, me }) => {
         </div>
         <div className="filetrList">
           <div>
-            {detailPost.language.split(',').map((a: string, i: number) => {
-              // eslint-disable-next-line react/no-array-index-key
-              return <p key={i}>{a}</p>;
-            })}
+            {detailPost.tags.map((tag: { id: number; name: string }) => (
+              <p key={tag.id}>{tag.name}</p>
+            ))}
           </div>
 
           <div className="detail__head-mobileLike">

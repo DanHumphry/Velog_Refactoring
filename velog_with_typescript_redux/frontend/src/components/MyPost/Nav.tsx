@@ -12,7 +12,7 @@ const Nav: React.VFC<Props> = ({ navModal, setNavModal, navOption, setNavOption 
     setNavOption(v);
     setNavModal(false);
   };
-  const menu = ['최신순', '좋아요순'];
+  const menu = ['최신순', '좋아요순', '시리즈별'];
   return (
     <div className="nav-section">
       <div className="nav-margin">

@@ -47,6 +47,18 @@ import {
   LOAD_LIKED_POSTS_FAILURE_ACTION,
   LOAD_LIKED_POSTS_REQUEST_ACTION,
   LOAD_LIKED_POSTS_SUCCESS_ACTION,
+  LOAD_FILTER_LIST_FAILURE_ACTION,
+  LOAD_FILTER_LIST_REQUEST_ACTION,
+  LOAD_FILTER_LIST_SUCCESS_ACTION,
+  LOAD_FILTERED_POSTS_FAILURE_ACTION,
+  LOAD_FILTERED_POSTS_REQUEST_ACTION,
+  LOAD_FILTERED_POSTS_SUCCESS_ACTION,
+  LOAD_SCROLL_EVENT_FILTERED_POSTS_FAILURE_ACTION,
+  LOAD_SCROLL_EVENT_FILTERED_POSTS_REQUEST_ACTION,
+  LOAD_SCROLL_EVENT_FILTERED_POSTS_SUCCESS_ACTION,
+  LOAD_SERIES_POSTS_FAILURE_ACTION,
+  LOAD_SERIES_POSTS_REQUEST_ACTION,
+  LOAD_SERIES_POSTS_SUCCESS_ACTION,
 } from '@actions/post';
 import * as postAPI from '@api/post';
 
@@ -208,5 +220,46 @@ export const REMOVE_POST_RECOMMENT_REQUEST = (data: any) => async (dispatch: any
     dispatch(REMOVE_POST_RECOMMENT_SUCCESS_ACTION(res.data));
   } catch (error) {
     dispatch(REMOVE_POST_RECOMMENT_FAILURE_ACTION(error.response.data));
+  }
+};
+export const LOAD_FILTER_LIST_REQUEST = () => async (dispatch: any) => {
+  try {
+    dispatch(LOAD_FILTER_LIST_REQUEST_ACTION());
+    const res = await postAPI.loadFilterList();
+    dispatch(LOAD_FILTER_LIST_SUCCESS_ACTION(res));
+  } catch (error) {
+    dispatch(LOAD_FILTER_LIST_FAILURE_ACTION(error.response.data));
+  }
+};
+
+export const LOAD_FILTERED_POSTS_REQUEST = (data: { tagList: number[] }) => async (dispatch: any) => {
+  try {
+    dispatch(LOAD_FILTERED_POSTS_REQUEST_ACTION());
+    const res = await postAPI.loadFilteredPosts(data);
+    dispatch(LOAD_FILTERED_POSTS_SUCCESS_ACTION(res));
+  } catch (error) {
+    dispatch(LOAD_FILTERED_POSTS_FAILURE_ACTION(error.response.data));
+  }
+};
+
+export const LOAD_SCROLL_EVENT_FILTERED_POSTS_REQUEST = (data: { tagList: number[]; lastId: number }) => async (
+  dispatch: any,
+) => {
+  try {
+    dispatch(LOAD_SCROLL_EVENT_FILTERED_POSTS_REQUEST_ACTION());
+    const res = await postAPI.loadScrollEventFilteredPosts(data);
+    dispatch(LOAD_SCROLL_EVENT_FILTERED_POSTS_SUCCESS_ACTION(res));
+  } catch (error) {
+    dispatch(LOAD_SCROLL_EVENT_FILTERED_POSTS_FAILURE_ACTION(error.response.data));
+  }
+};
+
+export const LOAD_SERIES_POSTS_REQUEST = (data: { userId: string }) => async (dispatch: any) => {
+  try {
+    dispatch(LOAD_SERIES_POSTS_REQUEST_ACTION());
+    const res = await postAPI.loadMyPostsInSeries(data);
+    dispatch(LOAD_SERIES_POSTS_SUCCESS_ACTION(res));
+  } catch (error) {
+    dispatch(LOAD_SERIES_POSTS_FAILURE_ACTION(error.response.data));
   }
 };

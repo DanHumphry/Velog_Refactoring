@@ -36,6 +36,7 @@ function Write() {
       formData.append('content', inp.content);
       formData.append('title', inp.title);
       formData.append('tag', tag.join(','));
+      formData.append('series', e.target.elements.postSeries.value);
 
       if (e.target.elements.imgFile.value) {
         formData.append('image', e.target.elements.imgFile.files[0]);

@@ -4,6 +4,7 @@
   margin-left: auto;
   margin-right: auto;
   position: relative;
+  padding-bottom: 4rem;
 }
 .overlay {
   z-index: 91;
@@ -237,11 +238,12 @@
   position: absolute;
   top: 48px;
   width: 100px;
-  height: 75px;
+  height: 112px;
   border: 1px solid lightgray;
   font-size: 17px;
   text-align-last: center;
   z-index: 99;
+  background: #fff;
 }
 
 .filterModalBox ul {
@@ -249,7 +251,7 @@
   margin: 0;
 }
 
-.filterModalBox ul li:first-child {
+.filterModalBox ul li {
   border-bottom: 1px solid lightgray;
 }
 
@@ -281,4 +283,69 @@
   color: rgb(134, 142, 150);
   margin-top: 3rem;
   margin-bottom: 2rem;
+}
+
+.dzWcEQ {
+  display: flex;
+  flex-wrap: wrap;
+  margin-left: -1rem;
+  margin-right: -1rem;
+  margin-top: -3rem;
+}
+
+.cVbiiY {
+  width: 50%;
+  padding-left: 1rem;
+  padding-right: 1rem;
+  padding-top: 3rem;
+}
+
+.boXBJt {
+  display: block;
+  text-decoration: none;
+  color: initial;
+}
+
+.cVbiiY h4 {
+  font-size: 1rem;
+  margin-top: 1rem;
+  margin-bottom: 0.5rem;
+  line-height: 1.5;
+  color: rgb(52, 58, 64);
+}
+
+.cVbiiY .info {
+  font-size: 0.875rem;
+  color: rgb(134, 142, 150);
+}
+
+.faWcFi {
+  padding-top: 52.6316%;
+  width: 100%;
+  position: relative;
+}
+
+.faWcFi img {
+  position: absolute;
+  top: 0px;
+  left: 0px;
+  width: 100%;
+  height: 100%;
+  display: block;
+  object-fit: cover;
+}
+
+.cVbiiY h4 a {
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  overflow: hidden;
+}
+
+.cVbiiY .info .count {
+  color: rgb(52, 58, 64);
+}
+
+.cVbiiY .info .dot {
+  margin-left: 0.25rem;
+  margin-right: 0.25rem;
 }

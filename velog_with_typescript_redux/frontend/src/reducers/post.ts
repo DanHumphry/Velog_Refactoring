@@ -1,12 +1,15 @@
 export const initialState = {
   mainPosts: [],
   likedPosts: [],
+  filteredPosts: [],
   detailPost: {},
   myPosts: [],
   myLikedPosts: [],
-  filterList: [],
+  mySeriesPosts: [],
+  allTags: [],
   hasMorePosts: true,
   hasMoreMyPosts: true,
+  hasMoreFilteredPosts: true,
   addPostLoading: false, // 포스트 작성중
   addPostDone: false,
   addPostError: null,
@@ -55,6 +58,15 @@ export const initialState = {
   removeReCommentLoading: false, // 댓글 제거중
   removeReCommentDone: false,
   removeReCommentError: null,
+  loadFilterListLoading: false, // 필터리스트가저오는중
+  loadFilterListDone: false,
+  loadFilterListError: null,
+  loadFilteredPostsLoading: false, // 필터된 포스팅가져오는중
+  loadFilteredPostsDone: false,
+  loadFilteredPostsError: null,
+  loadSeriesPostsLoading: false, // 시리즈별로 포스팅가져오는중
+  loadSeriesPostsDone: false,
+  loadSeriesPostsError: null,
 };
 
 export const ADD_POST_REQUEST = 'ADD_POST_REQUEST';
@@ -121,13 +133,21 @@ export const REMOVE_RECOMMENT_REQUEST = 'REMOVE_RECOMMENT_REQUEST';
 export const REMOVE_RECOMMENT_SUCCESS = 'REMOVE_RECOMMENT_SUCCESS';
 export const REMOVE_RECOMMENT_FAILURE = 'REMOVE_RECOMMENT_FAILURE';
 
-export const FILTER_REQUEST = 'FILTER_REQUEST';
-export const FILTER_SUCCESS = 'FILTER_SUCCESS';
-export const FILTER_FAILURE = 'FILTER_FAILURE';
+export const LOAD_FILTER_LIST_REQUEST = 'LOAD_FILTER_LIST_REQUEST';
+export const LOAD_FILTER_LIST_SUCCESS = 'LOAD_FILTER_LIST_SUCCESS';
+export const LOAD_FILTER_LIST_FAILURE = 'LOAD_FILTER_LIST_FAILURE';
 
-export const NEWORREC_REQUEST = 'NEWORREC_REQUEST';
-export const NEWORREC_SUCCESS = 'NEWORREC_SUCCESS';
-export const NEWORREC_FAILURE = 'NEWORREC_FAILURE';
+export const LOAD_FILTERED_POSTS_REQUEST = 'LOAD_FILTERED_POSTS_REQUEST';
+export const LOAD_FILTERED_POSTS_SUCCESS = 'LOAD_FILTERED_POSTS_SUCCESS';
+export const LOAD_FILTERED_POSTS_FAILURE = 'LOAD_FILTERED_POSTS_FAILURE';
+
+export const LOAD_SCROLL_EVENT_FILTERED_POSTS_REQUEST = 'LOAD_SCROLL_EVENT_FILTERED_POSTS_REQUEST';
+export const LOAD_SCROLL_EVENT_FILTERED_POSTS_SUCCESS = 'LOAD_SCROLL_EVENT_FILTERED_POSTS_SUCCESS';
+export const LOAD_SCROLL_EVENT_FILTERED_POSTS_FAILURE = 'LOAD_SCROLL_EVENT_FILTERED_POSTS_FAILURE';
+
+export const LOAD_SERIES_POSTS_REQUEST = 'LOAD_SERIES_POSTS_REQUEST';
+export const LOAD_SERIES_POSTS_SUCCESS = 'LOAD_SERIES_POSTS_SUCCESS';
+export const LOAD_SERIES_POSTS_FAILURE = 'LOAD_SERIES_POSTS_FAILURE';
 
 const Post = (state = initialState, action: any) => {
   switch (action.type) {
@@ -387,8 +407,76 @@ const Post = (state = initialState, action: any) => {
     case REMOVE_RECOMMENT_FAILURE:
       return { ...state, removeReCommentLoading: false, removeReCommentDone: false, removeReCommentError: action.data };
 
-    case FILTER_SUCCESS:
-      return { ...state, filterList: action.data };
+    case LOAD_FILTER_LIST_REQUEST:
+      return { ...state, loadFilterListLoading: true, loadFilterListDone: false, loadFilterListError: null };
+    case LOAD_FILTER_LIST_SUCCESS:
+      return {
+        ...state,
+        loadFilterListLoading: false,
+        loadFilterListDone: true,
+        loadFilterListError: null,
+        allTags: action.data.data,
+      };
+    case LOAD_FILTER_LIST_FAILURE:
+      return { ...state, loadFilterListLoading: false, loadFilterListDone: false, loadFilterListError: action.data };
+
+    case LOAD_FILTERED_POSTS_REQUEST:
+      return { ...state, loadFilteredPostsLoading: true, loadFilteredPostsDone: false, loadFilteredPostsError: null };
+    case LOAD_FILTERED_POSTS_SUCCESS: {
+      const isHasMore = action.data.data.length === 10;
+      return {
+        ...state,
+        loadFilteredPostsLoading: false,
+        loadFilteredPostsDone: true,
+        loadFilteredPostsError: null,
+        filteredPosts: action.data.data,
+        hasMoreFilteredPosts: isHasMore,
+      };
+    }
+
+    case LOAD_FILTERED_POSTS_FAILURE:
+      return {
+        ...state,
+        loadFilteredPostsLoading: false,
+        loadFilteredPostsDone: false,
+        loadFilteredPostsError: action.data,
+      };
+
+    case LOAD_SCROLL_EVENT_FILTERED_POSTS_REQUEST:
+      return { ...state, loadFilteredPostsLoading: true, loadFilteredPostsDone: false, loadFilteredPostsError: null };
+    case LOAD_SCROLL_EVENT_FILTERED_POSTS_SUCCESS: {
+      const prevPosts = [...state.filteredPosts];
+      const nextPosts = prevPosts.concat(action.data.data);
+      const isHasMore = action.data.length === 10;
+      return {
+        ...state,
+        loadFilteredPostsLoading: false,
+        loadFilteredPostsDone: true,
+        loadFilteredPostsError: null,
+        filteredPosts: nextPosts,
+        hasMoreFilteredPosts: isHasMore,
+      };
+    }
+    case LOAD_SCROLL_EVENT_FILTERED_POSTS_FAILURE:
+      return {
+        ...state,
+        loadFilteredPostsLoading: true,
+        loadFilteredPostsDone: false,
+        loadFilteredPostsError: action.data,
+      };
+
+    case LOAD_SERIES_POSTS_REQUEST:
+      return { ...state, loadSeriesPostsLoading: true, loadSeriesPostsDone: false, loadSeriesPostsError: null };
+    case LOAD_SERIES_POSTS_SUCCESS:
+      return {
+        ...state,
+        loadSeriesPostsLoading: false,
+        loadSeriesPostsDone: true,
+        loadSeriesPostsError: null,
+        mySeriesPosts: action.data.data,
+      };
+    case LOAD_SERIES_POSTS_FAILURE:
+      return { ...state, loadSeriesPostsLoading: false, loadSeriesPostsDone: false, loadSeriesPostsError: action.data };
 
     default:
       return state;

@@ -75,10 +75,9 @@ const Content: React.VFC<Props> = ({ myPosts, navOption }) => {
                 </div>
                 <p>{post.content}</p>
                 <div className="contents-filter">
-                  {post.language.split(',').map((L: string, i: number) => {
-                    // eslint-disable-next-line react/no-array-index-key
-                    return <p key={i}>{L}</p>;
-                  })}
+                  {post.tags.map((tag: { id: number; name: string }) => (
+                    <p key={tag.id}>{tag.name}</p>
+                  ))}
                 </div>
                 <div className="time-info">
                   <span>{date}</span>

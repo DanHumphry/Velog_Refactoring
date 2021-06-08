@@ -3,7 +3,7 @@ const multer = require("multer");
 const path = require("path");
 const fs = require("fs");
 
-const { Post, User, Comment, ReComment, Tag } = require("../models");
+const { Post, User, Comment, ReComment, Tag, Series } = require("../models");
 const { isLoggedIn } = require("./middlewares");
 
 const router = express.Router();
@@ -54,6 +54,14 @@ router.post("/", isLoggedIn, upload.single("image"), async (req, res, next) => {
       await post.addTags(result.map((v) => v[0]));
     }
 
+    if (req.body.series) {
+      const result = await Series.findOrCreate({
+        where: { name: req.body.series.toLowerCase() },
+      });
+
+      await post.addSeries(result[0]);
+    }
+
     const fullPost = await Post.findOne({
       where: { id: post.id },
       include: [
@@ -78,6 +86,10 @@ router.post("/", isLoggedIn, upload.single("image"), async (req, res, next) => {
         },
         {
           model: Tag,
+          attributes: ["id", "name"],
+        },
+        {
+          model: Series,
           attributes: ["id", "name"],
         },
       ],

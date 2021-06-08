@@ -226,9 +226,7 @@ const Setting: VFC<Props> = ({ visibility, setVisibility, inp, tag, setTag }) =>
                     </button>
                   ) : (
                     <div className="sc-ipZHIp fItzQM">
-                      <div className="name-wrapper">
-                        <div className="name">{selectPostSeries}</div>
-                      </div>
+                      <input name="postSeries" className="name-wrapper" defaultValue={selectPostSeries} readOnly />
                       <button type="button" data-testid="setting-button" onClick={changeSeriesModal}>
                         <svg
                           stroke="currentColor"

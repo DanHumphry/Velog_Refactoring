@@ -66,3 +66,19 @@ export const updateReCommentAPI = (data: any) => {
 export const removeReCommentAPI = (data: any) => {
   return axios.delete(`post/${data.reCommentId}/reComment/delete`);
 };
+
+export const loadFilterList = () => {
+  return axios.get(`posts/tags`);
+};
+
+export const loadFilteredPosts = (data: { tagList: number[] }) => {
+  return axios.post(`posts/tags/filter`, data);
+};
+
+export const loadScrollEventFilteredPosts = (data: { tagList: number[]; lastId: number }) => {
+  return axios.post(`posts/tags/filter/scroll`, data);
+};
+
+export const loadMyPostsInSeries = (data: { userId: string }) => {
+  return axios.get(`posts/${data.userId}/series`);
+};

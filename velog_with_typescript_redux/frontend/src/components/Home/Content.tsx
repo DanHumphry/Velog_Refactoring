@@ -1,60 +1,59 @@
 import myFunctions from '@hooks/myFunctions';
 import { RootState } from '@reducers/index';
-import { LOAD_POSTS_REQUEST, LOAD_LIKED_POSTS_REQUEST } from '@thunks/post';
+import { LOAD_POSTS_REQUEST, LOAD_LIKED_POSTS_REQUEST, LOAD_SCROLL_EVENT_FILTERED_POSTS_REQUEST } from '@thunks/post';
 import gravatar from 'gravatar';
 import React, { useEffect } from 'react';
 import '@styles/Board.css';
 import SideCheckBox from '@components/Home/SideCheckBox';
 import { useDispatch, useSelector } from 'react-redux';
 
-// 1. model만들기 - 둘다 post hasMany로 hashTag, series, -> foreignKey는 postId
-// 2. Router - addPost 요청 받았을 때 둘다 존재한다면 넣어주기
-// 3. res로 나갈 fullPosts에 include 추가
-// 4. post요청할때 front에서 submit요청시 hashTag랑, series 넣어서 보내기
-// 5. 각 component lang대신 tag받는걸로 수정
-// 6. myPost는 좋아요순, 최신순 말고도 시리즈별 추가
-// 7. 시리즈별로 묶어서 포스팅 볼 수 있는 section 만들기
-
-// 0. 다했다고 생각들면 update도 고치기
-
-// 시간남으면 사람인 보기
+// 0.update도 고치기
+// 1.series detail만들기(미정)
+// 2.detail Page에서 시리즈가 존재한다면 같은 시리즈들의 목록을 section추가
+// 3. 사람인 입사지원하기
 
 interface Props {
   isContent: boolean;
   mainPosts: any;
+  filterList: number[];
+  setFilterList: React.Dispatch<React.SetStateAction<number[]>>;
 }
 
-const Content: React.VFC<Props> = ({ isContent, mainPosts }) => {
+const Content: React.VFC<Props> = ({ isContent, mainPosts, filterList, setFilterList }) => {
   const dispatch = useDispatch();
   const { loadMyPost, loadPost } = myFunctions();
-  const { loadPostsLoading, hasMorePosts } = useSelector((store: RootState) => store.post);
-
-  // const [filterPost, setFilterPost] = useState<any[]>([...mainPosts]);
-  // useEffect(() => {
-  //   setFilterPost(
-  //     [...mainPosts].filter((v: { language: string }) => {
-  //       let inc = true;
-  //       [...filterList].forEach((item: string) => {
-  //         if (v.language.split(',').indexOf(item) === -1) inc = false;
-  //       });
-  //       if (inc) return v;
-  //       return null;
-  //     }),
-  //   );
-  // }, [mainPosts, filterList]);
+  const {
+    loadPostsLoading,
+    hasMorePosts,
+    loadFilteredPostsLoading,
+    loadMyPostsLoading,
+    hasMoreFilteredPosts,
+  } = useSelector((store: RootState) => store.post);
 
   useEffect(() => {
     function onScroll() {
       if (window.pageYOffset + document.documentElement.clientHeight > document.documentElement.scrollHeight - 300) {
-        if (hasMorePosts && !loadPostsLoading) {
+        if (
+          (hasMorePosts || hasMoreFilteredPosts) &&
+          !loadPostsLoading &&
+          !loadFilteredPostsLoading &&
+          !loadMyPostsLoading
+        ) {
           const posts = [...mainPosts];
-          if (isContent) {
+
+          if (filterList.length === 0) {
+            if (isContent) {
+              let lastId: any = posts[[...mainPosts].length - 1];
+              if (lastId) lastId = lastId.id;
+              dispatch(LOAD_POSTS_REQUEST(lastId));
+            } else {
+              const lastIdx = posts.length;
+              dispatch(LOAD_LIKED_POSTS_REQUEST(lastIdx));
+            }
+          } else {
             let lastId: any = posts[[...mainPosts].length - 1];
             if (lastId) lastId = lastId.id;
-            dispatch(LOAD_POSTS_REQUEST(lastId));
-          } else {
-            const lastIdx = posts.length;
-            dispatch(LOAD_LIKED_POSTS_REQUEST(lastIdx));
+            dispatch(LOAD_SCROLL_EVENT_FILTERED_POSTS_REQUEST({ tagList: filterList, lastId }));
           }
         }
       }
@@ -63,7 +62,7 @@ const Content: React.VFC<Props> = ({ isContent, mainPosts }) => {
     return () => {
       window.removeEventListener('scroll', onScroll);
     };
-  }, [hasMorePosts, loadPostsLoading, mainPosts, isContent]);
+  }, [hasMorePosts, loadPostsLoading, mainPosts, isContent, loadFilteredPostsLoading, loadMyPostsLoading]);
 
   return (
     <div className="trend-section">
@@ -100,10 +99,9 @@ const Content: React.VFC<Props> = ({ isContent, mainPosts }) => {
                     <span>{commentCnt}개의 댓글</span>
                   </div>
                   <div className="filter-info">
-                    {/* {post.language.split(',').map((L: string, i: number) => { */}
-                    {/*  // eslint-disable-next-line react/no-array-index-key */}
-                    {/*  return <p key={i}>{L}</p>; */}
-                    {/* })} */}
+                    {post.tags.map((tag: { id: number; name: string }) => (
+                      <p key={tag.id}>{tag.name}</p>
+                    ))}
                   </div>
                 </div>
                 <div className="article-footer">
@@ -134,7 +132,7 @@ const Content: React.VFC<Props> = ({ isContent, mainPosts }) => {
           })}
         </div>
       </main>
-      <SideCheckBox />
+      <SideCheckBox filterList={filterList} setFilterList={setFilterList} />
     </div>
   );
 };

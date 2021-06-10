@@ -28,7 +28,7 @@ export const loadPostAPI = (data: { postId: string }) => {
 };
 
 export const updatePostAPI = (data: { postId: string; data: any }) => {
-  return axios.post(`post/${data.postId}/update`, data);
+  return axios.post(`post/${data.postId}/update`, data.data);
 };
 
 export const removePostAPI = (data: { postId: string }) => {
@@ -81,4 +81,8 @@ export const loadScrollEventFilteredPosts = (data: { tagList: number[]; lastId: 
 
 export const loadMyPostsInSeries = (data: { userId: string }) => {
   return axios.get(`posts/${data.userId}/series`);
+};
+
+export const loadSeriesList = (data: { userId: string }) => {
+  return axios.get(`post/${data.userId}/seriesList`);
 };

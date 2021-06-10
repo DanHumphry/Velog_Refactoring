@@ -6,6 +6,7 @@ export const initialState = {
   myPosts: [],
   myLikedPosts: [],
   mySeriesPosts: [],
+  mySeriesList: [],
   allTags: [],
   hasMorePosts: true,
   hasMoreMyPosts: true,
@@ -67,6 +68,9 @@ export const initialState = {
   loadSeriesPostsLoading: false, // 시리즈별로 포스팅가져오는중
   loadSeriesPostsDone: false,
   loadSeriesPostsError: null,
+  loadSeriesListLoading: false, //   시리즈목록 가져오는중
+  loadSeriesListDone: false,
+  loadSeriesListError: null,
 };
 
 export const ADD_POST_REQUEST = 'ADD_POST_REQUEST';
@@ -148,6 +152,10 @@ export const LOAD_SCROLL_EVENT_FILTERED_POSTS_FAILURE = 'LOAD_SCROLL_EVENT_FILTE
 export const LOAD_SERIES_POSTS_REQUEST = 'LOAD_SERIES_POSTS_REQUEST';
 export const LOAD_SERIES_POSTS_SUCCESS = 'LOAD_SERIES_POSTS_SUCCESS';
 export const LOAD_SERIES_POSTS_FAILURE = 'LOAD_SERIES_POSTS_FAILURE';
+
+export const LOAD_SERIES_LIST_REQUEST = 'LOAD_SERIES_LIST_REQUEST';
+export const LOAD_SERIES_LIST_SUCCESS = 'LOAD_SERIES_LIST_SUCCESS';
+export const LOAD_SERIES_LIST_FAILURE = 'LOAD_SERIES_LIST_FAILURE';
 
 const Post = (state = initialState, action: any) => {
   switch (action.type) {
@@ -477,6 +485,19 @@ const Post = (state = initialState, action: any) => {
       };
     case LOAD_SERIES_POSTS_FAILURE:
       return { ...state, loadSeriesPostsLoading: false, loadSeriesPostsDone: false, loadSeriesPostsError: action.data };
+
+    case LOAD_SERIES_LIST_REQUEST:
+      return { ...state, loadSeriesListLoading: true, loadSeriesListDone: false, loadSeriesListError: null };
+    case LOAD_SERIES_LIST_SUCCESS:
+      return {
+        ...state,
+        loadSeriesListLoading: false,
+        loadSeriesListDone: true,
+        loadSeriesListError: null,
+        mySeriesList: action.data.data,
+      };
+    case LOAD_SERIES_LIST_FAILURE:
+      return { ...state, loadSeriesListLoading: false, loadSeriesListDone: false, loadSeriesListError: action.data };
 
     default:
       return state;

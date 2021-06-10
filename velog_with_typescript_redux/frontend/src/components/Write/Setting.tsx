@@ -1,6 +1,8 @@
 import myFunctions from '@hooks/myFunctions';
 import useInput from '@hooks/useInput';
+import { RootState } from '@reducers/index';
 import React, { useRef, useState, VFC, useEffect } from 'react';
+import { useSelector } from 'react-redux';
 
 interface Props {
   visibility: { textSection: { visibility: string }; settingSection: { visibility: string } };
@@ -14,6 +16,8 @@ interface Props {
 
 const Setting: VFC<Props> = ({ visibility, setVisibility, inp, tag, setTag }) => {
   const { onChangeImage } = myFunctions();
+  const { mySeriesList } = useSelector((store: RootState) => store.post);
+
   const [imgURL, setImgURL] = useState('' as string);
 
   const [tagInput, setTagInput, resetTagInput] = useInput('');
@@ -22,26 +26,33 @@ const Setting: VFC<Props> = ({ visibility, setVisibility, inp, tag, setTag }) =>
   const [seriesModal, setSeriesModal] = useState(false);
   const [seriesInput, setSeriesInput, resetSeriesInput] = useInput('');
   const [selectSeries, setSelectSeries] = useState<number | null>(null);
-  const [selectPostSeries, setSelectPostSeries] = useState<null | string>(null);
-  const [dummySeries, setDummySeries] = useState([
-    { id: 1, name: 'react-nodeJs' },
-    { id: 2, name: 'react-Django' },
-  ]);
+  const [selectedPostSeries, setSelectedPostSeries] = useState<string | null>(null);
+  const [seriesList, setSeriesList] = useState<any>([]);
 
   const insertSeries = () => {
-    const temp = [...dummySeries];
-    temp.push({ id: dummySeries.length + 1, name: seriesInput });
-    setDummySeries(temp);
-    resetSeriesInput('');
+    const temp: any = [...mySeriesList];
+    if (temp.findIndex((v: any) => v.name === seriesInput.toLowerCase()) !== -1) {
+      alert('이미 존재하는 시리즈 이름입니다.');
+    } else {
+      const lastIdxId: number = temp[0].id || 1;
+      temp.unshift({ id: lastIdxId + 1, name: seriesInput });
+      setSeriesList(temp);
+      resetSeriesInput('');
+    }
   };
+
   const changePostSeries = () => {
     if (selectSeries !== null) {
-      const currentSeries: string = dummySeries[selectSeries - 1].name;
-      setSelectPostSeries(currentSeries);
+      const temp: any = seriesList.length === 0 ? [...mySeriesList] : [...seriesList];
+      const findIdx: number = temp.findIndex((v: any) => v.id === selectSeries);
+      const currentSeries: string = temp[findIdx].name;
+      setSelectedPostSeries(currentSeries);
       setSeriesModal(false);
     } else alert('시리즈를 선택해주세요.');
   };
+
   const changeSeriesModal = () => setSeriesModal(!seriesModal);
+
   const insertTag = (e: React.KeyboardEvent<HTMLInputElement>) => {
     if (e.code === 'Enter' && tagInput !== '') {
       const temp: any = [...tag];
@@ -148,26 +159,27 @@ const Setting: VFC<Props> = ({ visibility, setVisibility, inp, tag, setTag }) =>
                     </div>
                   </div>
                   <ul className="sc-bMVAic XhGBA sc-iujRgT fAMcrW">
-                    {dummySeries.map((item) =>
-                      item.id === selectSeries ? (
-                        // eslint-disable-next-line jsx-a11y/click-events-have-key-events
-                        <li
-                          className="sc-bAeIUo bTeTbc list-item selectItem"
-                          key={item.id}
-                          onClick={() => setSelectSeries(item.id)}
-                        >
-                          {item.name}
-                        </li>
-                      ) : (
-                        // eslint-disable-next-line jsx-a11y/click-events-have-key-events
-                        <li
-                          className="sc-bAeIUo bTeTbc list-item"
-                          key={item.id}
-                          onClick={() => setSelectSeries(item.id)}
-                        >
-                          {item.name}
-                        </li>
-                      ),
+                    {(seriesList.length === 0 ? [...mySeriesList] : seriesList).map(
+                      (item: { id: number; name: string }) =>
+                        item.id === selectSeries ? (
+                          // eslint-disable-next-line jsx-a11y/click-events-have-key-events
+                          <li
+                            className="sc-bAeIUo bTeTbc list-item selectItem"
+                            key={item.id}
+                            onClick={() => setSelectSeries(item.id)}
+                          >
+                            {item.name}
+                          </li>
+                        ) : (
+                          // eslint-disable-next-line jsx-a11y/click-events-have-key-events
+                          <li
+                            className="sc-bAeIUo bTeTbc list-item"
+                            key={item.id}
+                            onClick={() => setSelectSeries(item.id)}
+                          >
+                            {item.name}
+                          </li>
+                        ),
                     )}
                   </ul>
                 </div>
@@ -212,7 +224,7 @@ const Setting: VFC<Props> = ({ visibility, setVisibility, inp, tag, setTag }) =>
               <section className="sc-gzOgki fRPcIQ sc-epnACN hsXqzQ">
                 <h3>시리즈 설정</h3>
                 <div className="contents">
-                  {selectPostSeries === null ? (
+                  {selectedPostSeries === null ? (
                     <button type="button" className="sc-iQNlJl ikrfmY" onClick={changeSeriesModal}>
                       <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
                         <path
@@ -226,7 +238,7 @@ const Setting: VFC<Props> = ({ visibility, setVisibility, inp, tag, setTag }) =>
                     </button>
                   ) : (
                     <div className="sc-ipZHIp fItzQM">
-                      <input name="postSeries" className="name-wrapper" defaultValue={selectPostSeries} readOnly />
+                      <input name="postSeries" className="name-wrapper" defaultValue={selectedPostSeries} readOnly />
                       <button type="button" data-testid="setting-button" onClick={changeSeriesModal}>
                         <svg
                           stroke="currentColor"

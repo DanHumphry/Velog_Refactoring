@@ -59,6 +59,9 @@ import {
   LOAD_SERIES_POSTS_FAILURE_ACTION,
   LOAD_SERIES_POSTS_REQUEST_ACTION,
   LOAD_SERIES_POSTS_SUCCESS_ACTION,
+  LOAD_SERIES_LIST_FAILURE_ACTION,
+  LOAD_SERIES_LIST_REQUEST_ACTION,
+  LOAD_SERIES_LIST_SUCCESS_ACTION,
 } from '@actions/post';
 import * as postAPI from '@api/post';
 
@@ -261,5 +264,15 @@ export const LOAD_SERIES_POSTS_REQUEST = (data: { userId: string }) => async (di
     dispatch(LOAD_SERIES_POSTS_SUCCESS_ACTION(res));
   } catch (error) {
     dispatch(LOAD_SERIES_POSTS_FAILURE_ACTION(error.response.data));
+  }
+};
+
+export const LOAD_SERIES_LIST_REQUEST = (data: { userId: string }) => async (dispatch: any) => {
+  try {
+    dispatch(LOAD_SERIES_LIST_REQUEST_ACTION());
+    const res = await postAPI.loadSeriesList(data);
+    dispatch(LOAD_SERIES_LIST_SUCCESS_ACTION(res));
+  } catch (error) {
+    dispatch(LOAD_SERIES_LIST_FAILURE_ACTION(error.response.data));
   }
 };

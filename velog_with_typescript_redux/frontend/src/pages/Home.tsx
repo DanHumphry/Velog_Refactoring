@@ -33,7 +33,7 @@ const Home = () => {
           isContent={isContent}
           mainPosts={
             // eslint-disable-next-line no-nested-ternary
-            Object.keys(filteredPosts).length === 0 && filterList.length === 0
+            Object.keys(filteredPosts).length === 0 || filterList.length === 0
               ? isContent
                 ? mainPosts
                 : likedPosts

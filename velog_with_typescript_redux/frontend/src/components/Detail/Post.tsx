@@ -6,6 +6,8 @@ import { useDispatch, useSelector } from 'react-redux';
 import { useHistory } from 'react-router';
 import { LIKE_POST_REQUEST, REMOVE_POST_REQUEST, UNLIKE_POST_REQUEST } from '@thunks/post';
 
+// 리팩토링 좀 더 하고, tag관련 필터 먹일때 좋아요순으로 빼먹은듯, 마무리하기..
+
 interface Props {
   detailPost: any;
   me: any;
@@ -24,7 +26,11 @@ const Post: React.VFC<Props> = ({ detailPost, me }) => {
     likePostError,
     unlikePostError,
   } = useSelector((store: RootState) => store.post);
-  const { loadMyPost } = myFunctions();
+  const { loadMyPost, loadPost } = myFunctions();
+
+  const [seriesModal, setSeriesModal] = useState(false);
+  const [currentSeries, setCurrentSeries] = useState(0);
+  const [seriesId, setSeriesId] = useState({ prev: '', current: '', next: '' });
 
   const [isLiked, setIsLiked] = useState(false);
   const [likeBtnStyle, setLikeBtnStyle] = useState({
@@ -62,6 +68,17 @@ const Post: React.VFC<Props> = ({ detailPost, me }) => {
     } else {
       setLikeBtnStyle({ svg: {}, svgParent: {} });
       setIsLiked(false);
+    }
+
+    if (Object.keys(detailPost.series).length) {
+      const currentIndex = detailPost.series[0].Posts.findIndex((v: any) => v.id === detailPost.id);
+      setCurrentSeries(currentIndex);
+      const id = {
+        prev: detailPost.series[0].Posts[currentIndex - 1]?.id,
+        current: detailPost.series[0].Posts[currentIndex].id,
+        next: detailPost.series[0].Posts[currentIndex + 1]?.id,
+      };
+      setSeriesId(id);
     }
   }, [detailPost]);
 
@@ -160,6 +177,84 @@ const Post: React.VFC<Props> = ({ detailPost, me }) => {
             </button>
           </div>
         </div>
+        {Object.keys(detailPost.series).length ? (
+          <div className="sc-TOsTZ eeUjPp">
+            <h2>{detailPost.series[0].name}</h2>
+            <svg width="32" height="48" fill="none" viewBox="0 0 32 48" className="series-corner-image">
+              <path fill="#12B886" d="M32 0H0v48h.163l16-16L32 47.836V0z" />
+            </svg>
+            {seriesModal ? (
+              <ol className="sc-kvZOFW jYLshN">
+                {detailPost.series[0].Posts.map((series: any) => (
+                  <li key={series.id}>
+                    <button type="button" onClick={() => loadPost(series.id)}>
+                      {series.title}
+                    </button>
+                  </li>
+                ))}
+              </ol>
+            ) : null}
+
+            <div className="sc-ksYbfQ bqagB">
+              <button type="button" className="sc-cJSrbW kGgGBF" onClick={() => setSeriesModal(!seriesModal)}>
+                <svg
+                  stroke="currentColor"
+                  fill="currentColor"
+                  strokeWidth="0"
+                  viewBox="0 0 24 24"
+                  height="1em"
+                  width="1em"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <path d="M7 14l5-5 5 5z" />
+                </svg>
+                {seriesModal ? '숨기기' : '목록보기'}
+              </button>
+              <div className="sc-kgAjT lbOAwN">
+                <div className="series-number">{`${currentSeries + 1}/${detailPost.series[0].Posts.length}`}</div>
+                <div className="sc-hmzhuo ebXfAn">
+                  <button
+                    type="button"
+                    className="sc-frDJqD kuTfSg"
+                    disabled={seriesId.prev === undefined}
+                    onClick={() => loadPost(seriesId.prev)}
+                  >
+                    <svg
+                      stroke="currentColor"
+                      fill="currentColor"
+                      strokeWidth="0"
+                      viewBox="0 0 24 24"
+                      height="1em"
+                      width="1em"
+                      xmlns="http://www.w3.org/2000/svg"
+                    >
+                      <path d="M15.41 7.41L14 6l-6 6 6 6 1.41-1.41L10.83 12z" />
+                    </svg>
+                  </button>
+                  <button
+                    type="button"
+                    className="sc-frDJqD kuTfSg"
+                    disabled={seriesId.next === undefined}
+                    onClick={() => loadPost(seriesId.next)}
+                  >
+                    <svg
+                      stroke="currentColor"
+                      fill="currentColor"
+                      strokeWidth="0"
+                      viewBox="0 0 24 24"
+                      height="1em"
+                      width="1em"
+                      xmlns="http://www.w3.org/2000/svg"
+                    >
+                      <path d="M10 6L8.59 7.41 13.17 12l-4.58 4.59L10 18l6-6z" />
+                    </svg>
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        ) : null}
+
         {detailPost.image === null ? null : <img src={detailPost.image} alt="" />}
       </div>
       <div className="detail__body-wrapper">

@@ -10,7 +10,6 @@ import { useDispatch, useSelector } from 'react-redux';
 // 0.update도 고치기
 // 1.series detail만들기(미정)
 // 2.detail Page에서 시리즈가 존재한다면 같은 시리즈들의 목록을 section추가
-// 3. 사람인 입사지원하기
 
 interface Props {
   isContent: boolean;

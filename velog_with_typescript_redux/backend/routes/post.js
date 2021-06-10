@@ -145,6 +145,16 @@ router.get("/:postId", async (req, res, next) => {
           model: Tag,
           attributes: ["id", "name"],
         },
+        {
+          model: Series,
+          attributes: ["id", "name"],
+          include: [
+            {
+              model: Post,
+              attributes: ["id", "title"],
+            },
+          ],
+        },
       ],
     });
 
@@ -176,8 +186,6 @@ router.post(
   upload.single("image"),
   async (req, res, next) => {
     try {
-      console.log(req.file);
-      console.log(req.body.image);
       const image =
         req.file !== undefined
           ? `http://localhost:3065/${req.file.path}`
@@ -190,12 +198,33 @@ router.post(
           title: req.body.title,
           content: req.body.content,
           image,
-          language: req.body.language,
         },
         {
           where: { id: req.params.postId },
         }
       );
+
+      const post = await Post.findOne({ where: { id: req.params.postId } });
+
+      if (req.body.tag) {
+        const tags = req.body.tag.split(",");
+        const result = await Promise.all(
+          tags.map((tag) =>
+            Tag.findOrCreate({
+              where: { name: tag.toLowerCase() },
+            })
+          )
+        );
+        await post.setTags(result.map((v) => v[0]));
+      }
+
+      if (req.body.series) {
+        const result = await Series.findOrCreate({
+          where: { name: req.body.series.toLowerCase() },
+        });
+
+        await post.setSeries(result[0]);
+      }
 
       const fullPost = await Post.findOne({
         where: { id: req.params.postId },
@@ -226,6 +255,14 @@ router.post(
             model: User, // 좋아요 누른 사람
             as: "Likers",
             attributes: ["id"],
+          },
+          {
+            model: Tag,
+            attributes: ["id", "name"],
+          },
+          {
+            model: Series,
+            attributes: ["id", "name"],
           },
         ],
       });
@@ -443,5 +480,25 @@ router.delete(
     }
   }
 );
+
+router.get("/:userId/seriesList", async (req, res, next) => {
+  try {
+    const seriesPosts = await Series.findAll({
+      order: [["createdAt", "DESC"]],
+      attributes: ["id", "name"],
+      include: [
+        {
+          model: Post,
+          where: { UserId: req.params.userId },
+        },
+      ],
+    });
+
+    res.status(200).json(seriesPosts);
+  } catch (error) {
+    console.error(error);
+    next(error);
+  }
+});
 
 module.exports = router;

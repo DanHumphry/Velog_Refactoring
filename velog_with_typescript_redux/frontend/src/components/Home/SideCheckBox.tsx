@@ -48,40 +48,49 @@ const SideCheckBox: React.VFC<Props> = ({ filterList, setFilterList }) => {
         <div className="filter__head" />
         <section>
           <ul>
+            {[...allTags]
+              .filter((v: any) => {
+                let bol = false;
+                for (let i = 0; i < filterList.length; i += 1) {
+                  if (filterList[i] === v.id) bol = true;
+                }
+                if (bol) return v;
+                return null;
+              })
+              .map((tag: { id: number; name: string }) => {
+                return (
+                  <li key={tag.id}>
+                    <input
+                      id={tag.name}
+                      className="filters-input__checkbox"
+                      value="action"
+                      type="checkbox"
+                      data-type="genres"
+                      defaultChecked
+                    />
+                    {/* eslint-disable-next-line jsx-a11y/click-events-have-key-events */}
+                    <label
+                      className="input__label | filters-input__label--checkbox"
+                      htmlFor={tag.name}
+                      onClick={() => clickTags(tag.id)}
+                    >
+                      <span>{tag.name}</span>
+                      <span className="filters-input__tick">
+                        <svg focusable="false" aria-hidden="true">
+                          <use xlinkHref="#check">
+                            <svg viewBox="0 0 24 24" id="check" xmlns="http://www.w3.org/2000/svg">
+                              <path d="M9 21.035l-9-8.638 2.791-2.87 6.156 5.874 12.21-12.436L24 5.782z" />
+                            </svg>
+                          </use>
+                        </svg>
+                      </span>
+                    </label>
+                  </li>
+                );
+              })}
             {searchInput === ''
               ? [...allTags].slice(0, 10).map((tag: { id: number; name: string }) => {
-                  return (
-                    <li key={tag.id}>
-                      <input
-                        id={tag.name}
-                        className="filters-input__checkbox"
-                        value="action"
-                        type="checkbox"
-                        data-type="genres"
-                      />
-                      {/* eslint-disable-next-line jsx-a11y/click-events-have-key-events */}
-                      <label
-                        className="input__label | filters-input__label--checkbox"
-                        htmlFor={tag.name}
-                        onClick={() => clickTags(tag.id)}
-                      >
-                        <span>{tag.name}</span>
-                        <span className="filters-input__tick">
-                          <svg focusable="false" aria-hidden="true">
-                            <use xlinkHref="#check">
-                              <svg viewBox="0 0 24 24" id="check" xmlns="http://www.w3.org/2000/svg">
-                                <path d="M9 21.035l-9-8.638 2.791-2.87 6.156 5.874 12.21-12.436L24 5.782z" />
-                              </svg>
-                            </use>
-                          </svg>
-                        </span>
-                      </label>
-                    </li>
-                  );
-                })
-              : [...allTags]
-                  .filter((v: { name: string }) => v.name.indexOf(searchInput) !== -1)
-                  .map((tag: { id: number; name: string }) => {
+                  if (filterList.indexOf(tag.id) === -1) {
                     return (
                       <li key={tag.id}>
                         <input
@@ -110,6 +119,43 @@ const SideCheckBox: React.VFC<Props> = ({ filterList, setFilterList }) => {
                         </label>
                       </li>
                     );
+                  }
+                  return null;
+                })
+              : [...allTags]
+                  .filter((v: { name: string }) => v.name.indexOf(searchInput) !== -1)
+                  .map((tag: { id: number; name: string }) => {
+                    if (filterList.indexOf(tag.id) === -1) {
+                      return (
+                        <li key={tag.id}>
+                          <input
+                            id={tag.name}
+                            className="filters-input__checkbox"
+                            value="action"
+                            type="checkbox"
+                            data-type="genres"
+                          />
+                          {/* eslint-disable-next-line jsx-a11y/click-events-have-key-events */}
+                          <label
+                            className="input__label | filters-input__label--checkbox"
+                            htmlFor={tag.name}
+                            onClick={() => clickTags(tag.id)}
+                          >
+                            <span>{tag.name}</span>
+                            <span className="filters-input__tick">
+                              <svg focusable="false" aria-hidden="true">
+                                <use xlinkHref="#check">
+                                  <svg viewBox="0 0 24 24" id="check" xmlns="http://www.w3.org/2000/svg">
+                                    <path d="M9 21.035l-9-8.638 2.791-2.87 6.156 5.874 12.21-12.436L24 5.782z" />
+                                  </svg>
+                                </use>
+                              </svg>
+                            </span>
+                          </label>
+                        </li>
+                      );
+                    }
+                    return null;
                   })}
           </ul>
         </section>

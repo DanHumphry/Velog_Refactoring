@@ -1,5 +1,8 @@
 import myFunctions from '@hooks/myFunctions';
-import React, { useRef, useState, VFC } from 'react';
+import useInput from '@hooks/useInput';
+import { RootState } from '@reducers/index';
+import React, { useEffect, useRef, useState, VFC } from 'react';
+import { useSelector } from 'react-redux';
 
 interface Props {
   visibility: { textSection: { visibility: string }; settingSection: { visibility: string } };
@@ -9,23 +12,74 @@ interface Props {
   inp: { title: string; content: string };
   imgURL: string;
   setImgURL: React.Dispatch<React.SetStateAction<string>>;
+  tag: string[];
+  setTag: React.Dispatch<React.SetStateAction<string[]>>;
+  detailPost: any;
 }
 
-const Setting: VFC<Props> = ({ visibility, setVisibility, inp, imgURL, setImgURL }) => {
+const Setting: VFC<Props> = ({ visibility, setVisibility, inp, imgURL, setImgURL, tag, setTag, detailPost }) => {
   const { onChangeImage } = myFunctions();
-
-  const [filterList] = useState([
-    { id: 1, language: 'Python' },
-    { id: 2, language: 'React' },
-    { id: 3, language: 'Java' },
-    { id: 4, language: 'C#' },
-    { id: 5, language: 'C' },
-    { id: 6, language: 'C++' },
-    { id: 7, language: 'GO' },
-    { id: 8, language: 'Javascript' },
-  ]);
+  const { mySeriesList } = useSelector((store: RootState) => store.post);
 
   const refImgFiles: any = useRef(null);
+
+  const [tagInput, setTagInput, resetTagInput] = useInput('');
+  const tagGuid = useRef<any>(null);
+
+  const [seriesModal, setSeriesModal] = useState(false);
+  const [seriesInput, setSeriesInput, resetSeriesInput] = useInput('');
+  const [selectSeries, setSelectSeries] = useState<number | null>(null);
+  const [selectedPostSeries, setSelectedPostSeries] = useState<string | null>(detailPost.series[0]?.name || null);
+  const [seriesList, setSeriesList] = useState<any>([]);
+
+  const insertSeries = () => {
+    const temp: any = [...mySeriesList];
+    if (temp.findIndex((v: any) => v.name === seriesInput.toLowerCase()) !== -1) {
+      alert('이미 존재하는 시리즈 이름입니다.');
+    } else {
+      const lastIdxId: number = temp[0].id || 1;
+      temp.unshift({ id: lastIdxId + 1, name: seriesInput });
+      setSeriesList(temp);
+      resetSeriesInput('');
+    }
+  };
+
+  const changePostSeries = () => {
+    if (selectSeries !== null) {
+      const temp: any = seriesList.length === 0 ? [...mySeriesList] : [...seriesList];
+      const findIdx: number = temp.findIndex((v: any) => v.id === selectSeries);
+      const currentSeries: string = temp[findIdx].name;
+      setSelectedPostSeries(currentSeries);
+      setSeriesModal(false);
+    } else alert('시리즈를 선택해주세요.');
+  };
+
+  const changeSeriesModal = () => setSeriesModal(!seriesModal);
+
+  const insertTag = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (e.code === 'Enter' && tagInput !== '') {
+      const temp: any = [...tag];
+      if (temp.indexOf(tagInput) === -1) {
+        temp.push(tagInput);
+        setTag(temp);
+      } else alert('이미 존재하는 태그입니다.');
+    }
+  };
+
+  const delTeg = (idx: number) => {
+    const prev: any = [...tag];
+    prev.splice(idx, 1);
+    setTag(prev);
+  };
+
+  const setVisibleTagGuid = () => {
+    if (tag.length === 0 && tagGuid.current !== null) tagGuid.current.style.visibility = 'visible';
+  };
+
+  useEffect(() => {
+    if (tag.length !== 0) tagGuid.current.style.visibility = 'hidden';
+    resetTagInput('');
+  }, [tag]);
 
   const delImg = () => {
     refImgFiles.current.files = null;
@@ -85,56 +139,143 @@ const Setting: VFC<Props> = ({ visibility, setVisibility, inp, imgURL, setImgURL
         </div>
         <div className="line_section" />
         <div className="right_section">
-          <div className="fillter_section">
-            <section>
-              <ul>
-                {filterList.map((a) => {
-                  // let checked = false;
-                  // if (detailPost.language.split(',').indexOf(a.language) !== -1) checked = true;
-                  return (
-                    <li key={a.id}>
+          {seriesModal ? (
+            <section className="sc-gzOgki fRPcIQ sc-gqPbQI guOUmw">
+              <h3>시리즈 설정</h3>
+              <div className="contents">
+                <div className="sc-hORach kxgRGC">
+                  <div>
+                    <div className="sc-iuJeZd ilAdLO">
                       <input
-                        id={a.language}
-                        className="filters-input__checkbox"
-                        value="action"
-                        type="checkbox"
-                        data-type="genres"
-                        name="langs"
-                        // defaultChecked={checked}
+                        placeholder="새로운 시리즈 이름을 입력하세요"
+                        name="name"
+                        className="sc-esOvli fPWeGR"
+                        value={seriesInput}
+                        onChange={setSeriesInput}
                       />
-                      {/* eslint-disable-next-line jsx-a11y/click-events-have-key-events */}
-                      <label className="input__label | filters-input__label--checkbox" htmlFor={a.language}>
-                        <span>{a.language}</span>
-                        <span className="filters-input__tick">
-                          <svg focusable="false" aria-hidden="true">
-                            <use xlinkHref="#check">
-                              <svg viewBox="0 0 24 24" id="check" xmlns="http://www.w3.org/2000/svg">
-                                <path d="M9 21.035l-9-8.638 2.791-2.87 6.156 5.874 12.21-12.436L24 5.782z" />
-                              </svg>
-                            </use>
-                          </svg>
-                        </span>
-                      </label>
-                    </li>
-                  );
-                })}
-              </ul>
+                      <div className="sc-hMFtBS kFYgzZ">
+                        <div className="sc-cLQEGU dryTVy">
+                          <button color="teal" type="button" className="sc-dnqmqq gzELJz" onClick={insertSeries}>
+                            시리즈 추가
+                          </button>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <ul className="sc-bMVAic XhGBA sc-iujRgT fAMcrW">
+                    {(seriesList.length === 0 ? [...mySeriesList] : seriesList).map(
+                      (item: { id: number; name: string }) =>
+                        item.id === selectSeries ? (
+                          // eslint-disable-next-line jsx-a11y/click-events-have-key-events
+                          <li
+                            className="sc-bAeIUo bTeTbc list-item selectItem"
+                            key={item.id}
+                            onClick={() => setSelectSeries(item.id)}
+                          >
+                            {item.name}
+                          </li>
+                        ) : (
+                          // eslint-disable-next-line jsx-a11y/click-events-have-key-events
+                          <li
+                            className="sc-bAeIUo bTeTbc list-item"
+                            key={item.id}
+                            onClick={() => setSelectSeries(item.id)}
+                          >
+                            {item.name}
+                          </li>
+                        ),
+                    )}
+                  </ul>
+                </div>
+                <div className="sc-GMQeP hLTRLT">
+                  <button type="button" color="gray" className="sc-dnqmqq ccZQXh" onClick={changeSeriesModal}>
+                    취소
+                  </button>
+                  <button type="button" color="teal" className="sc-dnqmqq jvzOMf" onClick={changePostSeries}>
+                    선택하기
+                  </button>
+                </div>
+              </div>
             </section>
-          </div>
-          <div>
-            <button
-              type="button"
-              className="upButton"
-              onClick={() =>
-                setVisibility({ textSection: { visibility: 'visible' }, settingSection: { visibility: 'hidden' } })
-              }
-            >
-              뒤로가기
-            </button>
-            <button type="submit" className="upButton" name="sendAPIButton">
-              수정하기
-            </button>
-          </div>
+          ) : (
+            <>
+              <section className="sc-gzOgki fRPcIQ sc-epnACN hsXqzQ">
+                <h3>태그 추가하기</h3>
+                <div className="contents">
+                  <input
+                    className="tag_input"
+                    onFocus={setVisibleTagGuid}
+                    value={tagInput}
+                    onChange={setTagInput}
+                    onKeyPress={(e) => insertTag(e)}
+                  />
+                </div>
+                <div className="sc-fYxtnH hLQrny" ref={tagGuid}>
+                  <div className="inside">
+                    <p>엔터를 입력하여 태그를 등록 할 수 있습니다.</p>
+                    <p>등록된 태그를 클릭하면 삭제됩니다.</p>
+                  </div>
+                </div>
+                <div>
+                  {tag.map((item: any, index: number) => (
+                    // eslint-disable-next-line react/no-array-index-key
+                    <button type="button" className="previewTag" key={index} onClick={() => delTeg(index)}>
+                      {item}
+                    </button>
+                  ))}
+                </div>
+              </section>
+              <section className="sc-gzOgki fRPcIQ sc-epnACN hsXqzQ">
+                <h3>시리즈 설정</h3>
+                <div className="contents">
+                  {selectedPostSeries === null ? (
+                    <button type="button" className="sc-iQNlJl ikrfmY" onClick={changeSeriesModal}>
+                      <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+                        <path
+                          fillRule="evenodd"
+                          clipRule="evenodd"
+                          d="M14 10H2V12H14V10ZM14 6H2V8H14V6ZM18 14V10H16V14H12V16H16V20H18V16H22V14H18ZM2 16H10V14H2V16Z"
+                          fill="currentColor"
+                        />
+                      </svg>
+                      시리즈에 추가하기
+                    </button>
+                  ) : (
+                    <div className="sc-ipZHIp fItzQM">
+                      <input name="postSeries" className="name-wrapper" defaultValue={selectedPostSeries} readOnly />
+                      <button type="button" data-testid="setting-button" onClick={changeSeriesModal}>
+                        <svg
+                          stroke="currentColor"
+                          fill="currentColor"
+                          strokeWidth="0"
+                          viewBox="0 0 24 24"
+                          height="1em"
+                          width="1em"
+                          xmlns="http://www.w3.org/2000/svg"
+                        >
+                          <path d="M19.43 12.98c.04-.32.07-.64.07-.98s-.03-.66-.07-.98l2.11-1.65c.19-.15.24-.42.12-.64l-2-3.46c-.12-.22-.39-.3-.61-.22l-2.49 1c-.52-.4-1.08-.73-1.69-.98l-.38-2.65C14.46 2.18 14.25 2 14 2h-4c-.25 0-.46.18-.49.42l-.38 2.65c-.61.25-1.17.59-1.69.98l-2.49-1c-.23-.09-.49 0-.61.22l-2 3.46c-.13.22-.07.49.12.64l2.11 1.65c-.04.32-.07.65-.07.98s.03.66.07.98l-2.11 1.65c-.19.15-.24.42-.12.64l2 3.46c.12.22.39.3.61.22l2.49-1c.52.4 1.08.73 1.69.98l.38 2.65c.03.24.24.42.49.42h4c.25 0 .46-.18.49-.42l.38-2.65c.61-.25 1.17-.59 1.69-.98l2.49 1c.23.09.49 0 .61-.22l2-3.46c.12-.22.07-.49-.12-.64l-2.11-1.65zM12 15.5c-1.93 0-3.5-1.57-3.5-3.5s1.57-3.5 3.5-3.5 3.5 1.57 3.5 3.5-1.57 3.5-3.5 3.5z" />
+                        </svg>
+                      </button>
+                    </div>
+                  )}
+                </div>
+              </section>
+              <div>
+                <button
+                  type="button"
+                  className="upButton"
+                  onClick={() =>
+                    setVisibility({ textSection: { visibility: 'visible' }, settingSection: { visibility: 'hidden' } })
+                  }
+                >
+                  뒤로가기
+                </button>
+                <button type="submit" className="upButton" name="sendAPIButton">
+                  출간하기
+                </button>
+              </div>
+            </>
+          )}
         </div>
       </div>
     </div>

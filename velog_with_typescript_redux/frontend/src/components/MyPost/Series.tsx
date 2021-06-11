@@ -1,9 +1,11 @@
+import myFunctions from '@hooks/myFunctions';
 import { RootState } from '@reducers/index';
 import React from 'react';
 import { useSelector } from 'react-redux';
 
 const Series = () => {
   const { mySeriesPosts } = useSelector((store: RootState) => store.post);
+  const { loadPost } = myFunctions();
 
   return (
     <div className="sc-hwwEjo dzWcEQ">
@@ -14,17 +16,19 @@ const Series = () => {
 
         return (
           <div className="sc-gzOgki cVbiiY" key={post.id}>
-            <a className="sc-dfVpRl boXBJt" href="/">
+            {/* eslint-disable-next-line jsx-a11y/click-events-have-key-events,jsx-a11y/no-static-element-interactions */}
+            <div className="sc-dfVpRl boXBJt" onClick={() => loadPost(post.Posts[0].id)}>
               {Object.keys(image).length !== 0 ? (
                 <div className="sc-jhAzac faWcFi">
                   <img src={image[0].image} alt="" />
                 </div>
               ) : null}
-            </a>
+            </div>
             <h4>
-              <a className="sc-dfVpRl boXBJt" href="/">
+              {/* eslint-disable-next-line jsx-a11y/click-events-have-key-events,jsx-a11y/no-static-element-interactions */}
+              <div className="sc-dfVpRl boXBJt" onClick={() => loadPost(post.Posts[0].id)}>
                 {post.name}
-              </a>
+              </div>
             </h4>
             <div className="info">
               <span className="count">{post.Posts.length}개의 포스트</span>

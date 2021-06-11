@@ -62,6 +62,9 @@ import {
   LOAD_SERIES_LIST_REQUEST,
   LOAD_SERIES_LIST_FAILURE,
   LOAD_SERIES_LIST_SUCCESS,
+  LOAD_LIKED_FILTERED_POSTS_REQUEST,
+  LOAD_LIKED_FILTERED_POSTS_FAILURE,
+  LOAD_LIKED_FILTERED_POSTS_SUCCESS,
 } from '@reducers/post';
 
 export const ADD_POST_REQUEST_ACTION = () => ({ type: ADD_POST_REQUEST });
@@ -183,5 +186,15 @@ export const LOAD_SERIES_LIST_REQUEST_ACTION = () => ({ type: LOAD_SERIES_LIST_R
 export const LOAD_SERIES_LIST_SUCCESS_ACTION = (data: any) => ({ type: LOAD_SERIES_LIST_SUCCESS, data });
 export const LOAD_SERIES_LIST_FAILURE_ACTION = (error: Error | any) => ({
   type: LOAD_SERIES_LIST_FAILURE,
+  data: error,
+});
+
+export const LOAD_LIKED_FILTERED_POSTS_REQUEST_ACTION = () => ({ type: LOAD_LIKED_FILTERED_POSTS_REQUEST });
+export const LOAD_LIKED_FILTERED_POSTS_SUCCESS_ACTION = (data: any) => ({
+  type: LOAD_LIKED_FILTERED_POSTS_SUCCESS,
+  data,
+});
+export const LOAD_LIKED_FILTERED_POSTS_FAILURE_ACTION = (error: Error | any) => ({
+  type: LOAD_LIKED_FILTERED_POSTS_FAILURE,
   data: error,
 });

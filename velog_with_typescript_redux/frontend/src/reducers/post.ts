@@ -2,6 +2,7 @@ export const initialState = {
   mainPosts: [],
   likedPosts: [],
   filteredPosts: [],
+  likedFilteredPosts: [],
   detailPost: {},
   myPosts: [],
   myLikedPosts: [],
@@ -71,6 +72,9 @@ export const initialState = {
   loadSeriesListLoading: false, //   시리즈목록 가져오는중
   loadSeriesListDone: false,
   loadSeriesListError: null,
+  loadLikedFilteredPostsLoading: false,
+  loadLikedFilteredPostsDone: false,
+  loadLikedFilteredPostsError: null,
 };
 
 export const ADD_POST_REQUEST = 'ADD_POST_REQUEST';
@@ -156,6 +160,10 @@ export const LOAD_SERIES_POSTS_FAILURE = 'LOAD_SERIES_POSTS_FAILURE';
 export const LOAD_SERIES_LIST_REQUEST = 'LOAD_SERIES_LIST_REQUEST';
 export const LOAD_SERIES_LIST_SUCCESS = 'LOAD_SERIES_LIST_SUCCESS';
 export const LOAD_SERIES_LIST_FAILURE = 'LOAD_SERIES_LIST_FAILURE';
+
+export const LOAD_LIKED_FILTERED_POSTS_REQUEST = 'LOAD_LIKED_FILTERED_POSTS_REQUEST';
+export const LOAD_LIKED_FILTERED_POSTS_SUCCESS = 'LOAD_LIKED_FILTERED_POSTS_SUCCESS';
+export const LOAD_LIKED_FILTERED_POSTS_FAILURE = 'LOAD_LIKED_FILTERED_POSTS_FAILURE';
 
 const Post = (state = initialState, action: any) => {
   switch (action.type) {
@@ -498,6 +506,29 @@ const Post = (state = initialState, action: any) => {
       };
     case LOAD_SERIES_LIST_FAILURE:
       return { ...state, loadSeriesListLoading: false, loadSeriesListDone: false, loadSeriesListError: action.data };
+
+    case LOAD_LIKED_FILTERED_POSTS_REQUEST:
+      return {
+        ...state,
+        loadLikedFilteredPostsLoading: true,
+        loadLikedFilteredPostsDone: false,
+        loadLikedFilteredPostsError: null,
+      };
+    case LOAD_LIKED_FILTERED_POSTS_SUCCESS:
+      return {
+        ...state,
+        loadLikedFilteredPostsLoading: false,
+        loadLikedFilteredPostsDone: true,
+        loadLikedFilteredPostsError: null,
+        likedFilteredPosts: action.data.data,
+      };
+    case LOAD_LIKED_FILTERED_POSTS_FAILURE:
+      return {
+        ...state,
+        loadLikedFilteredPostsLoading: false,
+        loadLikedFilteredPostsDone: false,
+        loadLikedFilteredPostsError: action.data,
+      };
 
     default:
       return state;

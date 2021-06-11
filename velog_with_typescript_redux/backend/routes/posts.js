@@ -7,6 +7,11 @@ const router = express.Router();
 
 router.post("/liked", async (req, res, next) => {
   try {
+    let where = {};
+    if (req.body.tagList) {
+      where = { id: { [sequelize.Op.and]: req.body.tagList } };
+    }
+
     const Posts = await Post.findAll({
       include: [
         {
@@ -31,6 +36,7 @@ router.post("/liked", async (req, res, next) => {
         {
           model: Tag,
           attributes: ["id", "name"],
+          where,
         },
       ],
       order: [["createdAt", "DESC"]],
@@ -40,8 +46,8 @@ router.post("/liked", async (req, res, next) => {
       (a, b) => b.dataValues.Likers.length - a.dataValues.Likers.length
     );
 
-    if (req.body.lastIdx) {
-      liked = liked.slice(req.body.lastIdx, req.body.lastIdx + 10);
+    if (req.body.lastId) {
+      liked = liked.slice(req.body.lastId, req.body.lastId + 10);
     } else {
       liked = liked.slice(0, 10);
     }

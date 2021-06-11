@@ -155,4 +155,4 @@ const ReComment: React.VFC<Props> = ({ comment, me }) => {
     </>
   );
 };
-export default ReComment;
+export default React.memo(ReComment);

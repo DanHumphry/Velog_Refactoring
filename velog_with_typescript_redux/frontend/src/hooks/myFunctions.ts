@@ -1,6 +1,7 @@
 import { RootState } from '@reducers/index';
 import { LOAD_MYPOSTS_REQUEST, LOAD_POST_REQUEST } from '@thunks/post';
 import { UPDATE_PROFILE_REQUEST } from '@thunks/user';
+import React, { useCallback } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useHistory } from 'react-router-dom';
 
@@ -9,22 +10,22 @@ export default function myFunctions() {
   const dispatch = useDispatch();
   const history = useHistory();
 
-  const loadPost = async (id: string) => {
+  const loadPost = useCallback(async (id: string) => {
     await dispatch(LOAD_POST_REQUEST({ postId: id }));
     history.push(`/detail/${id}`);
-  };
+  }, []);
 
-  const loadMyPost = async (data: { userId: string; lastId: number | null }) => {
+  const loadMyPost = useCallback(async (data: { userId: string; lastId: number | null }) => {
     if (Object.keys(myPosts).length === 0) await dispatch(LOAD_MYPOSTS_REQUEST(data));
     history.push(`/myPost/${data.userId}`);
-  };
+  }, []);
 
-  const updateProfile = async (data: { info: any; modal: any }) => {
+  const updateProfile = useCallback(async (data: { info: any; modal: any }) => {
     await dispatch(UPDATE_PROFILE_REQUEST(data.info));
     await data.modal(false);
-  };
+  }, []);
 
-  const limitMaxLength = (value: string, length: number) => {
+  const limitMaxLength = useCallback((value: string, length: number) => {
     const strLen = value.length;
 
     let byte = 0;
@@ -52,39 +53,116 @@ export default function myFunctions() {
     }
     str = value;
     return { str, byte };
-  };
+  }, []);
 
-  const limitLengthOnKeyUpEvent = (
-    e: React.KeyboardEvent<HTMLTextAreaElement> | React.KeyboardEvent<HTMLInputElement>,
-    resetValue: React.Dispatch<any>,
-    setState: React.Dispatch<React.SetStateAction<number>>,
-    limit: number,
-  ) => {
-    const target = e.target as any;
-    const { value } = target;
-    const { str, byte } = limitMaxLength(value, limit);
-    if (byte > limit) {
-      resetValue(str);
-      setState(limit);
-    } else setState(byte);
-  };
+  const limitLengthOnKeyUpEvent = useCallback(
+    (
+      e: React.KeyboardEvent<HTMLTextAreaElement> | React.KeyboardEvent<HTMLInputElement>,
+      resetValue: React.Dispatch<any>,
+      setState: React.Dispatch<React.SetStateAction<number>>,
+      limit: number,
+    ) => {
+      const target = e.target as any;
+      const { value } = target;
+      const { str, byte } = limitMaxLength(value, limit);
+      if (byte > limit) {
+        resetValue(str);
+        setState(limit);
+      } else setState(byte);
+    },
+    [],
+  );
 
-  const onChangeImage = (
-    e: React.ChangeEvent<HTMLInputElement>,
-    setImgURL: React.Dispatch<React.SetStateAction<string>>,
-  ) => {
-    e.preventDefault();
-    const reader = new FileReader();
-    let file: any;
-    if (e.target.files !== null) {
-      // eslint-disable-next-line prefer-destructuring
-      file = e.target.files[0];
-    }
-    reader.onloadend = () => {
-      if (reader.result !== null && typeof reader.result === 'string') setImgURL(reader.result);
-    };
-    reader.readAsDataURL(file);
-  };
+  const onChangeImage = useCallback(
+    (e: React.ChangeEvent<HTMLInputElement>, setImgURL: React.Dispatch<React.SetStateAction<string>>) => {
+      e.preventDefault();
+      const reader = new FileReader();
+      let file: any;
+      if (e.target.files !== null) {
+        // eslint-disable-next-line prefer-destructuring
+        file = e.target.files[0];
+      }
+      reader.onloadend = () => {
+        if (reader.result !== null && typeof reader.result === 'string') setImgURL(reader.result);
+      };
+      reader.readAsDataURL(file);
+    },
+    [],
+  );
 
-  return { loadPost, loadMyPost, updateProfile, limitLengthOnKeyUpEvent, onChangeImage };
+  const insertSeries = useCallback(
+    (
+      mySeriesList: never,
+      seriesInput: string,
+      setSeriesList: React.Dispatch<React.SetStateAction<{ id: number; name: string }[]>>,
+      resetSeriesInput: React.Dispatch<React.SetStateAction<string>>,
+    ) => {
+      const temp: any = [...mySeriesList];
+      if (temp.findIndex((v: any) => v.name === seriesInput.toLowerCase()) !== -1) {
+        alert('이미 존재하는 시리즈 이름입니다.');
+      } else {
+        // eslint-disable-next-line no-bitwise
+        const lastIdxId: number = temp[0]?.id | 1;
+        temp.unshift({ id: lastIdxId + 1, name: seriesInput });
+        setSeriesList(temp);
+        resetSeriesInput('');
+      }
+    },
+    [],
+  );
+
+  const changePostSeries = useCallback(
+    (
+      selectSeries: number | null,
+      mySeriesList: never,
+      seriesList: { id: number; name: string }[],
+      setSelectedPostSeries: React.Dispatch<React.SetStateAction<string | null>>,
+      setSeriesModal: React.Dispatch<React.SetStateAction<boolean>>,
+    ) => {
+      if (selectSeries !== null) {
+        const temp: any = seriesList.length === 0 ? [...mySeriesList] : [...seriesList];
+        const findIdx: number = temp.findIndex((v: any) => v.id === selectSeries);
+        const currentSeries: string = temp[findIdx].name;
+        setSelectedPostSeries(currentSeries);
+        setSeriesModal(false);
+      } else alert('시리즈를 선택해주세요.');
+    },
+    [],
+  );
+
+  const insertTag = useCallback(
+    (
+      e: React.KeyboardEvent<HTMLInputElement>,
+      tag: string[],
+      setTag: React.Dispatch<React.SetStateAction<string[]>>,
+      tagInput: string,
+    ) => {
+      if (e.code === 'Enter' && tagInput !== '') {
+        const temp: any = [...tag];
+        if (temp.indexOf(tagInput) === -1) {
+          temp.push(tagInput);
+          setTag(temp);
+        } else alert('이미 존재하는 태그입니다.');
+      }
+    },
+    [],
+  );
+
+  const delTeg = useCallback((idx: number, tag: string[], setTag: React.Dispatch<React.SetStateAction<string[]>>) => {
+    const prev: any = [...tag];
+    prev.splice(idx, 1);
+    setTag(prev);
+  }, []);
+
+  return {
+    loadPost,
+    loadMyPost,
+    updateProfile,
+    limitLengthOnKeyUpEvent,
+    onChangeImage,
+    delTeg,
+    insertTag,
+    changePostSeries,
+    insertSeries,
+  };
 }

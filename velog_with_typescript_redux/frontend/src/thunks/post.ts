@@ -62,6 +62,9 @@ import {
   LOAD_SERIES_LIST_FAILURE_ACTION,
   LOAD_SERIES_LIST_REQUEST_ACTION,
   LOAD_SERIES_LIST_SUCCESS_ACTION,
+  LOAD_LIKED_FILTERED_POSTS_FAILURE_ACTION,
+  LOAD_LIKED_FILTERED_POSTS_REQUEST_ACTION,
+  LOAD_LIKED_FILTERED_POSTS_SUCCESS_ACTION,
 } from '@actions/post';
 import * as postAPI from '@api/post';
 
@@ -86,10 +89,12 @@ export const LOAD_POSTS_REQUEST = (lastId: number | null) => async (dispatch: an
   }
 };
 
-export const LOAD_LIKED_POSTS_REQUEST = (lastId: number | null) => async (dispatch: any) => {
+export const LOAD_LIKED_POSTS_REQUEST = (data: { lastId: number | null; tagList: number[] | null }) => async (
+  dispatch: any,
+) => {
   try {
     dispatch(LOAD_LIKED_POSTS_REQUEST_ACTION());
-    const res = await postAPI.loadLikedPostsAPI(lastId);
+    const res = await postAPI.loadLikedPostsAPI(data);
     dispatch(LOAD_LIKED_POSTS_SUCCESS_ACTION(res.data));
   } catch (error) {
     dispatch(LOAD_LIKED_POSTS_FAILURE_ACTION(error.response.data));
@@ -274,5 +279,17 @@ export const LOAD_SERIES_LIST_REQUEST = (data: { userId: string }) => async (dis
     dispatch(LOAD_SERIES_LIST_SUCCESS_ACTION(res));
   } catch (error) {
     dispatch(LOAD_SERIES_LIST_FAILURE_ACTION(error.response.data));
+  }
+};
+
+export const LOAD_LIKED_FILTERED_POSTS_REQUEST = (data: { lastId: number | null; tagList: number[] | null }) => async (
+  dispatch: any,
+) => {
+  try {
+    dispatch(LOAD_LIKED_FILTERED_POSTS_REQUEST_ACTION());
+    const res = await postAPI.loadLikedPostsAPI(data);
+    dispatch(LOAD_LIKED_FILTERED_POSTS_SUCCESS_ACTION(res));
+  } catch (error) {
+    dispatch(LOAD_LIKED_FILTERED_POSTS_FAILURE_ACTION(error.response.data));
   }
 };

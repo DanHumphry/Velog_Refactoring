@@ -184,4 +184,4 @@ const Comment: React.VFC<Props> = ({ detailPost, me }) => {
     </div>
   );
 };
-export default Comment;
+export default React.memo(Comment);

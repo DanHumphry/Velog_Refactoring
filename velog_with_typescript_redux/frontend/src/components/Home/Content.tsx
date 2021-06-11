@@ -7,10 +7,6 @@ import '@styles/Board.css';
 import SideCheckBox from '@components/Home/SideCheckBox';
 import { useDispatch, useSelector } from 'react-redux';
 
-// 0.update도 고치기
-// 1.series detail만들기(미정)
-// 2.detail Page에서 시리즈가 존재한다면 같은 시리즈들의 목록을 section추가
-
 interface Props {
   isContent: boolean;
   mainPosts: any;
@@ -32,24 +28,21 @@ const Content: React.VFC<Props> = ({ isContent, mainPosts, filterList, setFilter
   useEffect(() => {
     function onScroll() {
       if (window.pageYOffset + document.documentElement.clientHeight > document.documentElement.scrollHeight - 300) {
-        if (
-          (hasMorePosts || hasMoreFilteredPosts) &&
-          !loadPostsLoading &&
-          !loadFilteredPostsLoading &&
-          !loadMyPostsLoading
-        ) {
+        if (!loadPostsLoading && !loadFilteredPostsLoading && !loadMyPostsLoading) {
           const posts = [...mainPosts];
 
-          if (filterList.length === 0) {
+          if (filterList.length === 0 && hasMorePosts) {
             if (isContent) {
               let lastId: any = posts[[...mainPosts].length - 1];
               if (lastId) lastId = lastId.id;
               dispatch(LOAD_POSTS_REQUEST(lastId));
             } else {
               const lastIdx = posts.length;
-              dispatch(LOAD_LIKED_POSTS_REQUEST(lastIdx));
+              dispatch(
+                LOAD_LIKED_POSTS_REQUEST({ lastId: lastIdx, tagList: filterList.length === 0 ? null : filterList }),
+              );
             }
-          } else {
+          } else if (hasMoreFilteredPosts) {
             let lastId: any = posts[[...mainPosts].length - 1];
             if (lastId) lastId = lastId.id;
             dispatch(LOAD_SCROLL_EVENT_FILTERED_POSTS_REQUEST({ tagList: filterList, lastId }));
@@ -131,7 +124,7 @@ const Content: React.VFC<Props> = ({ isContent, mainPosts, filterList, setFilter
           })}
         </div>
       </main>
-      <SideCheckBox filterList={filterList} setFilterList={setFilterList} />
+      <SideCheckBox filterList={filterList} setFilterList={setFilterList} isContent={isContent} />
     </div>
   );
 };

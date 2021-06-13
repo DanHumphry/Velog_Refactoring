@@ -6,14 +6,12 @@ import { useDispatch, useSelector } from 'react-redux';
 import { useHistory } from 'react-router';
 import { LIKE_POST_REQUEST, REMOVE_POST_REQUEST, UNLIKE_POST_REQUEST } from '@thunks/post';
 
-// 리팩토링 좀 더 하고, tag관련 필터 먹일때 좋아요순으로 빼먹은듯, 마무리하기..
-
 interface Props {
   detailPost: any;
   me: any;
 }
 
-const Post: React.VFC<Props> = ({ detailPost, me }) => {
+function Post({ detailPost, me }: Props) {
   const history = useHistory();
   const dispatch = useDispatch();
   const {
@@ -294,5 +292,5 @@ const Post: React.VFC<Props> = ({ detailPost, me }) => {
       </div>
     </>
   );
-};
+}
 export default Post;

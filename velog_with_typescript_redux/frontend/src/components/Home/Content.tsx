@@ -14,7 +14,7 @@ interface Props {
   setFilterList: React.Dispatch<React.SetStateAction<number[]>>;
 }
 
-const Content: React.VFC<Props> = ({ isContent, mainPosts, filterList, setFilterList }) => {
+function Content({ isContent, mainPosts, filterList, setFilterList }: Props) {
   const dispatch = useDispatch();
   const { loadMyPost, loadPost } = myFunctions();
   const {
@@ -127,5 +127,5 @@ const Content: React.VFC<Props> = ({ isContent, mainPosts, filterList, setFilter
       <SideCheckBox filterList={filterList} setFilterList={setFilterList} isContent={isContent} />
     </div>
   );
-};
+}
 export default Content;

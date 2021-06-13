@@ -5,7 +5,7 @@ interface Props {
   myPosts: any;
 }
 
-const Profile: React.VFC<Props> = ({ myPosts }) => {
+function Profile({ myPosts }: Props) {
   const githubLink = () => {
     if (!myPosts[0].User.git || myPosts[0].User.git === '') {
       alert('github주소가 등록되지 않은 사용자입니다.');
@@ -50,5 +50,5 @@ const Profile: React.VFC<Props> = ({ myPosts }) => {
       </div>
     </div>
   );
-};
+}
 export default Profile;

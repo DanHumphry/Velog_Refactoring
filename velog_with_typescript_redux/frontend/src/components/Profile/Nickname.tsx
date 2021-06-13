@@ -3,10 +3,17 @@ import useInput from '@hooks/useInput';
 import React, { useState } from 'react';
 
 interface Props {
-  me: any;
+  me: {
+    id: number;
+    email: string;
+    nickname: string;
+    git: string;
+    profileImg: string;
+    myIntroduce: string;
+  };
 }
 
-const Nickname: React.VFC<Props> = ({ me }) => {
+function Nickname({ me }: Props) {
   const [nicknameModal, setNicknameModal] = useState(false);
   const [nickname, setNickname, resetNickname] = useInput('');
   const [nicknameLength, setNicknameLength] = useState(0);
@@ -38,7 +45,7 @@ const Nickname: React.VFC<Props> = ({ me }) => {
                 <button
                   type="button"
                   className="save-button"
-                  onClick={() => updateProfile({ info: { ...me, nickname }, modal: setNicknameModal })}
+                  onClick={() => updateProfile({ ...me, nickname }, setNicknameModal)}
                 >
                   저장
                 </button>
@@ -64,5 +71,5 @@ const Nickname: React.VFC<Props> = ({ me }) => {
       </div>
     </div>
   );
-};
+}
 export default Nickname;

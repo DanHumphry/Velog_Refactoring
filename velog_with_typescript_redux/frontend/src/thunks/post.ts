@@ -68,7 +68,9 @@ import {
 } from '@actions/post';
 import * as postAPI from '@api/post';
 
-export const ADD_POST_REQUEST = (v: any) => async (dispatch: any) => {
+/* eslint-disable */
+
+export const ADD_POST_REQUEST = (v: FormData) => async (dispatch: any) => {
   try {
     dispatch(ADD_POST_REQUEST_ACTION());
     const res = await postAPI.postWriteAPI(v);
@@ -173,7 +175,9 @@ export const UNLIKE_POST_REQUEST = (data: { userId: number; postId: number }) =>
   }
 };
 
-export const ADD_POST_COMMENT_REQUEST = (data: any) => async (dispatch: any) => {
+export const ADD_POST_COMMENT_REQUEST = (data: { content: string; postId: number; userId: number }) => async (
+  dispatch: any,
+) => {
   try {
     dispatch(ADD_POST_COMMENT_REQUEST_ACTION());
     const res = await postAPI.PostCommentAPI(data);
@@ -183,7 +187,7 @@ export const ADD_POST_COMMENT_REQUEST = (data: any) => async (dispatch: any) => 
   }
 };
 
-export const UPDATE_POST_COMMENT_REQUEST = (data: any) => async (dispatch: any) => {
+export const UPDATE_POST_COMMENT_REQUEST = (data: { content: string; commentId: number }) => async (dispatch: any) => {
   try {
     dispatch(UPDATE_POST_COMMENT_REQUEST_ACTION());
     const res = await postAPI.updateCommentAPI(data);
@@ -192,7 +196,9 @@ export const UPDATE_POST_COMMENT_REQUEST = (data: any) => async (dispatch: any) 
     dispatch(UPDATE_POST_COMMENT_FAILURE_ACTION(error.response.data));
   }
 };
-export const REMOVE_POST_COMMENT_REQUEST = (data: any) => async (dispatch: any) => {
+export const REMOVE_POST_COMMENT_REQUEST = (data: { writtenUser: number; commentId: number }) => async (
+  dispatch: any,
+) => {
   try {
     dispatch(REMOVE_POST_COMMENT_REQUEST_ACTION());
     const res = await postAPI.removeCommentAPI(data);
@@ -202,7 +208,9 @@ export const REMOVE_POST_COMMENT_REQUEST = (data: any) => async (dispatch: any) 
   }
 };
 
-export const ADD_POST_RECOMMENT_REQUEST = (data: any) => async (dispatch: any) => {
+export const ADD_POST_RECOMMENT_REQUEST = (data: { content: string; userId: number; commentId: number }) => async (
+  dispatch: any,
+) => {
   try {
     dispatch(ADD_POST_RECOMMENT_REQUEST_ACTION());
     const res = await postAPI.PostReCommentAPI(data);
@@ -212,7 +220,9 @@ export const ADD_POST_RECOMMENT_REQUEST = (data: any) => async (dispatch: any) =
   }
 };
 
-export const UPDATE_POST_RECOMMENT_REQUEST = (data: any) => async (dispatch: any) => {
+export const UPDATE_POST_RECOMMENT_REQUEST = (data: { content: string; reCommentId: number }) => async (
+  dispatch: any,
+) => {
   try {
     dispatch(UPDATE_POST_RECOMMENT_REQUEST_ACTION());
     const res = await postAPI.updateReCommentAPI(data);
@@ -221,7 +231,9 @@ export const UPDATE_POST_RECOMMENT_REQUEST = (data: any) => async (dispatch: any
     dispatch(UPDATE_POST_RECOMMENT_FAILURE_ACTION(error.response.data));
   }
 };
-export const REMOVE_POST_RECOMMENT_REQUEST = (data: any) => async (dispatch: any) => {
+export const REMOVE_POST_RECOMMENT_REQUEST = (data: { writtenUser: number; reCommentId: number }) => async (
+  dispatch: any,
+) => {
   try {
     dispatch(REMOVE_POST_RECOMMENT_REQUEST_ACTION());
     const res = await postAPI.removeReCommentAPI(data);
@@ -293,3 +305,5 @@ export const LOAD_LIKED_FILTERED_POSTS_REQUEST = (data: { lastId: number | null;
     dispatch(LOAD_LIKED_FILTERED_POSTS_FAILURE_ACTION(error.response.data));
   }
 };
+
+/* eslint-enable */

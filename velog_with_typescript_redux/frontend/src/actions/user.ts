@@ -23,6 +23,7 @@ import {
   SET_LOGIN_MODAL,
   SET_ACCOUNT_TEXT,
 } from '@reducers/user';
+import { AxiosResponse } from 'axios';
 
 export const LOG_IN_REQUEST_ACTION = () => ({ type: LOG_IN_REQUEST });
 export const LOG_IN_SUCCESS_ACTION = (data: { email: string; password: string }) => ({ type: LOG_IN_SUCCESS, data });
@@ -48,11 +49,11 @@ export const SEND_EMAIL_SUCCESS_ACTION = () => ({ type: SEND_EMAIL_SUCCESS });
 export const SEND_EMAIL_FAILURE_ACTION = (error: Error | any) => ({ type: SEND_EMAIL_FAILURE, data: error });
 
 export const UPDATE_PROFILE_REQUEST_ACTION = () => ({ type: UPDATE_PROFILE_REQUEST });
-export const UPDATE_PROFILE_SUCCESS_ACTION = (data: any) => ({ type: UPDATE_PROFILE_SUCCESS, data });
+export const UPDATE_PROFILE_SUCCESS_ACTION = (data: AxiosResponse) => ({ type: UPDATE_PROFILE_SUCCESS, data });
 export const UPDATE_PROFILE_FAILURE_ACTION = (error: Error | any) => ({ type: UPDATE_PROFILE_FAILURE, data: error });
 
 export const UPDATE_PROFILE_IMG_REQUEST_ACTION = () => ({ type: UPDATE_PROFILE_IMG_REQUEST });
-export const UPDATE_PROFILE_IMG_SUCCESS_ACTION = (data: any) => ({ type: UPDATE_PROFILE_IMG_SUCCESS, data });
+export const UPDATE_PROFILE_IMG_SUCCESS_ACTION = (data: AxiosResponse) => ({ type: UPDATE_PROFILE_IMG_SUCCESS, data });
 export const UPDATE_PROFILE_IMG_FAILURE_ACTION = (error: Error | any) => ({
   type: UPDATE_PROFILE_IMG_FAILURE,
   data: error,

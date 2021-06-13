@@ -3,10 +3,17 @@ import useInput from '@hooks/useInput';
 import React, { useState } from 'react';
 
 interface Props {
-  me: any;
+  me: {
+    id: number;
+    email: string;
+    nickname: string;
+    git: string;
+    profileImg: string;
+    myIntroduce: string;
+  };
 }
 
-const Social: React.VFC<Props> = ({ me }) => {
+function Social({ me }: Props) {
   const [socialModal, setSocialModal] = useState(false);
   const [git, setGit] = useInput(me.git === null ? '' : me.git);
   const { updateProfile } = myFunctions();
@@ -50,7 +57,7 @@ const Social: React.VFC<Props> = ({ me }) => {
                 <button
                   type="button"
                   className="save-button"
-                  onClick={() => updateProfile({ info: { ...me, git }, modal: setSocialModal })}
+                  onClick={() => updateProfile({ ...me, git }, setSocialModal)}
                 >
                   저장
                 </button>
@@ -89,5 +96,5 @@ const Social: React.VFC<Props> = ({ me }) => {
       </div>
     </div>
   );
-};
+}
 export default Social;

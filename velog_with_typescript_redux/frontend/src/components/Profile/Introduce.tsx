@@ -3,10 +3,17 @@ import React, { useState } from 'react';
 import useInput from '@hooks/useInput';
 
 interface Props {
-  me: any;
+  me: {
+    id: number;
+    email: string;
+    nickname: string;
+    git: string;
+    profileImg: string;
+    myIntroduce: string;
+  };
 }
 
-const Introduce: React.VFC<Props> = ({ me }) => {
+function Introduce({ me }: Props) {
   const [infoModal, setInfoModal] = useState(false);
   const [info, setInfo, resetInfo] = useInput('');
   const [infoLength, setInfoLength] = useState<number>(0);
@@ -33,7 +40,7 @@ const Introduce: React.VFC<Props> = ({ me }) => {
             type="button"
             className="myInfoButton"
             name="myInfo"
-            onClick={() => updateProfile({ info: { ...me, myIntroduce: info }, modal: setInfoModal })}
+            onClick={() => updateProfile({ ...me, myIntroduce: info }, setInfoModal)}
           >
             저장
           </button>
@@ -60,5 +67,5 @@ const Introduce: React.VFC<Props> = ({ me }) => {
       )}
     </div>
   );
-};
+}
 export default Introduce;

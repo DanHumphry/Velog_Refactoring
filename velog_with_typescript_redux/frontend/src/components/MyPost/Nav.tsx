@@ -7,7 +7,7 @@ interface Props {
   setNavOption: React.Dispatch<React.SetStateAction<string>>;
 }
 
-const Nav: React.VFC<Props> = ({ navModal, setNavModal, navOption, setNavOption }) => {
+function Nav({ navModal, setNavModal, navOption, setNavOption }: Props) {
   const onClickMenu = (v: string) => {
     setNavOption(v);
     setNavModal(false);
@@ -48,5 +48,5 @@ const Nav: React.VFC<Props> = ({ navModal, setNavModal, navOption, setNavOption 
       </div>
     </div>
   );
-};
+}
 export default Nav;

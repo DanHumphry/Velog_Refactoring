@@ -33,7 +33,6 @@ function Write() {
       setInp({ title: e.target.elements.title.value, content: e.target.elements.content.value });
       setVisibility({ textSection: { visibility: 'hidden' }, settingSection: { visibility: 'visible' } });
     } else {
-      console.log(e.target.elements.postSeries);
       const formData = new FormData();
       formData.append('content', inp.content);
       formData.append('title', inp.title);

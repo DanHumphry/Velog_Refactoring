@@ -1,7 +1,7 @@
 import myFunctions from '@hooks/myFunctions';
 import useInput from '@hooks/useInput';
 import { RootState } from '@reducers/index';
-import React, { useState, VFC } from 'react';
+import React, { useState } from 'react';
 import { useSelector } from 'react-redux';
 import { useHistory } from 'react-router';
 
@@ -12,7 +12,7 @@ interface Props {
   >;
 }
 
-const TextArea: VFC<Props> = ({ visibility, setVisibility }) => {
+function TextArea({ visibility, setVisibility }: Props) {
   const history = useHistory();
 
   const { limitLengthOnKeyUpEvent } = myFunctions();
@@ -97,5 +97,5 @@ const TextArea: VFC<Props> = ({ visibility, setVisibility }) => {
       </article>
     </section>
   );
-};
+}
 export default TextArea;

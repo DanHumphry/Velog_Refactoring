@@ -12,7 +12,7 @@ import { useDispatch, useSelector } from 'react-redux';
 // scrollEvent는 data.concat
 // router.posts를 모두 통일해서 frontend단에서 보내는 data값에따라 where, order등 변경해서 api요청 주고받을 수 있도록 설계
 
-const Home = () => {
+function Home() {
   const dispatch = useDispatch();
   const { loadPostsLoading, mainPosts, likedPosts, filteredPosts, likedFilteredPosts } = useSelector(
     (store: RootState) => store.post,
@@ -54,6 +54,6 @@ const Home = () => {
       )}
     </>
   );
-};
+}
 
 export default Home;

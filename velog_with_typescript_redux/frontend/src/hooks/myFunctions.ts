@@ -20,10 +20,23 @@ export default function myFunctions() {
     history.push(`/myPost/${data.userId}`);
   }, []);
 
-  const updateProfile = useCallback(async (data: { info: any; modal: any }) => {
-    await dispatch(UPDATE_PROFILE_REQUEST(data.info));
-    await data.modal(false);
-  }, []);
+  const updateProfile = useCallback(
+    async (
+      data: {
+        id: number;
+        email: string;
+        nickname: string;
+        git: string;
+        profileImg: string;
+        myIntroduce: string;
+      },
+      setModal: React.Dispatch<React.SetStateAction<boolean>>,
+    ) => {
+      await dispatch(UPDATE_PROFILE_REQUEST(data));
+      await setModal(false);
+    },
+    [],
+  );
 
   const limitMaxLength = useCallback((value: string, length: number) => {
     const strLen = value.length;
@@ -97,7 +110,7 @@ export default function myFunctions() {
       setSeriesList: React.Dispatch<React.SetStateAction<{ id: number; name: string }[]>>,
       resetSeriesInput: React.Dispatch<React.SetStateAction<string>>,
     ) => {
-      const temp: any = [...mySeriesList];
+      const temp: { id: number; name: string }[] = [...mySeriesList];
       if (temp.findIndex((v: any) => v.name === seriesInput.toLowerCase()) !== -1) {
         alert('이미 존재하는 시리즈 이름입니다.');
       } else {
@@ -120,8 +133,8 @@ export default function myFunctions() {
       setSeriesModal: React.Dispatch<React.SetStateAction<boolean>>,
     ) => {
       if (selectSeries !== null) {
-        const temp: any = seriesList.length === 0 ? [...mySeriesList] : [...seriesList];
-        const findIdx: number = temp.findIndex((v: any) => v.id === selectSeries);
+        const temp: { id: number; name: string }[] = seriesList.length === 0 ? [...mySeriesList] : [...seriesList];
+        const findIdx: number = temp.findIndex((v: { id: number; name: string }) => v.id === selectSeries);
         const currentSeries: string = temp[findIdx].name;
         setSelectedPostSeries(currentSeries);
         setSeriesModal(false);
@@ -138,7 +151,7 @@ export default function myFunctions() {
       tagInput: string,
     ) => {
       if (e.code === 'Enter' && tagInput !== '') {
-        const temp: any = [...tag];
+        const temp: string[] = [...tag];
         if (temp.indexOf(tagInput) === -1) {
           temp.push(tagInput);
           setTag(temp);
@@ -149,7 +162,7 @@ export default function myFunctions() {
   );
 
   const delTeg = useCallback((idx: number, tag: string[], setTag: React.Dispatch<React.SetStateAction<string[]>>) => {
-    const prev: any = [...tag];
+    const prev: string[] = [...tag];
     prev.splice(idx, 1);
     setTag(prev);
   }, []);

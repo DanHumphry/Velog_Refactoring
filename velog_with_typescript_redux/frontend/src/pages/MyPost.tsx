@@ -9,7 +9,7 @@ import Nav from '@components/MyPost/Nav';
 import Series from '@components/MyPost/Series';
 import { useDispatch, useSelector } from 'react-redux';
 
-const MyPost = () => {
+function MyPost() {
   const dispatch = useDispatch();
   const { myPosts, myLikedPosts, loadLikedMyPostsLoading, loadMyPostsLoading, loadSeriesPostsLoading } = useSelector(
     (store: RootState) => store.post,
@@ -45,6 +45,6 @@ const MyPost = () => {
       )}
     </div>
   );
-};
+}
 
 export default MyPost;

@@ -5,7 +5,7 @@ interface Props {
   setIsContent: any;
 }
 
-const Navi: React.VFC<Props> = ({ setIsContent }) => {
+function Navi({ setIsContent }: Props) {
   const [underlineSt, setUnderlineSt] = useState({ left: '0%' });
 
   const changeContent = (content: boolean, underline: { left: string }) => {
@@ -32,5 +32,5 @@ const Navi: React.VFC<Props> = ({ setIsContent }) => {
       </div>
     </div>
   );
-};
+}
 export default Navi;

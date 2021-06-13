@@ -1,7 +1,7 @@
 import { googleAPI, kakaoAPI, githubAPI } from '@api/user';
 import React from 'react';
 
-const SocialAPI = () => {
+function SocialAPI() {
   return (
     <>
       <button type="button" onClick={googleAPI}>
@@ -59,5 +59,5 @@ const SocialAPI = () => {
       </button>
     </>
   );
-};
+}
 export default SocialAPI;

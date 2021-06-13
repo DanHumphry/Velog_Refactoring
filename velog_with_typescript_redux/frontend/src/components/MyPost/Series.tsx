@@ -3,7 +3,7 @@ import { RootState } from '@reducers/index';
 import React from 'react';
 import { useSelector } from 'react-redux';
 
-const Series = () => {
+function Series() {
   const { mySeriesPosts } = useSelector((store: RootState) => store.post);
   const { loadPost } = myFunctions();
 
@@ -39,6 +39,6 @@ const Series = () => {
       })}
     </div>
   );
-};
+}
 
 export default Series;

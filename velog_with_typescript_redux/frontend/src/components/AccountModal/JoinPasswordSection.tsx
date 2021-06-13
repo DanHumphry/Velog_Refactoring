@@ -1,7 +1,7 @@
 import useInput from '@hooks/useInput';
 import React, { useRef, useState } from 'react';
 
-const JoinPasswordSection = () => {
+function JoinPasswordSection() {
   const case3Ref = useRef<HTMLParagraphElement | null>(null);
   const case4Ref = useRef<HTMLParagraphElement | null>(null);
   const case5Ref = useRef<HTMLParagraphElement | null>(null);
@@ -103,5 +103,5 @@ const JoinPasswordSection = () => {
       </div>
     </>
   );
-};
+}
 export default React.memo(JoinPasswordSection);

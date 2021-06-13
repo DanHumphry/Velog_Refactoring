@@ -66,98 +66,102 @@ import {
   LOAD_LIKED_FILTERED_POSTS_FAILURE,
   LOAD_LIKED_FILTERED_POSTS_SUCCESS,
 } from '@reducers/post';
+import { AxiosResponse } from 'axios';
 
 export const ADD_POST_REQUEST_ACTION = () => ({ type: ADD_POST_REQUEST });
-export const ADD_POST_SUCCESS_ACTION = (data: any) => ({ type: ADD_POST_SUCCESS, data });
+export const ADD_POST_SUCCESS_ACTION = (data: AxiosResponse) => ({ type: ADD_POST_SUCCESS, data });
 export const ADD_POST_FAILURE_ACTION = (error: Error | any) => ({ type: ADD_POST_FAILURE, data: error });
 
 export const LOAD_LIKED_MYPOSTS_REQUEST_ACTION = () => ({ type: LOAD_LIKED_MYPOSTS_REQUEST });
-export const LOAD_LIKED_MYPOSTS_SUCCESS_ACTION = (data: any) => ({ type: LOAD_LIKED_MYPOSTS_SUCCESS, data });
+export const LOAD_LIKED_MYPOSTS_SUCCESS_ACTION = (data: AxiosResponse) => ({ type: LOAD_LIKED_MYPOSTS_SUCCESS, data });
 export const LOAD_LIKED_MYPOSTS_FAILURE_ACTION = (error: Error | any) => ({
   type: LOAD_LIKED_MYPOSTS_FAILURE,
   data: error,
 });
 
 export const LOAD_MYPOSTS_REQUEST_ACTION = () => ({ type: LOAD_MYPOSTS_REQUEST });
-export const LOAD_MYPOSTS_SUCCESS_ACTION = (data: any) => ({ type: LOAD_MYPOSTS_SUCCESS, data });
+export const LOAD_MYPOSTS_SUCCESS_ACTION = (data: AxiosResponse) => ({ type: LOAD_MYPOSTS_SUCCESS, data });
 export const LOAD_MYPOSTS_FAILURE_ACTION = (error: Error | any) => ({ type: LOAD_MYPOSTS_FAILURE, data: error });
 
 export const LOAD_LIKED_POSTS_REQUEST_ACTION = () => ({ type: LOAD_LIKED_POSTS_REQUEST });
-export const LOAD_LIKED_POSTS_SUCCESS_ACTION = (data: any) => ({ type: LOAD_LIKED_POSTS_SUCCESS, data });
+export const LOAD_LIKED_POSTS_SUCCESS_ACTION = (data: AxiosResponse) => ({ type: LOAD_LIKED_POSTS_SUCCESS, data });
 export const LOAD_LIKED_POSTS_FAILURE_ACTION = (error: Error | any) => ({
   type: LOAD_LIKED_POSTS_FAILURE,
   data: error,
 });
 
 export const LOAD_POSTS_REQUEST_ACTION = () => ({ type: LOAD_POSTS_REQUEST });
-export const LOAD_POSTS_SUCCESS_ACTION = (data: any) => ({ type: LOAD_POSTS_SUCCESS, data });
+export const LOAD_POSTS_SUCCESS_ACTION = (data: AxiosResponse) => ({ type: LOAD_POSTS_SUCCESS, data });
 export const LOAD_POSTS_FAILURE_ACTION = (error: Error | any) => ({ type: LOAD_POSTS_FAILURE, data: error });
 
 export const LOAD_POST_REQUEST_ACTION = () => ({ type: LOAD_POST_REQUEST });
-export const LOAD_POST_SUCCESS_ACTION = (data: any) => ({ type: LOAD_POST_SUCCESS, data });
+export const LOAD_POST_SUCCESS_ACTION = (data: AxiosResponse) => ({ type: LOAD_POST_SUCCESS, data });
 export const LOAD_POST_FAILURE_ACTION = (error: Error | any) => ({ type: LOAD_POST_FAILURE, data: error });
 
 export const UPDATE_POST_REQUEST_ACTION = () => ({ type: UPDATE_POST_REQUEST });
-export const UPDATE_POST_SUCCESS_ACTION = (data: any) => ({ type: UPDATE_POST_SUCCESS, data });
+export const UPDATE_POST_SUCCESS_ACTION = (data: AxiosResponse) => ({ type: UPDATE_POST_SUCCESS, data });
 export const UPDATE_POST_FAILURE_ACTION = (error: Error | any) => ({ type: UPDATE_POST_FAILURE, data: error });
 
 export const REMOVE_POST_REQUEST_ACTION = () => ({ type: REMOVE_POST_REQUEST });
-export const REMOVE_POST_SUCCESS_ACTION = (data: any) => ({ type: REMOVE_POST_SUCCESS, data });
+export const REMOVE_POST_SUCCESS_ACTION = (data: AxiosResponse) => ({ type: REMOVE_POST_SUCCESS, data });
 export const REMOVE_POST_FAILURE_ACTION = (error: Error | any) => ({ type: REMOVE_POST_FAILURE, data: error });
 
 export const LIKE_POST_REQUEST_ACTION = () => ({ type: LIKE_POST_REQUEST });
-export const LIKE_POST_SUCCESS_ACTION = (data: any) => ({ type: LIKE_POST_SUCCESS, data });
+export const LIKE_POST_SUCCESS_ACTION = (data: AxiosResponse) => ({ type: LIKE_POST_SUCCESS, data });
 export const LIKE_POST_FAILURE_ACTION = (error: Error | any) => ({ type: LIKE_POST_FAILURE, data: error });
 
 export const UNLIKE_POST_REQUEST_ACTION = () => ({ type: UNLIKE_POST_REQUEST });
-export const UNLIKE_POST_SUCCESS_ACTION = (data: any) => ({ type: UNLIKE_POST_SUCCESS, data });
+export const UNLIKE_POST_SUCCESS_ACTION = (data: AxiosResponse) => ({ type: UNLIKE_POST_SUCCESS, data });
 export const UNLIKE_POST_FAILURE_ACTION = (error: Error | any) => ({ type: UNLIKE_POST_FAILURE, data: error });
 
 export const ADD_POST_COMMENT_REQUEST_ACTION = () => ({ type: ADD_COMMENT_REQUEST });
-export const ADD_POST_COMMENT_SUCCESS_ACTION = (data: any) => ({ type: ADD_COMMENT_SUCCESS, data });
+export const ADD_POST_COMMENT_SUCCESS_ACTION = (data: AxiosResponse) => ({ type: ADD_COMMENT_SUCCESS, data });
 export const ADD_POST_COMMENT_FAILURE_ACTION = (error: Error | any) => ({ type: ADD_COMMENT_FAILURE, data: error });
 
 export const UPDATE_POST_COMMENT_REQUEST_ACTION = () => ({ type: UPDATE_COMMENT_REQUEST });
-export const UPDATE_POST_COMMENT_SUCCESS_ACTION = (data: any) => ({ type: UPDATE_COMMENT_SUCCESS, data });
+export const UPDATE_POST_COMMENT_SUCCESS_ACTION = (data: AxiosResponse) => ({ type: UPDATE_COMMENT_SUCCESS, data });
 export const UPDATE_POST_COMMENT_FAILURE_ACTION = (error: Error | any) => ({
   type: UPDATE_COMMENT_FAILURE,
   data: error,
 });
 
 export const REMOVE_POST_COMMENT_REQUEST_ACTION = () => ({ type: REMOVE_COMMENT_REQUEST });
-export const REMOVE_POST_COMMENT_SUCCESS_ACTION = (data: any) => ({ type: REMOVE_COMMENT_SUCCESS, data });
+export const REMOVE_POST_COMMENT_SUCCESS_ACTION = (data: AxiosResponse) => ({ type: REMOVE_COMMENT_SUCCESS, data });
 export const REMOVE_POST_COMMENT_FAILURE_ACTION = (error: Error | any) => ({
   type: REMOVE_COMMENT_FAILURE,
   data: error,
 });
 
 export const ADD_POST_RECOMMENT_REQUEST_ACTION = () => ({ type: ADD_RECOMMENT_REQUEST });
-export const ADD_POST_RECOMMENT_SUCCESS_ACTION = (data: any) => ({ type: ADD_RECOMMENT_SUCCESS, data });
+export const ADD_POST_RECOMMENT_SUCCESS_ACTION = (data: AxiosResponse) => ({ type: ADD_RECOMMENT_SUCCESS, data });
 export const ADD_POST_RECOMMENT_FAILURE_ACTION = (error: Error | any) => ({ type: ADD_RECOMMENT_FAILURE, data: error });
 
 export const UPDATE_POST_RECOMMENT_REQUEST_ACTION = () => ({ type: UPDATE_RECOMMENT_REQUEST });
-export const UPDATE_POST_RECOMMENT_SUCCESS_ACTION = (data: any) => ({ type: UPDATE_RECOMMENT_SUCCESS, data });
+export const UPDATE_POST_RECOMMENT_SUCCESS_ACTION = (data: AxiosResponse) => ({ type: UPDATE_RECOMMENT_SUCCESS, data });
 export const UPDATE_POST_RECOMMENT_FAILURE_ACTION = (error: Error | any) => ({
   type: UPDATE_RECOMMENT_FAILURE,
   data: error,
 });
 
 export const REMOVE_POST_RECOMMENT_REQUEST_ACTION = () => ({ type: REMOVE_RECOMMENT_REQUEST });
-export const REMOVE_POST_RECOMMENT_SUCCESS_ACTION = (data: any) => ({ type: REMOVE_RECOMMENT_SUCCESS, data });
+export const REMOVE_POST_RECOMMENT_SUCCESS_ACTION = (data: AxiosResponse) => ({ type: REMOVE_RECOMMENT_SUCCESS, data });
 export const REMOVE_POST_RECOMMENT_FAILURE_ACTION = (error: Error | any) => ({
   type: REMOVE_RECOMMENT_FAILURE,
   data: error,
 });
 
 export const LOAD_FILTER_LIST_REQUEST_ACTION = () => ({ type: LOAD_FILTER_LIST_REQUEST });
-export const LOAD_FILTER_LIST_SUCCESS_ACTION = (data: any) => ({ type: LOAD_FILTER_LIST_SUCCESS, data });
+export const LOAD_FILTER_LIST_SUCCESS_ACTION = (data: AxiosResponse) => ({ type: LOAD_FILTER_LIST_SUCCESS, data });
 export const LOAD_FILTER_LIST_FAILURE_ACTION = (error: Error | any) => ({
   type: LOAD_FILTER_LIST_FAILURE,
   data: error,
 });
 
 export const LOAD_FILTERED_POSTS_REQUEST_ACTION = () => ({ type: LOAD_FILTERED_POSTS_REQUEST });
-export const LOAD_FILTERED_POSTS_SUCCESS_ACTION = (data: any) => ({ type: LOAD_FILTERED_POSTS_SUCCESS, data });
+export const LOAD_FILTERED_POSTS_SUCCESS_ACTION = (data: AxiosResponse) => ({
+  type: LOAD_FILTERED_POSTS_SUCCESS,
+  data,
+});
 export const LOAD_FILTERED_POSTS_FAILURE_ACTION = (error: Error | any) => ({
   type: LOAD_FILTERED_POSTS_FAILURE,
   data: error,
@@ -166,7 +170,7 @@ export const LOAD_FILTERED_POSTS_FAILURE_ACTION = (error: Error | any) => ({
 export const LOAD_SCROLL_EVENT_FILTERED_POSTS_REQUEST_ACTION = () => ({
   type: LOAD_SCROLL_EVENT_FILTERED_POSTS_REQUEST,
 });
-export const LOAD_SCROLL_EVENT_FILTERED_POSTS_SUCCESS_ACTION = (data: any) => ({
+export const LOAD_SCROLL_EVENT_FILTERED_POSTS_SUCCESS_ACTION = (data: AxiosResponse) => ({
   type: LOAD_SCROLL_EVENT_FILTERED_POSTS_SUCCESS,
   data,
 });
@@ -176,21 +180,21 @@ export const LOAD_SCROLL_EVENT_FILTERED_POSTS_FAILURE_ACTION = (error: Error | a
 });
 
 export const LOAD_SERIES_POSTS_REQUEST_ACTION = () => ({ type: LOAD_SERIES_POSTS_REQUEST });
-export const LOAD_SERIES_POSTS_SUCCESS_ACTION = (data: any) => ({ type: LOAD_SERIES_POSTS_SUCCESS, data });
+export const LOAD_SERIES_POSTS_SUCCESS_ACTION = (data: AxiosResponse) => ({ type: LOAD_SERIES_POSTS_SUCCESS, data });
 export const LOAD_SERIES_POSTS_FAILURE_ACTION = (error: Error | any) => ({
   type: LOAD_SERIES_POSTS_FAILURE,
   data: error,
 });
 
 export const LOAD_SERIES_LIST_REQUEST_ACTION = () => ({ type: LOAD_SERIES_LIST_REQUEST });
-export const LOAD_SERIES_LIST_SUCCESS_ACTION = (data: any) => ({ type: LOAD_SERIES_LIST_SUCCESS, data });
+export const LOAD_SERIES_LIST_SUCCESS_ACTION = (data: AxiosResponse) => ({ type: LOAD_SERIES_LIST_SUCCESS, data });
 export const LOAD_SERIES_LIST_FAILURE_ACTION = (error: Error | any) => ({
   type: LOAD_SERIES_LIST_FAILURE,
   data: error,
 });
 
 export const LOAD_LIKED_FILTERED_POSTS_REQUEST_ACTION = () => ({ type: LOAD_LIKED_FILTERED_POSTS_REQUEST });
-export const LOAD_LIKED_FILTERED_POSTS_SUCCESS_ACTION = (data: any) => ({
+export const LOAD_LIKED_FILTERED_POSTS_SUCCESS_ACTION = (data: AxiosResponse) => ({
   type: LOAD_LIKED_FILTERED_POSTS_SUCCESS,
   data,
 });

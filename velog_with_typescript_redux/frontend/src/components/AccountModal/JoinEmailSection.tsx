@@ -5,7 +5,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { CHECK_EMAIL_REQUEST, SEND_EMAIL_REQUEST } from '@thunks/user';
 import ButtonLoader from '@loader/ButtonLoader';
 
-const JoinEmailSection = () => {
+function JoinEmailSection() {
   const dispatch = useDispatch();
   const case6Ref = useRef<HTMLParagraphElement | null>(null);
   const case7Ref = useRef<HTMLParagraphElement | null>(null);
@@ -27,8 +27,8 @@ const JoinEmailSection = () => {
   };
 
   const sendEmail = async (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
+    e.preventDefault();
     if (case7Ref.current?.className === 'case ok') {
-      // e.preventDefault();
       const number = await Math.floor(Math.random() * 100000);
       setRandNum(number);
       await dispatch(SEND_EMAIL_REQUEST({ email, number }));
@@ -103,5 +103,5 @@ const JoinEmailSection = () => {
       </div>
     </>
   );
-};
+}
 export default React.memo(JoinEmailSection);

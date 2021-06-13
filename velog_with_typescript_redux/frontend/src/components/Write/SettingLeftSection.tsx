@@ -5,7 +5,7 @@ interface Props {
   inp: { title: string; content: string };
 }
 
-const SettingLeftSection: React.VFC<Props> = ({ inp }) => {
+function SettingLeftSection({ inp }: Props) {
   const { onChangeImage } = myFunctions();
   const [imgURL, setImgURL] = useState('' as string);
 
@@ -63,5 +63,5 @@ const SettingLeftSection: React.VFC<Props> = ({ inp }) => {
       </section>
     </div>
   );
-};
+}
 export default SettingLeftSection;

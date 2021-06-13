@@ -9,7 +9,7 @@ interface Props {
   navOption: string;
 }
 
-const Content: React.VFC<Props> = ({ myPosts, navOption }) => {
+function Content({ myPosts, navOption }: Props) {
   const dispatch = useDispatch();
 
   const { loadMyPostsLoading, hasMoreMyPosts, loadLikedMyPostsLoading } = useSelector((store: RootState) => store.post);
@@ -91,5 +91,5 @@ const Content: React.VFC<Props> = ({ myPosts, navOption }) => {
       </div>
     </div>
   );
-};
+}
 export default Content;

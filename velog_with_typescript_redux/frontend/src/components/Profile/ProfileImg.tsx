@@ -4,10 +4,17 @@ import { useDispatch } from 'react-redux';
 import { UPDATE_PROFILE_IMG_REQUEST } from '@thunks/user';
 
 interface Props {
-  me: any;
+  me: {
+    id: number;
+    email: string;
+    nickname: string;
+    git: string;
+    profileImg: string;
+    myIntroduce: string;
+  };
 }
 
-const ProfileImg: React.VFC<Props> = ({ me }) => {
+function ProfileImg({ me }: Props) {
   const dispatch = useDispatch();
   const [imgURL, setImgURL] = useState<string>('');
   const [imgFile, setImgFile] = useState<null | File>(null);
@@ -29,7 +36,7 @@ const ProfileImg: React.VFC<Props> = ({ me }) => {
 
   const submitImg = async () => {
     const formData = new FormData();
-    await formData.append('id', me.id);
+    await formData.append('id', `${me.id}`);
     if (imgFile !== null) {
       await formData.append('image', imgFile);
     } else await formData.append('image', '');
@@ -55,5 +62,5 @@ const ProfileImg: React.VFC<Props> = ({ me }) => {
       </button>
     </div>
   );
-};
+}
 export default ProfileImg;

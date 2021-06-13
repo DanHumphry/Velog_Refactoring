@@ -25,6 +25,8 @@ import {
   SET_ACCOUNT_TEXT_ACTION,
 } from '@actions/user';
 
+/* eslint-disable */
+
 export const LOG_IN_REQUEST = (v: { email: string; password: string }) => async (dispatch: any) => {
   try {
     dispatch(LOG_IN_REQUEST_ACTION());
@@ -118,3 +120,5 @@ export const SET_ACCOUNT_TEXT = (data: boolean) => async (dispatch: any) => {
     console.log(error);
   }
 };
+
+/* eslint-enable */

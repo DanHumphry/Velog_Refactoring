@@ -11,7 +11,7 @@ interface Props {
   me: any;
 }
 
-const Comment: React.VFC<Props> = ({ detailPost, me }) => {
+function Comment({ detailPost, me }: Props) {
   const dispatch = useDispatch();
   const [comment, setComment, resetInput] = useInput('');
   const { loadMyPost } = myFunctions();
@@ -183,5 +183,5 @@ const Comment: React.VFC<Props> = ({ detailPost, me }) => {
       </div>
     </div>
   );
-};
+}
 export default React.memo(Comment);

@@ -15,7 +15,7 @@ interface Props {
   detailPost: any;
 }
 
-const Setting: React.VFC<Props> = ({ visibility, setVisibility, inp, imgURL, setImgURL, tag, setTag, detailPost }) => {
+function Setting({ visibility, setVisibility, inp, imgURL, setImgURL, tag, setTag, detailPost }: Props) {
   return (
     <div className="thumbnail_container" style={visibility.settingSection as React.CSSProperties}>
       <div className="thumbnail_section">
@@ -25,5 +25,5 @@ const Setting: React.VFC<Props> = ({ visibility, setVisibility, inp, imgURL, set
       </div>
     </div>
   );
-};
+}
 export default Setting;

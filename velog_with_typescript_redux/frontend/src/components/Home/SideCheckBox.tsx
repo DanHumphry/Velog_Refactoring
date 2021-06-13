@@ -10,7 +10,7 @@ interface Props {
   setFilterList: React.Dispatch<React.SetStateAction<number[]>>;
 }
 
-const SideCheckBox: React.VFC<Props> = ({ filterList, setFilterList, isContent }) => {
+function SideCheckBox({ filterList, setFilterList, isContent }: Props) {
   const dispatch = useDispatch();
   const { allTags } = useSelector((store: RootState) => store.post);
   const [searchInput, setSearchInput] = useInput('');
@@ -39,18 +39,7 @@ const SideCheckBox: React.VFC<Props> = ({ filterList, setFilterList, isContent }
 
   if (Object.keys(allTags).length === 0) return null;
 
-  // const findSelectedTags = (id: number) => {
-  //   let bol = false;
-  //   for (let i = 0; i < filterList.length; i += 1) {
-  //     if (filterList[i] === id) {
-  //       bol = true;
-  //       break;
-  //     }
-  //   }
-  //   return bol;
-  // };
-
-  const tagJSX = (tag: { id: number; name: string }) => {
+  const tagJSX = (tag: { id: number; name: string }, checked: boolean) => {
     return (
       <li key={tag.id}>
         <input
@@ -59,9 +48,8 @@ const SideCheckBox: React.VFC<Props> = ({ filterList, setFilterList, isContent }
           value="action"
           type="checkbox"
           data-type="genres"
-          defaultChecked
+          defaultChecked={checked}
         />
-        {/* eslint-disable-next-line jsx-a11y/click-events-have-key-events */}
         <label
           className="input__label | filters-input__label--checkbox"
           htmlFor={tag.name}
@@ -99,30 +87,23 @@ const SideCheckBox: React.VFC<Props> = ({ filterList, setFilterList, isContent }
         <section>
           <ul>
             {[...allTags]
-              .filter((v: any) => {
-                // filterList.find((tagId)=>tagId === v.id)
-                let bol = false;
-                for (let i = 0; i < filterList.length; i += 1) {
-                  if (filterList[i] === v.id) {
-                    bol = true;
-                    break;
-                  }
-                }
-                if (bol) return v;
-                return null;
-              })
-              .map((tag: { id: number; name: string }) => tagJSX(tag))}
+              .filter((v: any) => filterList.find((tagId) => tagId === v.id) !== undefined)
+              .map((tag: { id: number; name: string }) => tagJSX(tag, true))}
             {searchInput === ''
               ? [...allTags]
                   .slice(0, 10)
-                  .map((tag: { id: number; name: string }) => (filterList.indexOf(tag.id) === -1 ? tagJSX(tag) : null))
+                  .map((tag: { id: number; name: string }) =>
+                    filterList.indexOf(tag.id) === -1 ? tagJSX(tag, false) : null,
+                  )
               : [...allTags]
                   .filter((v: { name: string }) => v.name.indexOf(searchInput) !== -1)
-                  .map((tag: { id: number; name: string }) => (filterList.indexOf(tag.id) === -1 ? tagJSX(tag) : null))}
+                  .map((tag: { id: number; name: string }) =>
+                    filterList.indexOf(tag.id) === -1 ? tagJSX(tag, false) : null,
+                  )}
           </ul>
         </section>
       </div>
     </aside>
   );
-};
+}
 export default SideCheckBox;

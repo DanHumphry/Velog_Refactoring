@@ -1,6 +1,6 @@
 import React from 'react';
 
-const Button = () => {
+function Button() {
   return (
     <div className="myProfile">
       <div className="wrapper">
@@ -15,5 +15,5 @@ const Button = () => {
       </div>
     </div>
   );
-};
+}
 export default Button;

@@ -12,7 +12,7 @@ interface Props {
   setTag: React.Dispatch<React.SetStateAction<string[]>>;
 }
 
-const Setting: React.VFC<Props> = ({ visibility, setVisibility, inp, tag, setTag }) => {
+function Setting({ visibility, setVisibility, inp, tag, setTag }: Props) {
   return (
     <div className="thumbnail_container" style={visibility.settingSection as React.CSSProperties}>
       <div className="thumbnail_section">
@@ -22,5 +22,5 @@ const Setting: React.VFC<Props> = ({ visibility, setVisibility, inp, tag, setTag
       </div>
     </div>
   );
-};
+}
 export default Setting;

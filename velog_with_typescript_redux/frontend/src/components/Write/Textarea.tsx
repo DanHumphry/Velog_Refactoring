@@ -1,13 +1,13 @@
 import myFunctions from '@hooks/myFunctions';
 import useInput from '@hooks/useInput';
-import React, { VFC, useState } from 'react';
+import React, { useState } from 'react';
 import { useHistory } from 'react-router';
 
 interface Props {
   visibility: { textSection: { visibility: string }; settingSection: { visibility: string } };
 }
 
-const TextArea: VFC<Props> = ({ visibility }) => {
+function TextArea({ visibility }: Props) {
   const history = useHistory();
 
   const { limitLengthOnKeyUpEvent } = myFunctions();
@@ -84,5 +84,5 @@ const TextArea: VFC<Props> = ({ visibility }) => {
       </article>
     </section>
   );
-};
+}
 export default TextArea;

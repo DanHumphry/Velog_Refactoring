@@ -13,7 +13,7 @@ interface Props {
   detailPost: any;
 }
 
-const SettingRightSection: React.VFC<Props> = ({ detailPost, tag, setTag, setVisibility }) => {
+function SettingRightSection({ detailPost, tag, setTag, setVisibility }: Props) {
   const { mySeriesList } = useSelector((store: RootState) => store.post);
 
   const [tagInput, setTagInput, resetTagInput] = useInput('');
@@ -184,5 +184,5 @@ const SettingRightSection: React.VFC<Props> = ({ detailPost, tag, setTag, setVis
       )}
     </div>
   );
-};
+}
 export default SettingRightSection;

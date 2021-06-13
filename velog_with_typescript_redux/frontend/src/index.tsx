@@ -7,7 +7,7 @@ import logger from 'redux-logger';
 import { createStore, applyMiddleware } from 'redux';
 import rootReducer from '@reducers/index';
 import { composeWithDevTools } from 'redux-devtools-extension';
-import { BrowserRouter, Router } from 'react-router-dom';
+import { Router } from 'react-router-dom';
 import { createBrowserHistory } from 'history';
 import reportWebVitals from './reportWebVitals';
 import App from './App';

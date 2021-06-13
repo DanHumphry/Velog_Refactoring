@@ -10,7 +10,7 @@ interface Props {
   me: any;
 }
 
-const ReComment: React.VFC<Props> = ({ comment, me }) => {
+function ReComment({ comment, me }: Props) {
   const dispatch = useDispatch();
   const { loadMyPost } = myFunctions();
 
@@ -37,7 +37,7 @@ const ReComment: React.VFC<Props> = ({ comment, me }) => {
     }
   };
 
-  const updateReComment = async (reCommentId: string) => {
+  const updateReComment = async (reCommentId: number) => {
     await dispatch(UPDATE_POST_RECOMMENT_REQUEST({ content: updateReCommentInput, reCommentId }));
     setUpdateReCommentModal(null);
   };
@@ -154,5 +154,5 @@ const ReComment: React.VFC<Props> = ({ comment, me }) => {
       </div>
     </>
   );
-};
+}
 export default React.memo(ReComment);

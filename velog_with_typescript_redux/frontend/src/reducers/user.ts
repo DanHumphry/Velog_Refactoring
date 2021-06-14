@@ -23,6 +23,9 @@ export const initialState = {
   updateProfileImgLoading: false, // 프로필 이미지 업데이트 시도중
   updateProfileImgDone: false,
   updateProfileImgError: null,
+  deleteUserLoading: false,
+  deleteUserDone: false,
+  deleteUserError: null,
 
   me: {},
 };
@@ -57,6 +60,10 @@ export const UPDATE_PROFILE_FAILURE = 'UPDATE_PROFILE_FAILURE';
 export const UPDATE_PROFILE_IMG_REQUEST = 'UPDATE_PROFILE_IMG_REQUEST';
 export const UPDATE_PROFILE_IMG_SUCCESS = 'UPDATE_PROFILE_IMG_SUCCESS';
 export const UPDATE_PROFILE_IMG_FAILURE = 'UPDATE_PROFILE_IMG_FAILURE';
+
+export const DELETE_USER_REQUEST = 'DELETE_USER_REQUEST';
+export const DELETE_USER_SUCCESS = 'DELETE_USER_SUCCESS';
+export const DELETE_USER_FAILURE = 'DELETE_USER_FAILURE';
 
 export default function User(state = initialState, action: any) {
   switch (action.type) {
@@ -142,6 +149,14 @@ export default function User(state = initialState, action: any) {
         updateProfileImgDone: false,
         updateProfileImgError: action.data,
       };
+
+    case DELETE_USER_REQUEST:
+      return { ...state, deleteUserLoading: true, deleteUserDone: false, deleteUserError: null };
+    case DELETE_USER_SUCCESS:
+      return { ...state, deleteUserLoading: false, deleteUserDone: true, deleteUserError: null, me: {} };
+    case DELETE_USER_FAILURE:
+      return { ...state, deleteUserLoading: false, deleteUserDone: false, deleteUserError: action.data };
+
     default:
       return state;
   }

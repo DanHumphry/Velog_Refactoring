@@ -4,7 +4,6 @@
     "paths": {
       "@actions/*": ["src/actions/*"],
       "@api/*": ["src/api/*"],
-      "@assets/*": ["src/assets/*"],
       "@components/*": ["src/components/*"],
       "@hooks/*": ["src/hooks/*"],
       "@loader/*": ["src/loader/*"],
@@ -12,7 +11,8 @@
       "@reducers/*": ["src/reducers/*"],
       "@sagas/*": ["src/sagas/*"],
       "@styles/*": ["src/styles/*"],
-      "@thunks/*": ["src/thunks/*"]
+      "@thunks/*": ["src/thunks/*"],
+      "@typings/*": ["src/typings/*"]
     }
   }
 }

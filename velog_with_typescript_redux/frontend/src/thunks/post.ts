@@ -103,7 +103,7 @@ export const LOAD_LIKED_POSTS_REQUEST = (data: { lastId: number | null; tagList:
   }
 };
 
-export const LOAD_MYPOSTS_REQUEST = (data: { userId: string; lastId: number | null }) => async (dispatch: any) => {
+export const LOAD_MYPOSTS_REQUEST = (data: { userId: number; lastId: number | null }) => async (dispatch: any) => {
   try {
     dispatch(LOAD_MYPOSTS_REQUEST_ACTION());
     const res = await postAPI.loadMyPostsAPI(data);
@@ -113,7 +113,7 @@ export const LOAD_MYPOSTS_REQUEST = (data: { userId: string; lastId: number | nu
   }
 };
 
-export const LOAD_LIKED_MYPOSTS_REQUEST = (data: { userId: string; lastIdx: number | null }) => async (
+export const LOAD_LIKED_MYPOSTS_REQUEST = (data: { userId: number; lastIdx: number | null }) => async (
   dispatch: any,
 ) => {
   try {
@@ -125,7 +125,7 @@ export const LOAD_LIKED_MYPOSTS_REQUEST = (data: { userId: string; lastIdx: numb
   }
 };
 
-export const LOAD_POST_REQUEST = (data: { postId: string }) => async (dispatch: any) => {
+export const LOAD_POST_REQUEST = (data: { postId: number }) => async (dispatch: any) => {
   try {
     dispatch(LOAD_POST_REQUEST_ACTION());
     const res = await postAPI.loadPostAPI(data);
@@ -135,7 +135,7 @@ export const LOAD_POST_REQUEST = (data: { postId: string }) => async (dispatch: 
   }
 };
 
-export const UPDATE_POST_REQUEST = (data: { postId: string; data: any }) => async (dispatch: any) => {
+export const UPDATE_POST_REQUEST = (data: { postId: number; data: FormData }) => async (dispatch: any) => {
   try {
     dispatch(UPDATE_POST_REQUEST_ACTION());
     const res = await postAPI.updatePostAPI(data);
@@ -145,7 +145,7 @@ export const UPDATE_POST_REQUEST = (data: { postId: string; data: any }) => asyn
   }
 };
 
-export const REMOVE_POST_REQUEST = (data: { postId: string }) => async (dispatch: any) => {
+export const REMOVE_POST_REQUEST = (data: { postId: number }) => async (dispatch: any) => {
   try {
     dispatch(REMOVE_POST_REQUEST_ACTION());
     const res = await postAPI.removePostAPI(data);
@@ -274,7 +274,7 @@ export const LOAD_SCROLL_EVENT_FILTERED_POSTS_REQUEST = (data: { tagList: number
   }
 };
 
-export const LOAD_SERIES_POSTS_REQUEST = (data: { userId: string }) => async (dispatch: any) => {
+export const LOAD_SERIES_POSTS_REQUEST = (data: { userId: number }) => async (dispatch: any) => {
   try {
     dispatch(LOAD_SERIES_POSTS_REQUEST_ACTION());
     const res = await postAPI.loadMyPostsInSeries(data);
@@ -284,7 +284,7 @@ export const LOAD_SERIES_POSTS_REQUEST = (data: { userId: string }) => async (di
   }
 };
 
-export const LOAD_SERIES_LIST_REQUEST = (data: { userId: string }) => async (dispatch: any) => {
+export const LOAD_SERIES_LIST_REQUEST = (data: { userId: number }) => async (dispatch: any) => {
   try {
     dispatch(LOAD_SERIES_LIST_REQUEST_ACTION());
     const res = await postAPI.loadSeriesList(data);

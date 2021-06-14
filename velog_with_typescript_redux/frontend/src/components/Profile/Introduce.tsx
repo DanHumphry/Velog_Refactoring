@@ -1,16 +1,10 @@
 import myFunctions from '@hooks/myFunctions';
 import React, { useState } from 'react';
 import useInput from '@hooks/useInput';
+import { me } from '@typings/db';
 
 interface Props {
-  me: {
-    id: number;
-    email: string;
-    nickname: string;
-    git: string;
-    profileImg: string;
-    myIntroduce: string;
-  };
+  me: me;
 }
 
 function Introduce({ me }: Props) {

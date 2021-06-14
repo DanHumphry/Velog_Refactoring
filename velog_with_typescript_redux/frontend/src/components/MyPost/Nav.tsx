@@ -12,11 +12,14 @@ function Nav({ navModal, setNavModal, navOption, setNavOption }: Props) {
     setNavOption(v);
     setNavModal(false);
   };
-  const menu = ['최신순', '좋아요순', '시리즈별'];
+  const menu = [
+    { id: 1, name: '최신순' },
+    { id: 2, name: '좋아요순' },
+    { id: 3, name: '시리즈별' },
+  ];
   return (
     <div className="nav-section">
       <div className="nav-margin">
-        {/* eslint-disable-next-line jsx-a11y/click-events-have-key-events */}
         <h2 onClick={() => setNavModal(true)}>
           {navOption}
           <svg
@@ -34,14 +37,11 @@ function Nav({ navModal, setNavModal, navOption, setNavOption }: Props) {
         {navModal ? (
           <div className="filterModalBox">
             <ul>
-              {menu.map((item, idx) => {
-                return (
-                  // eslint-disable-next-line react/no-array-index-key,jsx-a11y/click-events-have-key-events
-                  <li key={idx} onClick={() => onClickMenu(item)}>
-                    {item}
-                  </li>
-                );
-              })}
+              {menu.map((item) => (
+                <li key={item.id} onClick={() => onClickMenu(item.name)}>
+                  {item.name}
+                </li>
+              ))}
             </ul>
           </div>
         ) : null}

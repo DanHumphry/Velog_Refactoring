@@ -12,11 +12,12 @@ function Join() {
   const dispatch = useDispatch();
   const { signUpError, signUpLoading, loginModal, accountText } = useSelector((store: RootState) => store.user);
 
-  const submitJoinButton = (e: any) => {
+  const submitJoinButton = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     let isReturn = false;
+    const tar = e.target as Element | any;
 
-    e.target.childNodes.forEach((item: ChildNode) => {
+    tar.childNodes.forEach((item: ChildNode) => {
       if (item.nodeName === 'DIV') {
         item.childNodes.forEach((p: any) => {
           if (p.className !== 'case ok' && !isReturn) {
@@ -31,8 +32,8 @@ function Join() {
 
     dispatch(
       SIGN_UP_REQUEST({
-        email: e.target.elements.email.value,
-        password: e.target.elements.password.value,
+        email: tar.elements.email.value,
+        password: tar.elements.password.value,
       }),
     );
   };

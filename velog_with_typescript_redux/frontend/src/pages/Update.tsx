@@ -15,10 +15,7 @@ function Update() {
 
   const { me } = useSelector((store: RootState) => store.user);
   const { updatePostLoading } = useSelector((store: RootState) => store.post);
-  const detailPost: any = useSelector((store: RootState) => {
-    const { detailPost } = store.post;
-    return detailPost;
-  });
+  const { detailPost }: any = useSelector((store: RootState) => store.post);
 
   const [tag, setTag] = useState<string[]>(detailPost.tags.map((v: any) => v.name));
 
@@ -60,7 +57,7 @@ function Update() {
       alert('로그인이 필요한 서비스입니다.');
       history.push('/');
     } else {
-      dispatch(LOAD_SERIES_LIST_REQUEST({ userId: `${me.id}` }));
+      dispatch(LOAD_SERIES_LIST_REQUEST({ userId: me.id }));
     }
   }, [me]);
 
@@ -68,7 +65,7 @@ function Update() {
 
   return (
     <form encType="multipart/form-data" onSubmit={(e) => submitWrite(e)}>
-      <TextArea visibility={visibility} setVisibility={setVisibility} />
+      <TextArea visibility={visibility} setVisibility={setVisibility} detailPost={detailPost} />
       <Setting
         visibility={visibility}
         setVisibility={setVisibility}

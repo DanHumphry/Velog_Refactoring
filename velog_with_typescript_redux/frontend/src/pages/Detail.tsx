@@ -10,11 +10,10 @@ import { useSelector, useDispatch } from 'react-redux';
 function Detail() {
   const dispatch = useDispatch();
   const { detailPost, loadPostLoading } = useSelector((store: RootState) => store.post);
-  const { me } = useSelector((store: RootState) => store.user);
 
   useEffect(() => {
     if (Object.keys(detailPost).length === 0) {
-      dispatch(LOAD_POST_REQUEST({ postId: window.location.href.split('/')[4] }));
+      dispatch(LOAD_POST_REQUEST({ postId: +window.location.href.split('/')[4] }));
     }
   }, []);
 
@@ -22,8 +21,8 @@ function Detail() {
 
   return (
     <div className="detail__container">
-      <Post detailPost={detailPost} me={me} />
-      <Comment detailPost={detailPost} me={me} />
+      <Post detailPost={detailPost} />
+      <Comment detailPost={detailPost} />
     </div>
   );
 }

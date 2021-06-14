@@ -1,22 +1,21 @@
 import myFunctions from '@hooks/myFunctions';
 import useInput from '@hooks/useInput';
-import { RootState } from '@reducers/index';
 import React, { useState } from 'react';
-import { useSelector } from 'react-redux';
 import { useHistory } from 'react-router';
+import { detailPost } from '@typings/db';
 
 interface Props {
   visibility: { textSection: { visibility: string }; settingSection: { visibility: string } };
   setVisibility: React.Dispatch<
     React.SetStateAction<{ textSection: { visibility: string }; settingSection: { visibility: string } }>
   >;
+  detailPost: detailPost;
 }
 
-function TextArea({ visibility, setVisibility }: Props) {
+function TextArea({ visibility, setVisibility, detailPost }: Props) {
   const history = useHistory();
 
   const { limitLengthOnKeyUpEvent } = myFunctions();
-  const { detailPost }: any = useSelector((store: RootState) => store.post);
 
   const [title, setTitle, resetTitle] = useInput(detailPost.title);
   const [content, setContent] = useInput(detailPost.content);

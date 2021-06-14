@@ -1,25 +1,27 @@
 import ReComment from '@components/Detail/ReComment';
 import myFunctions from '@hooks/myFunctions';
 import useInput from '@hooks/useInput';
+import { RootState } from '@reducers/index';
 import { ADD_POST_COMMENT_REQUEST, REMOVE_POST_COMMENT_REQUEST, UPDATE_POST_COMMENT_REQUEST } from '@thunks/post';
 import gravatar from 'gravatar';
 import React, { useState } from 'react';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
+import { detailPost } from '@typings/db';
 
 interface Props {
-  detailPost: any;
-  me: any;
+  detailPost: detailPost;
 }
 
-function Comment({ detailPost, me }: Props) {
+function Comment({ detailPost }: Props) {
   const dispatch = useDispatch();
-  const [comment, setComment, resetInput] = useInput('');
   const { loadMyPost } = myFunctions();
+  const { me } = useSelector((store: RootState) => store.user);
 
   const [updateCommentInput, setUpdateCommentInput, resetUpdateComment] = useInput('');
   const [updateCommentModal, setUpdateCommentModal] = useState<number | null>(null);
+  const [comment, setComment, resetInput] = useInput('');
 
-  const [reCommentModal, setReCommentModal] = useState([] as any);
+  const [reCommentModal, setReCommentModal] = useState<number[]>([]);
 
   const submitComment = () => {
     if (comment !== '') {
@@ -29,7 +31,7 @@ function Comment({ detailPost, me }: Props) {
   };
 
   const showReCommentModal = (id: number) => {
-    const temp: any = [...reCommentModal];
+    const temp: number[] = [...reCommentModal];
     if (temp.indexOf(id) === -1) temp.push(id);
     else temp.splice(temp.indexOf(id), 1);
 
@@ -84,7 +86,7 @@ function Comment({ detailPost, me }: Props) {
                 <div className="commentUserInfo">
                   <div className="commentProfile">
                     {/* eslint-disable-next-line jsx-a11y/click-events-have-key-events,jsx-a11y/no-static-element-interactions */}
-                    <div onClick={() => loadMyPost({ userId: `${comment.UserId}`, lastId: null })}>
+                    <div onClick={() => loadMyPost({ userId: comment.UserId, lastId: null })}>
                       {comment.User.profileImg === null ||
                       comment.User.profileImg === '' ||
                       comment.User.profileImg === undefined ? (
@@ -96,7 +98,7 @@ function Comment({ detailPost, me }: Props) {
                     <div className="comment-info">
                       <div className="commentUsername">
                         {/* eslint-disable-next-line jsx-a11y/click-events-have-key-events,jsx-a11y/no-static-element-interactions */}
-                        <div onClick={() => loadMyPost({ userId: `${comment.UserId}`, lastId: null })}>
+                        <div onClick={() => loadMyPost({ userId: comment.UserId, lastId: null })}>
                           {comment.User.nickname}
                         </div>
                       </div>
@@ -174,7 +176,7 @@ function Comment({ detailPost, me }: Props) {
                       {reCommentModal.indexOf(comment.id) !== -1 ? '숨기기' : '답글 달기'}
                     </span>
                   </div>
-                  {reCommentModal.indexOf(comment.id) !== -1 ? <ReComment comment={comment} me={me} /> : null}
+                  {reCommentModal.indexOf(comment.id) !== -1 ? <ReComment comment={comment} /> : null}
                 </div>
               </div>
             </div>

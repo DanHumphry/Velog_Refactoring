@@ -52,7 +52,7 @@ function Write() {
       alert('로그인이 필요한 서비스입니다.');
       history.push('/');
     } else {
-      dispatch(LOAD_SERIES_LIST_REQUEST({ userId: `${me.id}` }));
+      dispatch(LOAD_SERIES_LIST_REQUEST({ userId: me.id }));
     }
   }, [me]);
 

@@ -23,6 +23,9 @@ import {
   SEND_EMAIL_SUCCESS_ACTION,
   SET_LOGIN_MODAL_ACTION,
   SET_ACCOUNT_TEXT_ACTION,
+  DELETE_USER_FAILURE_ACTION,
+  DELETE_USER_REQUEST_ACTION,
+  DELETE_USER_SUCCESS_ACTION,
 } from '@actions/user';
 
 /* eslint-disable */
@@ -55,9 +58,9 @@ export const CHECK_EMAIL_REQUEST = (v: { email: string }) => async (dispatch: an
     const res = await userAPI.emailCheckAPI(v);
     await dispatch(CHECK_EMAIL_SUCCESS_ACTION());
     alert('사용가능한 이메일 입니다.');
-    return res;
+    return res.status;
   } catch (error) {
-    dispatch(CHECK_EMAIL_FAILURE_ACTION(error));
+    dispatch(CHECK_EMAIL_FAILURE_ACTION(error.response.data));
     alert('이미 존재하는 이메일 입니다.');
     return error;
   }
@@ -68,10 +71,8 @@ export const SEND_EMAIL_REQUEST = (data: { email: string; number: number }) => a
     await dispatch(SEND_EMAIL_REQUEST_ACTION());
     await userAPI.sendEmailAPI(data);
     await dispatch(SEND_EMAIL_SUCCESS_ACTION());
-    alert('발송완료되었습니다. 이메일을 확인해주세요.');
   } catch (error) {
-    dispatch(SEND_EMAIL_FAILURE_ACTION(error));
-    alert('발송에 실패했습니다. 이메일을 확인해주세요.');
+    dispatch(SEND_EMAIL_FAILURE_ACTION(error.response.data));
   }
 };
 
@@ -80,18 +81,25 @@ export const LOG_OUT_REQUEST = () => async (dispatch: any) => {
     dispatch(LOG_OUT_REQUEST_ACTION());
     await userAPI.logOutAPI();
     await dispatch(LOG_OUT_SUCCESS_ACTION());
-  } catch (e) {
-    dispatch(LOG_OUT_FAILURE_ACTION(e));
+  } catch (error) {
+    dispatch(LOG_OUT_FAILURE_ACTION(error.response.data));
   }
 };
 
-export const UPDATE_PROFILE_REQUEST = (v: any) => async (dispatch: any) => {
+export const UPDATE_PROFILE_REQUEST = (v: {
+  id: number;
+  email: string;
+  nickname: string;
+  git: string;
+  profileImg: string;
+  myIntroduce: string;
+}) => async (dispatch: any) => {
   try {
     dispatch(UPDATE_PROFILE_REQUEST_ACTION());
     const res = await userAPI.updateProfileAPI(v);
     await dispatch(UPDATE_PROFILE_SUCCESS_ACTION(res.data));
-  } catch (e) {
-    dispatch(UPDATE_PROFILE_FAILURE_ACTION(e));
+  } catch (error) {
+    dispatch(UPDATE_PROFILE_FAILURE_ACTION(error.response.data));
   }
 };
 
@@ -100,8 +108,8 @@ export const UPDATE_PROFILE_IMG_REQUEST = (v: FormData) => async (dispatch: any)
     dispatch(UPDATE_PROFILE_IMG_REQUEST_ACTION());
     const res = await userAPI.updateProfileImgAPI(v);
     await dispatch(UPDATE_PROFILE_IMG_SUCCESS_ACTION(res.data));
-  } catch (e) {
-    dispatch(UPDATE_PROFILE_IMG_FAILURE_ACTION(e));
+  } catch (error) {
+    dispatch(UPDATE_PROFILE_IMG_FAILURE_ACTION(error.response.data));
   }
 };
 
@@ -118,6 +126,17 @@ export const SET_ACCOUNT_TEXT = (data: boolean) => async (dispatch: any) => {
     dispatch(SET_ACCOUNT_TEXT_ACTION(data));
   } catch (error) {
     console.log(error);
+  }
+};
+
+export const DELETE_USER_REQUEST = (data: { userId: number }) => async (dispatch: any) => {
+  try {
+    dispatch(DELETE_USER_REQUEST_ACTION());
+    await userAPI.deleteUserAPI(data);
+    dispatch(DELETE_USER_SUCCESS_ACTION());
+  } catch (error) {
+    console.log(error);
+    dispatch(DELETE_USER_FAILURE_ACTION(error.response.data));
   }
 };
 

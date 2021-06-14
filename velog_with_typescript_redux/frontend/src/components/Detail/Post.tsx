@@ -5,13 +5,13 @@ import React, { useState, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useHistory } from 'react-router';
 import { LIKE_POST_REQUEST, REMOVE_POST_REQUEST, UNLIKE_POST_REQUEST } from '@thunks/post';
+import { detailPost } from '@typings/db';
 
 interface Props {
-  detailPost: any;
-  me: any;
+  detailPost: detailPost;
 }
 
-function Post({ detailPost, me }: Props) {
+function Post({ detailPost }: Props) {
   const history = useHistory();
   const dispatch = useDispatch();
   const {
@@ -26,14 +26,16 @@ function Post({ detailPost, me }: Props) {
   } = useSelector((store: RootState) => store.post);
   const { loadMyPost, loadPost } = myFunctions();
 
+  const { me } = useSelector((store: RootState) => store.user);
+
   const [seriesModal, setSeriesModal] = useState(false);
   const [currentSeries, setCurrentSeries] = useState(0);
-  const [seriesId, setSeriesId] = useState({ prev: '', current: '', next: '' });
+  const [seriesId, setSeriesId] = useState({ prev: 0, current: 0, next: 0 });
 
   const [isLiked, setIsLiked] = useState(false);
   const [likeBtnStyle, setLikeBtnStyle] = useState({
-    svg: {} as any,
-    svgParent: {} as any,
+    svg: {},
+    svgParent: {},
   });
 
   const updatePost = () => {
@@ -56,7 +58,7 @@ function Post({ detailPost, me }: Props) {
   };
 
   useEffect(() => {
-    const liked = detailPost.Likers.find((v: any) => v.id === me.id);
+    const liked = detailPost.Likers.find((v: { id: number }) => v.id === me.id);
     if (liked !== undefined) {
       setLikeBtnStyle({
         svg: { color: 'white' },
@@ -69,7 +71,7 @@ function Post({ detailPost, me }: Props) {
     }
 
     if (Object.keys(detailPost.series).length) {
-      const currentIndex = detailPost.series[0].Posts.findIndex((v: any) => v.id === detailPost.id);
+      const currentIndex = detailPost.series[0].Posts.findIndex((v: { id: number }) => v.id === detailPost.id);
       setCurrentSeries(currentIndex);
       const id = {
         prev: detailPost.series[0].Posts[currentIndex - 1]?.id,
@@ -134,7 +136,7 @@ function Post({ detailPost, me }: Props) {
             {/* eslint-disable-next-line jsx-a11y/click-events-have-key-events,jsx-a11y/no-static-element-interactions */}
             <span
               className="detail__head-username"
-              onClick={() => loadMyPost({ userId: `${detailPost.UserId}`, lastId: null })}
+              onClick={() => loadMyPost({ userId: detailPost.UserId, lastId: null })}
             >
               {detailPost.User.nickname}
             </span>
@@ -150,7 +152,7 @@ function Post({ detailPost, me }: Props) {
 
         <div className="detail__head-like">
           <div className="iCfLcp">
-            {/* eslint-disable-next-line jsx-a11y/click-events-have-key-events,jsx-a11y/no-static-element-interactions */}
+            {/* eslint-disable-next-line jsx-a11y/no-static-element-interactions */}
             <div style={likeBtnStyle.svgParent} className="dtrfkW" onClick={submitLike}>
               <svg style={likeBtnStyle.svg} width="24" height="24" viewBox="0 0 24 24">
                 <path fill="currentColor" d="M18 1l-6 4-6-4-6 5v7l12 10 12-10v-7z" />
@@ -271,7 +273,7 @@ function Post({ detailPost, me }: Props) {
         <div className="detail__writerInfo">
           <div className="detail__topInfo">
             {/* eslint-disable-next-line jsx-a11y/click-events-have-key-events,jsx-a11y/no-static-element-interactions */}
-            <div onClick={() => loadMyPost({ userId: `${detailPost.UserId}`, lastId: null })}>
+            <div onClick={() => loadMyPost({ userId: detailPost.UserId, lastId: null })}>
               {detailPost.User.profileImg ? (
                 <img src={detailPost.User.profileImg} alt="" />
               ) : (

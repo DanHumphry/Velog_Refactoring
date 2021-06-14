@@ -3,9 +3,10 @@ import { RootState } from '@reducers/index';
 import { LOAD_LIKED_MYPOSTS_REQUEST, LOAD_MYPOSTS_REQUEST } from '@thunks/post';
 import React, { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
+import { myPosts } from '@typings/db';
 
 interface Props {
-  myPosts: any;
+  myPosts: myPosts[];
   navOption: string;
 }
 
@@ -15,16 +16,15 @@ function Content({ myPosts, navOption }: Props) {
   const { loadMyPostsLoading, hasMoreMyPosts, loadLikedMyPostsLoading } = useSelector((store: RootState) => store.post);
   const { loadPost } = myFunctions();
 
-  const userId: string = window.location.href.split('/')[4];
+  const userId: number = +window.location.href.split('/')[4];
 
   useEffect(() => {
     function onScroll() {
       if (window.pageYOffset + document.documentElement.clientHeight > document.documentElement.scrollHeight - 300) {
         if (hasMoreMyPosts && !loadMyPostsLoading && !loadLikedMyPostsLoading) {
           if (navOption === '최신순') {
-            let lastId: any = myPosts[[...myPosts].length - 1];
-            if (lastId) lastId = lastId.id;
-            dispatch(LOAD_MYPOSTS_REQUEST({ userId, lastId }));
+            const lastId = myPosts[[...myPosts].length - 1];
+            dispatch(LOAD_MYPOSTS_REQUEST({ userId, lastId: lastId.id }));
           } else {
             const lastIdx = [...myPosts].length;
             dispatch(LOAD_LIKED_MYPOSTS_REQUEST({ userId, lastIdx }));

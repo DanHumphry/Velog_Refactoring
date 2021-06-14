@@ -28,12 +28,11 @@ function App() {
   }, []);
 
   return (
-    // eslint-disable-next-line jsx-a11y/click-events-have-key-events,jsx-a11y/no-static-element-interactions
     <div className="App">
       <div className="auto-margin">
         {loginModal ? (
           <>
-            {/* eslint-disable-next-line jsx-a11y/no-static-element-interactions,jsx-a11y/click-events-have-key-events */}
+            {/* eslint-disable-next-line jsx-a11y/no-static-element-interactions */}
             <div id="withBackground" className="overlay" onClick={() => dispatch(SET_LOGIN_MODAL(false))} />
             <AccountModal />
           </>

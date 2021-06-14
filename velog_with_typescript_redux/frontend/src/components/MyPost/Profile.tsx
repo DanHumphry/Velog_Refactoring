@@ -1,8 +1,9 @@
 import gravatar from 'gravatar';
 import React from 'react';
+import { myPosts } from '@typings/db';
 
 interface Props {
-  myPosts: any;
+  myPosts: myPosts[];
 }
 
 function Profile({ myPosts }: Props) {

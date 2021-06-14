@@ -10,12 +10,12 @@ export default function myFunctions() {
   const dispatch = useDispatch();
   const history = useHistory();
 
-  const loadPost = useCallback(async (id: string) => {
+  const loadPost = useCallback(async (id: number) => {
     await dispatch(LOAD_POST_REQUEST({ postId: id }));
     history.push(`/detail/${id}`);
   }, []);
 
-  const loadMyPost = useCallback(async (data: { userId: string; lastId: number | null }) => {
+  const loadMyPost = useCallback(async (data: { userId: number; lastId: number | null }) => {
     if (Object.keys(myPosts).length === 0) await dispatch(LOAD_MYPOSTS_REQUEST(data));
     history.push(`/myPost/${data.userId}`);
   }, []);

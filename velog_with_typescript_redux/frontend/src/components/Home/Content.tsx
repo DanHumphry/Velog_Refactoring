@@ -6,10 +6,11 @@ import React, { useEffect } from 'react';
 import '@styles/Board.css';
 import SideCheckBox from '@components/Home/SideCheckBox';
 import { useDispatch, useSelector } from 'react-redux';
+import { mainPosts } from '@typings/db';
 
 interface Props {
   isContent: boolean;
-  mainPosts: any;
+  mainPosts: mainPosts[];
   filterList: number[];
   setFilterList: React.Dispatch<React.SetStateAction<number[]>>;
 }
@@ -33,9 +34,8 @@ function Content({ isContent, mainPosts, filterList, setFilterList }: Props) {
 
           if (filterList.length === 0 && hasMorePosts) {
             if (isContent) {
-              let lastId: any = posts[[...mainPosts].length - 1];
-              if (lastId) lastId = lastId.id;
-              dispatch(LOAD_POSTS_REQUEST(lastId));
+              const lastId: { id: number } = posts[[...mainPosts].length - 1];
+              dispatch(LOAD_POSTS_REQUEST(lastId.id));
             } else {
               const lastIdx = posts.length;
               dispatch(
@@ -43,9 +43,8 @@ function Content({ isContent, mainPosts, filterList, setFilterList }: Props) {
               );
             }
           } else if (hasMoreFilteredPosts) {
-            let lastId: any = posts[[...mainPosts].length - 1];
-            if (lastId) lastId = lastId.id;
-            dispatch(LOAD_SCROLL_EVENT_FILTERED_POSTS_REQUEST({ tagList: filterList, lastId }));
+            const lastId = posts[[...mainPosts].length - 1];
+            dispatch(LOAD_SCROLL_EVENT_FILTERED_POSTS_REQUEST({ tagList: filterList, lastId: lastId.id }));
           }
         }
       }

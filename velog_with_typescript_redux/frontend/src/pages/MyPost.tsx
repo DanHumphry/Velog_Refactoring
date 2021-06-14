@@ -17,7 +17,7 @@ function MyPost() {
   const [navOption, setNavOption] = useState('최신순');
   const [navModal, setNavModal] = useState(false);
 
-  const userId: string = window.location.href.split('/')[4];
+  const userId: number = +window.location.href.split('/')[4];
 
   useEffect(() => {
     if (navOption === '최신순' && Object.keys(myPosts).length === 0) {

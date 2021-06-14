@@ -2,16 +2,10 @@ import React, { useState } from 'react';
 import gravatar from 'gravatar';
 import { useDispatch } from 'react-redux';
 import { UPDATE_PROFILE_IMG_REQUEST } from '@thunks/user';
+import { me } from '@typings/db';
 
 interface Props {
-  me: {
-    id: number;
-    email: string;
-    nickname: string;
-    git: string;
-    profileImg: string;
-    myIntroduce: string;
-  };
+  me: me;
 }
 
 function ProfileImg({ me }: Props) {

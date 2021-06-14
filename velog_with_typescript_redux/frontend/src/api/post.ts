@@ -3,7 +3,7 @@ import axios from 'axios';
 axios.defaults.baseURL = 'http://localhost:3065';
 axios.defaults.withCredentials = true;
 
-export const postWriteAPI = (data: any) => {
+export const postWriteAPI = (data: FormData) => {
   return axios.post('post/', data);
 };
 
@@ -15,23 +15,23 @@ export const loadLikedPostsAPI = (data: { lastId: number | null; tagList: number
   return axios.post('posts/liked', data);
 };
 
-export const loadMyPostsAPI = (data: { userId: string; lastId: number | null }) => {
+export const loadMyPostsAPI = (data: { userId: number; lastId: number | null }) => {
   return axios.post(`posts/${data.userId}`, data);
 };
 
-export const loadLikedMyPostsAPI = (data: { userId: string; lastIdx: number | null }) => {
+export const loadLikedMyPostsAPI = (data: { userId: number; lastIdx: number | null }) => {
   return axios.post(`posts/${data.userId}/liked`, data);
 };
 
-export const loadPostAPI = (data: { postId: string }) => {
+export const loadPostAPI = (data: { postId: number }) => {
   return axios.get(`post/${data.postId}`);
 };
 
-export const updatePostAPI = (data: { postId: string; data: any }) => {
+export const updatePostAPI = (data: { postId: number; data: FormData }) => {
   return axios.post(`post/${data.postId}/update`, data.data);
 };
 
-export const removePostAPI = (data: { postId: string }) => {
+export const removePostAPI = (data: { postId: number }) => {
   return axios.delete(`post/${data.postId}/delete`);
 };
 
@@ -43,27 +43,27 @@ export const unlikePostAPI = (data: { userId: number; postId: number }) => {
   return axios.delete(`post/${data.postId}/like`);
 };
 
-export const PostCommentAPI = (data: any) => {
+export const PostCommentAPI = (data: { content: string; postId: number; userId: number }) => {
   return axios.post(`post/${data.postId}/comment`, data);
 };
 
-export const updateCommentAPI = (data: any) => {
+export const updateCommentAPI = (data: { content: string; commentId: number }) => {
   return axios.post(`post/${data.commentId}/comment/update`, data);
 };
 
-export const removeCommentAPI = (data: any) => {
+export const removeCommentAPI = (data: { writtenUser: number; commentId: number }) => {
   return axios.delete(`post/${data.commentId}/comment/delete`);
 };
 
-export const PostReCommentAPI = (data: any) => {
+export const PostReCommentAPI = (data: { content: string; userId: number; commentId: number }) => {
   return axios.post(`post/${data.commentId}/reComment`, data);
 };
 
-export const updateReCommentAPI = (data: any) => {
+export const updateReCommentAPI = (data: { content: string; reCommentId: number }) => {
   return axios.post(`post/${data.reCommentId}/reComment/update`, data);
 };
 
-export const removeReCommentAPI = (data: any) => {
+export const removeReCommentAPI = (data: { writtenUser: number; reCommentId: number }) => {
   return axios.delete(`post/${data.reCommentId}/reComment/delete`);
 };
 
@@ -79,10 +79,10 @@ export const loadScrollEventFilteredPosts = (data: { tagList: number[]; lastId: 
   return axios.post(`posts/tags/filter/scroll`, data);
 };
 
-export const loadMyPostsInSeries = (data: { userId: string }) => {
+export const loadMyPostsInSeries = (data: { userId: number }) => {
   return axios.get(`posts/${data.userId}/series`);
 };
 
-export const loadSeriesList = (data: { userId: string }) => {
+export const loadSeriesList = (data: { userId: number }) => {
   return axios.get(`post/${data.userId}/seriesList`);
 };

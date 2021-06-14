@@ -5,7 +5,7 @@ const multer = require("multer");
 const path = require("path");
 const fs = require("fs");
 
-const { User } = require("../models");
+const { User, Post, Tag } = require("../models");
 const { isLoggedIn, isNotLoggedIn } = require("./middlewares");
 
 const router = express.Router();
@@ -185,5 +185,27 @@ router.get(
     res.redirect("http://localhost:3000");
   }
 );
+
+router.post("/delete", isLoggedIn, async (req, res, next) => {
+  req.logout();
+  req.session.destroy();
+
+  try {
+    await Post.destroy({
+      where: { UserId: req.body.userId },
+    });
+    await User.destroy({
+      where: { id: req.body.userId },
+    });
+    // await Tag.destroy({
+    //   where: {}
+    // })
+  } catch (error) {
+    console.log(error);
+    next(error);
+  }
+
+  res.send("ok");
+});
 
 module.exports = router;

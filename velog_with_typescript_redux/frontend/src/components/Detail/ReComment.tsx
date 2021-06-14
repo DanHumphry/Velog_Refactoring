@@ -1,18 +1,21 @@
 import myFunctions from '@hooks/myFunctions';
 import useInput from '@hooks/useInput';
+import { RootState } from '@reducers/index';
 import { ADD_POST_RECOMMENT_REQUEST, REMOVE_POST_RECOMMENT_REQUEST, UPDATE_POST_RECOMMENT_REQUEST } from '@thunks/post';
 import gravatar from 'gravatar';
 import React, { useState } from 'react';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
+import { comment } from '@typings/db';
 
 interface Props {
-  comment: any;
-  me: any;
+  comment: comment;
 }
 
-function ReComment({ comment, me }: Props) {
+function ReComment({ comment }: Props) {
   const dispatch = useDispatch();
   const { loadMyPost } = myFunctions();
+
+  const { me } = useSelector((store: RootState) => store.user);
 
   const [reCommentInput, setReCommentInput, resetInput] = useInput('');
 
@@ -61,8 +64,8 @@ function ReComment({ comment, me }: Props) {
               <div className="sc-cmTdod kzRjyM comment">
                 <div className="sc-jwKygS ezDpwK">
                   <div className="profile">
-                    {/* eslint-disable-next-line jsx-a11y/click-events-have-key-events,jsx-a11y/no-static-element-interactions */}
-                    <div onClick={() => loadMyPost({ userId: `${reComment.UserId}`, lastId: null })}>
+                    {/* eslint-disable-next-line jsx-a11y/no-static-element-interactions */}
+                    <div onClick={() => loadMyPost({ userId: reComment.UserId, lastId: null })}>
                       {reComment.User.profileImg ? (
                         <img src={reComment.User.profileImg} alt="comment-user-thumbnail" />
                       ) : (
@@ -71,8 +74,8 @@ function ReComment({ comment, me }: Props) {
                     </div>
                     <div className="comment-info">
                       <div className="username">
-                        {/* eslint-disable-next-line jsx-a11y/click-events-have-key-events,jsx-a11y/no-static-element-interactions */}
-                        <div onClick={() => loadMyPost({ userId: `${reComment.UserId}`, lastId: null })}>
+                        {/* eslint-disable-next-line jsx-a11y/no-static-element-interactions */}
+                        <div onClick={() => loadMyPost({ userId: reComment.UserId, lastId: null })}>
                           {reComment.User.nickname}
                         </div>
                       </div>

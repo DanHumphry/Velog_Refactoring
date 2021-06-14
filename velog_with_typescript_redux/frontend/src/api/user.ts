@@ -19,7 +19,14 @@ export const logOutAPI = () => {
   return axios.post('/user/logout');
 };
 
-export const updateProfileAPI = (data: any) => {
+export const updateProfileAPI = (data: {
+  id: number;
+  email: string;
+  nickname: string;
+  git: string;
+  profileImg: string;
+  myIntroduce: string;
+}) => {
   return axios.patch('user/update', data);
 };
 
@@ -45,4 +52,8 @@ export const kakaoAPI = () => {
 
 export const githubAPI = () => {
   window.location.href = 'http://localhost:3065/user/auth/github';
+};
+
+export const deleteUserAPI = (data: { userId: number }) => {
+  return axios.post('/user/delete', data);
 };

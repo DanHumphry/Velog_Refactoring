@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import '@styles/Navi.css';
 
 interface Props {
-  setIsContent: any;
+  setIsContent: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
 function Navi({ setIsContent }: Props) {

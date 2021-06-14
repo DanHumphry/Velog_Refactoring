@@ -1,3 +1,5 @@
+import { detailPost, mainPosts } from '@typings/db';
+
 export const initialState = {
   mainPosts: [],
   likedPosts: [],
@@ -170,7 +172,7 @@ const Post = (state = initialState, action: any) => {
     case ADD_POST_REQUEST:
       return { ...state, addPostLoading: true, addPostDone: false, addPostError: null };
     case ADD_POST_SUCCESS: {
-      const posts: any[] = [...state.mainPosts];
+      const posts: mainPosts[] = [...state.mainPosts];
       posts.unshift(action.data);
       return {
         ...state,
@@ -291,7 +293,7 @@ const Post = (state = initialState, action: any) => {
     case REMOVE_POST_REQUEST:
       return { ...state, removePostLoading: true, removePostDone: false, removePostError: null };
     case REMOVE_POST_SUCCESS: {
-      let posts: any[] = [...state.mainPosts];
+      let posts: mainPosts[] = [...state.mainPosts];
       posts = posts.filter((v) => v.id !== action.data.PostId);
       return {
         ...state,
@@ -308,7 +310,7 @@ const Post = (state = initialState, action: any) => {
     case LIKE_POST_REQUEST:
       return { ...state, likePostLoading: true, likePostDone: false, likePostError: null };
     case LIKE_POST_SUCCESS: {
-      const post: any = { ...state.detailPost };
+      const post: detailPost | any = { ...state.detailPost };
       post.Likers.push({ id: action.data.userId });
       return { ...state, likePostLoading: false, likePostDone: true, likePostError: null, detailPost: post };
     }
@@ -317,8 +319,8 @@ const Post = (state = initialState, action: any) => {
     case UNLIKE_POST_REQUEST:
       return { ...state, unlikePostLoading: true, unlikePostDone: false, unlikePostError: null };
     case UNLIKE_POST_SUCCESS: {
-      const post: any = { ...state.detailPost };
-      post.Likers = post.Likers.filter((v: any) => v.id !== action.data.userId);
+      const post: detailPost | any = { ...state.detailPost };
+      post.Likers = post.Likers.filter((v: { id: number }) => v.id !== action.data.userId);
       return { ...state, unlikePostLoading: false, unlikePostDone: true, unlikePostError: null, detailPost: post };
     }
     case UNLIKE_POST_FAILURE:
@@ -327,7 +329,7 @@ const Post = (state = initialState, action: any) => {
     case ADD_COMMENT_REQUEST:
       return { ...state, addCommentLoading: true, addCommentDone: false, addCommentError: null };
     case ADD_COMMENT_SUCCESS: {
-      const post: any = { ...state.detailPost };
+      const post: detailPost | any = { ...state.detailPost };
       if (post.Comments) post.Comments.push(action.data);
       else post.Comments = [action.data];
       return { ...state, addCommentLoading: false, addCommentDone: true, addCommentError: null, detailPost: post };
@@ -337,8 +339,8 @@ const Post = (state = initialState, action: any) => {
     case UPDATE_COMMENT_REQUEST:
       return { ...state, updateCommentLoading: true, updateCommentDone: false, updateCommentError: null };
     case UPDATE_COMMENT_SUCCESS: {
-      const post: any = { ...state.detailPost };
-      const idx = post.Comments.findIndex((comment: any) => comment.id === action.data.id);
+      const post: detailPost | any = { ...state.detailPost };
+      const idx = post.Comments.findIndex((comment: { id: number }) => comment.id === action.data.id);
       post.Comments[idx] = action.data;
       return {
         ...state,
@@ -353,8 +355,8 @@ const Post = (state = initialState, action: any) => {
     case REMOVE_COMMENT_REQUEST:
       return { ...state, removeCommentLoading: true, removeCommentDone: false, removeCommentError: null };
     case REMOVE_COMMENT_SUCCESS: {
-      const post: any = { ...state.detailPost };
-      post.Comments = post.Comments.filter((comment: any) => comment.id !== action.data.commentId);
+      const post: detailPost | any = { ...state.detailPost };
+      post.Comments = post.Comments.filter((comment: { id: number }) => comment.id !== action.data.commentId);
       return {
         ...state,
         removeCommentLoading: false,
@@ -369,8 +371,8 @@ const Post = (state = initialState, action: any) => {
     case ADD_RECOMMENT_REQUEST:
       return { ...state, addReCommentLoading: true, addReCommentDone: false, addReCommentError: null };
     case ADD_RECOMMENT_SUCCESS: {
-      const post: any = { ...state.detailPost };
-      const postComment = post.Comments.find((v: any) => v.id === action.data.CommentId);
+      const post: detailPost | any = { ...state.detailPost };
+      const postComment = post.Comments.find((v: { id: number }) => v.id === action.data.CommentId);
       postComment.reComments.push(action.data);
       // else postComment.reComments = [action.data];
       return {
@@ -386,9 +388,11 @@ const Post = (state = initialState, action: any) => {
     case UPDATE_RECOMMENT_REQUEST:
       return { ...state, updateReCommentLoading: true, updateReCommentDone: false, updateReCommentError: null };
     case UPDATE_RECOMMENT_SUCCESS: {
-      const post: any = { ...state.detailPost };
-      const commentIdx = post.Comments.findIndex((v: any) => v.id === action.data.CommentId);
-      const reCommentIdx = post.Comments[commentIdx].reComments.findIndex((v: any) => v.id === action.data.id);
+      const post: detailPost | any = { ...state.detailPost };
+      const commentIdx = post.Comments.findIndex((v: { id: number }) => v.id === action.data.CommentId);
+      const reCommentIdx = post.Comments[commentIdx].reComments.findIndex(
+        (v: { id: number }) => v.id === action.data.id,
+      );
       post.Comments[commentIdx].reComments[reCommentIdx] = action.data;
       return {
         ...state,
@@ -403,10 +407,12 @@ const Post = (state = initialState, action: any) => {
     case REMOVE_RECOMMENT_REQUEST:
       return { ...state, removeReCommentLoading: true, removeReCommentDone: false, removeReCommentError: null };
     case REMOVE_RECOMMENT_SUCCESS: {
-      const post: any = { ...state.detailPost };
+      const post: detailPost | any = { ...state.detailPost };
       let idx;
       for (let l = 0; l < post.Comments.length; l += 1) {
-        idx = post.Comments[l].reComments.findIndex((reComment: any) => reComment.id === action.data.reCommentId);
+        idx = post.Comments[l].reComments.findIndex(
+          (reComment: { id: number }) => reComment.id === action.data.reCommentId,
+        );
         if (idx !== -1) {
           post.Comments[l].reComments.splice(idx, 1);
           break;

@@ -264,6 +264,13 @@ router.post(
           {
             model: Series,
             attributes: ["id", "name"],
+            include: [
+              {
+                model: Post,
+                attributes: ["id", "title", "UserId"],
+                where: { UserId: post.dataValues.UserId },
+              },
+            ],
           },
         ],
       });

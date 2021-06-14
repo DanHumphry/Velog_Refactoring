@@ -1,6 +1,7 @@
 import React from 'react';
 import SettingLeftSection from '@components/Update/SettingLeftSection';
 import SettingRightSection from '@components/Update/SettingRightSection';
+import { detailPost } from '@typings/db';
 
 interface Props {
   visibility: { textSection: { visibility: string }; settingSection: { visibility: string } };
@@ -12,7 +13,7 @@ interface Props {
   setImgURL: React.Dispatch<React.SetStateAction<string>>;
   tag: string[];
   setTag: React.Dispatch<React.SetStateAction<string[]>>;
-  detailPost: any;
+  detailPost: detailPost;
 }
 
 function Setting({ visibility, setVisibility, inp, imgURL, setImgURL, tag, setTag, detailPost }: Props) {

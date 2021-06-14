@@ -19,7 +19,7 @@ function JoinEmailSection() {
     hiddenValidation: { display: 'none' },
   });
 
-  const { checkEmailLoading, sendEmailLoading } = useSelector((store: RootState) => store.user);
+  const { checkEmailLoading } = useSelector((store: RootState) => store.user);
 
   const onFocusDisplay = (e: React.FocusEvent<HTMLInputElement>) => {
     if (e.target.name === 'email') setCaseStyle({ ...caseStyle, hiddenEmail: { display: 'block' } });
@@ -31,8 +31,14 @@ function JoinEmailSection() {
     if (case7Ref.current?.className === 'case ok') {
       const number = await Math.floor(Math.random() * 100000);
       setRandNum(number);
-      await dispatch(SEND_EMAIL_REQUEST({ email, number }));
-      setEmailReadOnly(true);
+      try {
+        dispatch(SEND_EMAIL_REQUEST({ email, number }));
+        alert('발송되었습니다. 잠시후 확인해주세요.');
+        setEmailReadOnly(true);
+      } catch (error) {
+        console.log(error);
+        alert('발송에 실패했습니다. 이메일을 확인해주세요.');
+      }
     } else if (case7Ref.current?.className === 'case no') alert('이미 사용중이거나, 사용할 수 없는 이메일입니다.');
     else alert('이메일의 중복확인을 먼저 해주세요.');
   };
@@ -50,10 +56,15 @@ function JoinEmailSection() {
     if (email === '' || email === null) {
       alert('이메일을 입력해주세요.');
     } else {
-      const res: any = await dispatch(CHECK_EMAIL_REQUEST({ email }));
-      if (res.status === 200 && case7Ref.current !== null) case7Ref.current.className = 'case ok';
-      else if (case7Ref.current !== null) case7Ref.current.className = 'case no';
-      setEmailReadOnly(true);
+      try {
+        const res: number | any = await dispatch(CHECK_EMAIL_REQUEST({ email }));
+        if (res === 200 && case7Ref.current !== null) {
+          case7Ref.current.className = 'case ok';
+          setEmailReadOnly(true);
+        } else if (case7Ref.current !== null) case7Ref.current.className = 'case no';
+      } catch (e) {
+        console.log(e);
+      }
     }
   };
 
@@ -93,7 +104,7 @@ function JoinEmailSection() {
         </p>
       </div>
       <button type="button" className="sendEmailBtn" onClick={sendEmail}>
-        {sendEmailLoading ? <ButtonLoader /> : '번호발송'}
+        번호발송
       </button>
       <input type="text" placeholder="인증번호확인" onFocus={onFocusDisplay} onChange={checkNum} />
       <div className="focusInputOn" style={caseStyle.hiddenValidation}>

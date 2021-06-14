@@ -3,6 +3,7 @@ import useInput from '@hooks/useInput';
 import { RootState } from '@reducers/index';
 import React, { useEffect, useRef, useState } from 'react';
 import { useSelector } from 'react-redux';
+import { detailPost } from '@typings/db';
 
 interface Props {
   setVisibility: React.Dispatch<
@@ -10,14 +11,14 @@ interface Props {
   >;
   tag: string[];
   setTag: React.Dispatch<React.SetStateAction<string[]>>;
-  detailPost: any;
+  detailPost: detailPost;
 }
 
 function SettingRightSection({ detailPost, tag, setTag, setVisibility }: Props) {
   const { mySeriesList } = useSelector((store: RootState) => store.post);
 
   const [tagInput, setTagInput, resetTagInput] = useInput('');
-  const tagGuid = useRef<any>(null);
+  const tagGuid: React.MutableRefObject<any> = useRef(null);
 
   const [seriesModal, setSeriesModal] = useState(false);
   const [seriesInput, setSeriesInput, resetSeriesInput] = useInput('');

@@ -10,7 +10,7 @@ function Series() {
   return (
     <div className="sc-hwwEjo dzWcEQ">
       {[...mySeriesPosts].map((post: any) => {
-        const image = post.Posts.filter((v: any) => v.image !== null);
+        const image = post.Posts.filter((v: { image: string }) => v.image !== null);
         const lastUpdate = post.Posts[post.Posts.length - 1].PostSeries.createdAt.split('-');
         const date = `${lastUpdate[0]}년 ${lastUpdate[1]}월 ${lastUpdate[2].split('T')[0]}일`;
 

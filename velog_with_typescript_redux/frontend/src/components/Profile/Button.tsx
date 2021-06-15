@@ -13,8 +13,12 @@ function Button({ me }: Props) {
   const dispatch = useDispatch();
 
   const delUser = async () => {
-    await dispatch(DELETE_USER_REQUEST({ userId: me.id }));
-    history.push('/');
+    if (me.id) {
+      if (window.confirm('정말 삭제하시겠습니까 ?')) {
+        dispatch(DELETE_USER_REQUEST({ userId: me.id }));
+        history.push('/');
+      }
+    } else alert('권한이 없습니다.');
   };
 
   return (

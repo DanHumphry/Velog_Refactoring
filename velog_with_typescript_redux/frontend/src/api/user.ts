@@ -1,4 +1,5 @@
 import axios from 'axios';
+import { me } from '@typings/db';
 
 axios.defaults.baseURL = 'http://localhost:3065';
 axios.defaults.withCredentials = true;
@@ -19,14 +20,7 @@ export const logOutAPI = () => {
   return axios.post('/user/logout');
 };
 
-export const updateProfileAPI = (data: {
-  id: number;
-  email: string;
-  nickname: string;
-  git: string;
-  profileImg: string;
-  myIntroduce: string;
-}) => {
+export const updateProfileAPI = (data: me) => {
   return axios.patch('user/update', data);
 };
 

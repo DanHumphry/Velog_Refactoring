@@ -243,3 +243,13 @@ footer.post-comment > div > button:hover {
   cursor: pointer;
 }
 /* view */
+.sd-qqww {
+  position: relative;
+}
+.seriesDelBtn {
+  position: absolute;
+  right: 0;
+  color: red;
+  right: 3px;
+  bottom: -22px;
+}

@@ -7,6 +7,15 @@ function Series() {
   const { mySeriesPosts } = useSelector((store: RootState) => store.post);
   const { loadPost } = myFunctions();
 
+  if (Object.keys(mySeriesPosts).length === 0) {
+    return (
+      <div className="sc-kafWEX ksEIiH">
+        <img src="https://static.velog.io/static/media/undraw_blank_canvas_3rbb.35e81baf.svg" alt="list is empty" />
+        <div className="message">포스트가 없습니다.</div>
+      </div>
+    );
+  }
+
   return (
     <div className="sc-hwwEjo dzWcEQ">
       {[...mySeriesPosts].map((post: any) => {

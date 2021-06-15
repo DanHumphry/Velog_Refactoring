@@ -191,20 +191,33 @@ router.post("/delete", isLoggedIn, async (req, res, next) => {
   req.session.destroy();
 
   try {
+    const Posts = await Post.findAll({
+      where: { UserId: req.body.userId },
+      include: [
+        {
+          model: Tag,
+          attributes: ["id"],
+        },
+      ],
+    });
+    const tagsId = [];
+    Posts.forEach((post) => {
+      post.dataValues.tags.forEach((tag) => tagsId.push(tag.id));
+    });
+
+    await Tag.destroy({
+      where: { id: tagsId },
+    });
     await Post.destroy({
       where: { UserId: req.body.userId },
     });
     await User.destroy({
       where: { id: req.body.userId },
     });
-    // await Tag.destroy({
-    //   where: {}
-    // })
   } catch (error) {
     console.log(error);
     next(error);
   }
-
   res.send("ok");
 });
 

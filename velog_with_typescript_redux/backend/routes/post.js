@@ -217,6 +217,8 @@ router.post(
           )
         );
         await post.setTags(result.map((v) => v[0]));
+      } else {
+        await post.setTags(null);
       }
 
       if (req.body.series) {
@@ -225,6 +227,8 @@ router.post(
         });
 
         await post.setSeries(result[0]);
+      } else {
+        await post.setSeries(null);
       }
 
       const fullPost = await Post.findOne({

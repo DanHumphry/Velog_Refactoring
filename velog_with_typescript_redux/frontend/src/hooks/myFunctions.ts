@@ -110,15 +110,19 @@ export default function myFunctions() {
       setSeriesList: React.Dispatch<React.SetStateAction<{ id: number; name: string }[]>>,
       resetSeriesInput: React.Dispatch<React.SetStateAction<string>>,
     ) => {
-      const temp: { id: number; name: string }[] = [...mySeriesList];
-      if (temp.findIndex((v: any) => v.name === seriesInput.toLowerCase()) !== -1) {
-        alert('이미 존재하는 시리즈 이름입니다.');
+      if (seriesInput === '' || seriesInput === null) {
+        alert('시리즈 제목을 입력해주세요.');
       } else {
-        // eslint-disable-next-line no-bitwise
-        const lastIdxId: number = temp[0]?.id | 1;
-        temp.unshift({ id: lastIdxId + 1, name: seriesInput });
-        setSeriesList(temp);
-        resetSeriesInput('');
+        const temp: { id: number; name: string }[] = [...mySeriesList];
+        if (temp.findIndex((v: any) => v.name === seriesInput.toLowerCase()) !== -1) {
+          alert('이미 존재하는 시리즈 이름입니다.');
+        } else {
+          // eslint-disable-next-line no-bitwise
+          const lastIdxId: number = temp[0]?.id | 1;
+          temp.unshift({ id: lastIdxId + 1, name: seriesInput });
+          setSeriesList(temp);
+          resetSeriesInput('');
+        }
       }
     },
     [],
@@ -167,6 +171,17 @@ export default function myFunctions() {
     setTag(prev);
   }, []);
 
+  const delSeries = useCallback(
+    (
+      setSelectSeries: React.Dispatch<React.SetStateAction<number | null>>,
+      setSelectedPostSeries: React.Dispatch<React.SetStateAction<string | null>>,
+    ) => {
+      setSelectSeries(null);
+      setSelectedPostSeries(null);
+    },
+    [],
+  );
+
   return {
     loadPost,
     loadMyPost,
@@ -177,5 +192,6 @@ export default function myFunctions() {
     insertTag,
     changePostSeries,
     insertSeries,
+    delSeries,
   };
 }

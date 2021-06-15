@@ -28,6 +28,8 @@ import {
   DELETE_USER_SUCCESS_ACTION,
 } from '@actions/user';
 
+import { me } from '@typings/db';
+
 /* eslint-disable */
 
 export const LOG_IN_REQUEST = (v: { email: string; password: string }) => async (dispatch: any) => {
@@ -46,7 +48,6 @@ export const SIGN_UP_REQUEST = (v: { email: string; password: string }) => async
     await userAPI.signUpAPI(v);
     await dispatch(SIGN_UP_SUCCESS_ACTION());
     await alert('환영합니다. 회원가입이 완료되었습니다!!');
-    await LOG_IN_REQUEST(v);
   } catch (error) {
     dispatch(SIGN_UP_FAILURE_ACTION(error.response.data));
   }
@@ -86,14 +87,7 @@ export const LOG_OUT_REQUEST = () => async (dispatch: any) => {
   }
 };
 
-export const UPDATE_PROFILE_REQUEST = (v: {
-  id: number;
-  email: string;
-  nickname: string;
-  git: string;
-  profileImg: string;
-  myIntroduce: string;
-}) => async (dispatch: any) => {
+export const UPDATE_PROFILE_REQUEST = (v: me) => async (dispatch: any) => {
   try {
     dispatch(UPDATE_PROFILE_REQUEST_ACTION());
     const res = await userAPI.updateProfileAPI(v);

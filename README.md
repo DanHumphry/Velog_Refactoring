@@ -1,5 +1,6 @@
 # : Velog Clone Project (1인 개인 프로젝트)
-> 배포 : http://www.hyeon4137.shop (AWS EC2 프리티어)
+> 배포 : http://www.hyeon4137.shop (AWS EC2 프리티어). 
+> 로그인 ID : demo@naver.com , paw : test123123
 
 > 모델 : https://velog.io
 
@@ -53,6 +54,6 @@ api요청 및 action type정의
 #### action/post.ts -> reducers/post.ts
 <img width="800" alt="action - reducer" src="https://user-images.githubusercontent.com/54474732/123266596-26743680-d537-11eb-9c03-c96f545e36bb.png">
 <img width="800" alt="action - reducer" src="https://user-images.githubusercontent.com/54474732/123266618-2a07bd80-d537-11eb-9a8e-3cb1524e643f.png">
- .concat() 또는 hasMorePosts은 무한스크롤이벤트 관련 메서드와 state값  
- -> 그리고 다시 pages/Home.tsx에서 useSelector를 이용한 state값 호출  
+.concat() 또는 hasMorePosts은 무한스크롤이벤트 관련 메서드와 state값    
+그리고 다시 pages/Home.tsx에서 useSelector를 이용한 state값 호출  
   

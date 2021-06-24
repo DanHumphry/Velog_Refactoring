@@ -44,16 +44,15 @@
 첫로딩  (isContent의 값에따라 보여지는 constnets가 변경)
 <img width="800" alt="home - thunk" src="https://user-images.githubusercontent.com/54474732/123266627-2b38ea80-d537-11eb-9a7b-3bdf53b2529c.png">
  
-#### thunk/post.ts -> action/post.ts
-
+#### thunk/post.ts -> action/post.ts -> api/post.ts -> action/post.ts
 <img width="800" alt="thunk - action" src="https://user-images.githubusercontent.com/54474732/123266625-2aa05400-d537-11eb-8a13-7c13c0109a48.png">
-
-
-<img width="800" alt="action - reducer" src="https://user-images.githubusercontent.com/54474732/123266596-26743680-d537-11eb-9c03-c96f545e36bb.png">
+api요청 및 action type정의
+<img width="803" alt="action - API" src="https://user-images.githubusercontent.com/54474732/123269077-971c5280-d539-11eb-8abd-fe0ff52f6fbb.png">
 <img width="800" alt="action type정의" src="https://user-images.githubusercontent.com/54474732/123266613-28d69080-d537-11eb-9959-cfac2ed9ec5d.png">
-<img width="800" alt="action - reducer" src="https://user-images.githubusercontent.com/54474732/123266618-2a07bd80-d537-11eb-9a8e-3cb1524e643f.png">
 
- 
- 
- 보완해야할 점 또는 아쉬웠던 점
- 
+#### action/post.ts -> reducers/post.ts
+<img width="800" alt="action - reducer" src="https://user-images.githubusercontent.com/54474732/123266596-26743680-d537-11eb-9c03-c96f545e36bb.png">
+<img width="800" alt="action - reducer" src="https://user-images.githubusercontent.com/54474732/123266618-2a07bd80-d537-11eb-9a8e-3cb1524e643f.png">
+ .concat() 또는 hasMorePosts은 무한스크롤이벤트 관련 메서드와 state값  
+ -> 그리고 다시 pages/Home.tsx에서 useSelector를 이용한 state값 호출  
+  

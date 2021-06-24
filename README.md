@@ -1,4 +1,4 @@
-# : Velog Clone Project
+# : Velog Clone Project (1인 개인 프로젝트)
 > 배포 : http://www.hyeon4137.shop (AWS EC2 프리티어)
 
 > 모델 : https://velog.io

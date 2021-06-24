@@ -16,7 +16,7 @@
  ┣ 📂src  
  ┃ ┣ 📂actions  
  ┃ ┣ 📂api  
- ┃ ┣ 📂components  
+ ┃ ┣ 📂components  // -> page에 대응하는 componnent  
  ┃ ┃ ┣ 📂AccountModal  
  ┃ ┃ ┣ 📂Detail  
  ┃ ┃ ┣ 📂Home  

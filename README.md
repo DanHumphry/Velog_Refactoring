@@ -1,6 +1,6 @@
 # : Velog Clone Project (1인 개인 프로젝트)
 > 배포 : http://www.hyeon4137.shop (AWS EC2 프리티어). 
-> 로그인 ID : demo@naver.com , paw : test123123
+> 로그인 ID : demo@naver.com , pwd : test123123
 
 > 모델 : https://velog.io
 
